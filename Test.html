@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="windows-1251" />
+  <meta http-equiv="X-UA-Compatible" content="IE=9" />
+  <link rel="stylesheet" href="./styles/styles.css"> 
+  <link rel="stylesheet" href="./styles/styles_states.css">
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"/>
+  <script src="./scripts/script.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script>
+    $(init);
+    function init() {
+      $(".ui-sortable").sortable(
+        {
+          delay: 10,
+          opacity: helperOpacity,
+          stop: stopChangeState,
+          forcePlaceholderSize: true,
+          start: startChangeState,
+          placeholder: "task-placeholder",
+          forcePlaceholderSize: true
+        });
+      // допустимые переходы  
+      $("#task-list_873357").sortable({ connectWith: "#task-list_873358"});
+      $("#task-list_873358").sortable({ connectWith: "#task-list_873359"});
+      $("#task-list_873359").sortable({ connectWith: "#task-list_873360,#task-list_873358"});
+      $("#task-list_873360").sortable({ connectWith: "#task-list_873363,#task-list_873359"});
+      $("#task-list_873363").sortable({ connectWith: "#task-list_873358"});
+            
+      $(".ui-resizable").resizable(
+        {
+          autoHide: true,
+          handles: "e"          
+        }
+      );            
+      $(".ui-resizable").bind("resize", stopChangeSize);
+    };
+  </script>
+  <title></title>
+</head>
+<body draggable="false">
+  <div class="header">
+    <a class="btn add" href="#"><img src=".\img\new.png" /></a>
+    <a class="btn refresh" href="#"><img src=".\img\refresh.png" /></a>
+    <a class="btn filter" href="#"><img src=".\img\settings.png" /></a>
+  </div>
+
+  <div class="states">
+    <div class="state ui-resizable" id="state-state_873357">
+      <span class="state-name">Зарегестирован</span>
+    </div>
+    <div class="state ui-resizable" id="state-state_873358">
+      <span class="state-name">Проектирование</span>
+    </div>
+    <div class="state ui-resizable" id="state-state_873359">
+      <span class="state-name">Разработка</span>
+    </div>
+    <div class="state ui-resizable" id="state-state_873360">
+      <span class="state-name">Тестирование</span>
+    </div>
+    <div class="state ui-resizable" id="state-state_873363">
+      <span class="state-name">Выполнен</span>
+    </div>    
+  </div>
+  
+  <div class="tasks-board">
+    <div class="tasks">
+      <div class="tasks-row">
+        <div class="fake-col-task">
+          <div style="height: 132px;"></div>
+        </div> 
+        <div class="col-task" id="col-task_873357">
+          <div class="task-group ui-resizable" id="task-group_873357">
+            <div class="task-list ui-sortable" id="task-list_873357">
+              <div class="task">
+                <div class="task-handle"></div>
+                <div class="task-body clearfix">
+                  <div class="task-link"><a href="#">При изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорционально</a></div>
+                  <div class="task-executor"><img src=".\img\avatars\empty_executor.jpg" alt="Исполнитель" /></div>
+                  <div class="task-status clearfix">
+                    <div class="task-priority"><span>Высокий</span></div>
+                    <div class="task-plan-date"><span>10.08.2016</span></div>
+                  </div>  
+                </div>
+              </div>
+            </div>  
+          </div>
+        </div>
+       <div class="col-task" id="col-task_873358">
+          <div class="task-group ui-resizable" id="task-group_873358">
+            <div class="task-list ui-sortable" id="task-list_873358">
+              
+            </div>  
+          </div>
+        </div>
+       <div class="col-task" id="col-task_873359">
+          <div class="task-group ui-resizable" id="task-group_873359">
+            <div class="task-list ui-sortable" id="task-list_873359">
+              <div class="task">
+                <div class="task-handle"></div>
+                <div class="task-body clearfix">
+                  <div class="task-link"><a href="#">При изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорциональноПри изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорциональноПри изменении масштаба страницы галочка "Запомнить" масштабируется обратнопро</a></div>
+                  <div class="task-executor"><img src=".\img\avatars\1149425.jpg" alt="Исполнитель" /></div>
+                  <div class="task-status clearfix">
+                    <div class="task-priority"><span>Сверхсрочно</span></div>
+                    <div class="task-plan-date"><span></span></div>
+                  </div>  
+                </div>
+              </div>
+            </div>  
+          </div>
+        </div>
+       <div class="col-task" id="col-task_873360">
+          <div class="task-group ui-resizable" id="task-group_873360">
+            <div class="task-list ui-sortable" id="task-list_873360">
+              
+            </div>  
+          </div>
+        </div>
+       <div class="col-task" id="col-task_873363">
+          <div class="task-group ui-resizable" id="task-group_873363">
+            <div class="task-list ui-sortable" id="task-list_873363">
+              
+            </div>  
+          </div>
+        </div>        
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+  
