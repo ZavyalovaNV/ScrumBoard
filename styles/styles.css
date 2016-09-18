@@ -12,23 +12,93 @@
 /*блок кнопок*/
 .header {
     background-color: #d8dedf;
-    height: 41px;
-    width: auto;
+    /*height: 44px;*/    
+}
+
+.content-left {
+    float: left;
+}
+
+.content-right {
+    float: right;
 }
 
 a.btn {
-    color: transparent;
-    float: left;
-    height: 29px;
-    padding: 6px 7px 6px;
-    text-align: center;
-    width: 29px;
+    display: block;
+    width: 24px;
+    height: 24px;
+    padding: 9px;
+    margin: 0;
+    border: 0;
 }
 a.btn:hover { background: #cccccc; }
 a.btn:active { background: #999999; }
 
-a.filter {
-    float: right;
+.btn img {
+    border: 0;
+    width: 24px;
+    height: 24px;  
+}
+
+.main-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    width: 90px;
+}
+
+.main-menu li {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.filter-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 40px;
+    width: 40px;
+    font-size: 13px;
+}
+
+.filter-menu > li {
+    position: relative;
+}
+
+.filter-submenu {
+    display: none;
+    position: absolute;
+    left: -116px;
+    top: 32px;
+    margin: 0;
+    padding: 2px;
+    list-style: none;
+    width: 150px;
+    background-color: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(203, 219, 222, 1);
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(102, 102, 102, 1);
+}
+
+.filter-submenu > li {
+    padding-top: 3px;
+    padding-left: 10px;
+}
+
+.filter-submenu-view {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 5px;
+    list-style: none;   
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.filter-submenu-view > li {
+    padding-top: 5px;
+    padding-left: 10px;
 }
 
 .state, .col-task, .task-group {
@@ -37,12 +107,12 @@ a.filter {
 }
 
 /*блок статусов*/
-.states {    
+.states {        
     background-color: transparent;    
     box-shadow: 0px -3px 0px #cfd9db, 0px 2px 5px rgba(0,0,0,0.15);
     height: 35px;  
     font-size: 0px;
-    top: 51px;
+    top: 52px;
     width: auto;
     white-space: nowrap;
 }
@@ -213,24 +283,52 @@ a.filter {
     border-bottom: 3px dashed #ff0037;
 }
 
-.menu {
+/*
+li {
+    color: #666;
+}
+
+label {
+    vertical-align: baseline;
+    text-align: left;
+}
+
+input {
+    color: #000;
+    vertical-align: text-bottom;
+    margin: 0 4px -2px 0;
+}
+
+.menu,
+.submenu-view,
+.submenu-filter {
     margin: 0;
     padding: 0;
     list-style: none;
-    border: 1px solid #e5e5e5;
+}
+
+.menu {
     width: 200px;
+    font-size: 12px;
+    position: absolute;
+}
+
+.menu > li {
+    padding: 5px 5px;
+    margin-bottom: -1px;
     background-color: #f5f5f5;
-    font-size: 14px;
+    border: 1px solid #e5e5e5;
 }
 
-.top-level-menu {
-    padding: 10px 15px;    
+.submenu-view {
+    width: 184px;
+    font-size: 12px;
+    padding: 0px 5px;
 }
 
-.view {
-    background-color: #6b6a6a;
-    list-style-type: circle
+.submenu-view > li {
+    padding: 3px 0;
+    margin-bottom: -1px;
+    background-color: #f5f5f5;
 }
-
-.level-menu {
-}
+*/

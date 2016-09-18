@@ -1,4 +1,4 @@
-
+п»ї
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -13,6 +13,10 @@
   <script>
     $(init);
     function init() {
+      elemID = "filter-submenu";
+      elem = document.getElementById(elemID);
+      elem.style.display = 'none';
+
       $(".ui-sortable").sortable(
         {
           delay: 10,
@@ -23,7 +27,7 @@
           placeholder: "task-placeholder",
           forcePlaceholderSize: true
         });
-      // допустимые переходы  
+      // РґРѕРїСѓСЃС‚РёРјС‹Рµ РїРµСЂРµС…РѕРґС‹  
       $("#task-list_873357").sortable({ connectWith: "#task-list_873358"});
       $("#task-list_873358").sortable({ connectWith: "#task-list_873359"});
       $("#task-list_873359").sortable({ connectWith: "#task-list_873360,#task-list_873358"});
@@ -42,50 +46,48 @@
   <title></title>
 </head>
 <body draggable="false">
-  <ul class="menu">
-    <li class="top-level-menu view">Вид
-      <div class="radio">
-        <label>
-          <input type="radio"/>
-          Полный
-        </label>
-        <br>
-        <label>
-          <input type="radio" />
-          Компактный
-        </label>
-      </div>
-    </li>
-    <li class="top-level-menu filter">Фильтр
-      <ul>
-        <li class="level-menu">По работникам</li>
-        <li class="level-menu">По приоритетам</li>
-        <li class="level-menu">По плановой дате</li>
+  <div class="header clearfix">
+    <div class="content-left">
+      <ul class="main-menu">
+        <li><a class="btn new" href="#"><img src=".\img\new.png" /></a></li>
+        <li><a class="btn refresh" href="#"><img src=".\img\refresh.png" /></a></li>
       </ul>
-    </li>
-  </ul>
+    </div>
+    <div class="content-right">
+      <ul class="filter-menu">
+        <li>
+          <a class="btn settings" href="#" onclick="showFilterMenu()"><img src=".\img\settings.png" /></a>
 
-  <div class="header">
-    <a class="btn add" href="#"><img src=".\img\new.png" /></a>
-    <a class="btn refresh" href="#"><img src=".\img\refresh.png" /></a>
-    <a class="btn filter" href="#"><img src=".\img\settings.png" /></a>
+          <ul class="filter-submenu" id="filter-submenu">
+            <li>
+              Р’РёРґ
+              <ul class="filter-submenu-view">
+                <li><label><input name="view-kind" type="radio" checked="checked" onclick="setFullMode()" />РџРѕР»РЅС‹Р№</label></li>
+                <li><label><input name="view-kind" type="radio" onclick="setCompactMode()" />РљРѕРјРїР°РєС‚РЅС‹Р№</label></li>
+              </ul>
+            </li>
+            <li>Р¤РёР»СЊС‚СЂ</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
-
+  
   <div class="states">
     <div class="state ui-resizable" id="state_873357">
-      <span class="state-name">Зарегестирован</span>
+      <span class="state-name">Р—Р°СЂРµРіРµСЃС‚РёСЂРѕРІР°РЅ</span>
     </div>
     <div class="state ui-resizable" id="state_873358">
-      <span class="state-name">Проектирование</span>
+      <span class="state-name">РџСЂРѕРµРєС‚РёСЂРѕРІР°РЅРёРµ</span>
     </div>
     <div class="state ui-resizable" id="state_873359">
-      <span class="state-name">Разработка</span>
+      <span class="state-name">Р Р°Р·СЂР°Р±РѕС‚РєР°</span>
     </div>
     <div class="state ui-resizable" id="state_873360">
-      <span class="state-name">Тестирование</span>
+      <span class="state-name">РўРµСЃС‚РёСЂРѕРІР°РЅРёРµ</span>
     </div>
     <div class="state ui-resizable" id="state_873363">
-      <span class="state-name">Выполнен</span>
+      <span class="state-name">Р’С‹РїРѕР»РЅРµРЅ</span>
     </div>    
   </div>
   
@@ -95,16 +97,16 @@
         <div class="fake-col-task">
           <div style="height: 132px;"></div>
         </div> 
-        <div class="col-task" id="col-task_873357">
-          <div class="task-group ui-resizable" id="task-group_873357">
+        <div class="col-task ui-resizable" id="col-task_873357">
+          <div class="task-group" id="task-group_873357">
             <div class="task-list ui-sortable" id="task-list_873357">
               <div class="task">
                 <div class="task-handle"></div>
                 <div class="task-body clearfix">
-                  <div class="task-text"><a href="#">При изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорционально</a></div>
-                  <div class="task-executor"><img src=".\img\avatars\empty_executor.jpg" alt="Исполнитель" /></div>
+                  <div class="task-text"><a href="#">РџСЂРё РёР·РјРµРЅРµРЅРёРё РјР°СЃС€С‚Р°Р±Р° СЃС‚СЂР°РЅРёС†С‹ РіР°Р»РѕС‡РєР° "Р—Р°РїРѕРјРЅРёС‚СЊ" РјР°СЃС€С‚Р°Р±РёСЂСѓРµС‚СЃСЏ РѕР±СЂР°С‚РЅРѕРїСЂРѕРїРѕСЂС†РёРѕРЅР°Р»СЊРЅРѕ</a></div>
+                  <div class="task-executor"><img src=".\img\avatars\empty_executor.jpg" alt="РСЃРїРѕР»РЅРёС‚РµР»СЊ" /></div>
                   <div class="task-status clearfix">
-                    <div class="task-priority"><span>Высокий</span></div>
+                    <div class="task-priority"><span>Р’С‹СЃРѕРєРёР№</span></div>
                     <div class="task-plan-date"><span>10.08.2016</span></div>
                   </div>
                   <div class="task-ind"></div>  
@@ -113,23 +115,23 @@
             </div>  
           </div>
         </div>
-       <div class="col-task" id="col-task_873358">
-          <div class="task-group ui-resizable" id="task-group_873358">
+       <div class="col-task ui-resizable" id="col-task_873358">
+          <div class="task-group" id="task-group_873358">
             <div class="task-list ui-sortable" id="task-list_873358">
               
             </div>  
           </div>
         </div>
-       <div class="col-task" id="col-task_873359">
-          <div class="task-group ui-resizable" id="task-group_873359">
+       <div class="col-task ui-resizable" id="col-task_873359">
+          <div class="task-group" id="task-group_873359">
             <div class="task-list ui-sortable" id="task-list_873359">
               <div class="task">
                 <div class="task-handle"></div>
                 <div class="task-body clearfix">
-                  <div class="task-text"><a href="#">При изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорциональноПри изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорциональноПри изменении масштаба страницы галочка "Запомнить" масштабируется обратнопро</a></div>
-                  <div class="task-executor"><img src=".\img\avatars\1149425.jpg" alt="Исполнитель" /></div>
+                  <div class="task-text"><a href="#">РџСЂРё РёР·РјРµРЅРµРЅРёРё РјР°СЃС€С‚Р°Р±Р° СЃС‚СЂР°РЅРёС†С‹ РіР°Р»РѕС‡РєР° "Р—Р°РїРѕРјРЅРёС‚СЊ" РјР°СЃС€С‚Р°Р±РёСЂСѓРµС‚СЃСЏ РѕР±СЂР°С‚РЅРѕРїСЂРѕРїРѕСЂС†РёРѕРЅР°Р»СЊРЅРѕРџСЂРё РёР·РјРµРЅРµРЅРёРё РјР°СЃС€С‚Р°Р±Р° СЃС‚СЂР°РЅРёС†С‹ РіР°Р»РѕС‡РєР° "Р—Р°РїРѕРјРЅРёС‚СЊ" РјР°СЃС€С‚Р°Р±РёСЂСѓРµС‚СЃСЏ РѕР±СЂР°С‚РЅРѕРїСЂРѕРїРѕСЂС†РёРѕРЅР°Р»СЊРЅРѕРџСЂРё РёР·РјРµРЅРµРЅРёРё РјР°СЃС€С‚Р°Р±Р° СЃС‚СЂР°РЅРёС†С‹ РіР°Р»РѕС‡РєР° "Р—Р°РїРѕРјРЅРёС‚СЊ" РјР°СЃС€С‚Р°Р±РёСЂСѓРµС‚СЃСЏ РѕР±СЂР°С‚РЅРѕРїСЂРѕ</a></div>
+                  <div class="task-executor"><img src=".\img\avatars\1149425.jpg" alt="РСЃРїРѕР»РЅРёС‚РµР»СЊ" /></div>
                   <div class="task-status clearfix">
-                    <div class="task-priority"><span>Сверхсрочно</span></div>
+                    <div class="task-priority"><span>РЎРІРµСЂС…СЃСЂРѕС‡РЅРѕ</span></div>
                     <div class="task-plan-date"><span></span></div>
                   </div>
                   <div class="task-ind"></div>  
@@ -138,15 +140,15 @@
             </div>  
           </div>
         </div>
-       <div class="col-task" id="col-task_873360">
-          <div class="task-group ui-resizable" id="task-group_873360">
+       <div class="col-task ui-resizable" id="col-task_873360">
+          <div class="task-group" id="task-group_873360">
             <div class="task-list ui-sortable" id="task-list_873360">
               
             </div>  
           </div>
         </div>
-       <div class="col-task" id="col-task_873363">
-          <div class="task-group ui-resizable" id="task-group_873363">
+       <div class="col-task ui-resizable" id="col-task_873363">
+          <div class="task-group" id="task-group_873363">
             <div class="task-list ui-sortable" id="task-list_873363">
               
             </div>  
@@ -155,5 +157,6 @@
       </div>
     </div>
   </div>
+  
 </body>
 </html> 

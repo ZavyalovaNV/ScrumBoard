@@ -1,7 +1,7 @@
 ﻿var helperOpacity = 0.85;
 var startElement = null;
 var divState = 'state';
-var divTaskCol = 'task-group';
+var divTaskCol = 'col-task';
 
 
 
@@ -23,8 +23,7 @@ function openTask() {
 
 function stopChangeSize(event, ui) {
     elementID = ui.element.attr('id');
-    console.log(elementID);
-
+    
     // Если элемент - статус, получить столбец и наоборот
     originalStr = divTaskCol;
     replaceStr = divState;
@@ -38,8 +37,6 @@ function stopChangeSize(event, ui) {
     elem = $("#" + linkedID);
     width = ui.size.width;
     elem.width(width);
-    console.log('stopChangeState, ' + linkedID + '.width = ' + width)
-    //alert('stopChangeSize');
 }
 
 function stopChangeState(event, ui) {
@@ -62,4 +59,38 @@ function startChangeState(event, ui) {
         elem.style.borderColor = '#d9f4ff';
         elem.style.backgroundColor = '#d9f4ff';
     }*/
+}
+
+function showFilterMenu() {
+    elemID = "filter-submenu";
+    elem = document.getElementById(elemID);
+    display = elem.style.display;
+    if (display == 'none') {
+        display = 'block'
+    } else {
+        display = 'none'
+    }
+    elem.style.display = display;
+}
+
+function hideElemens(className, display) {
+    elements = document.getElementsByClassName(className);
+    for (var i = 0; i < elements.length; i++) {
+        elem = elements[i];
+        elem.style.display = display;
+    };
+}
+
+function setCompactMode() {
+    display = 'none';
+    hideElemens("task-executor", display);
+    hideElemens("task-status", display);
+    hideElemens("task-ind", display);
+}
+
+function setFullMode() {
+    display = 'block';
+    hideElemens("task-executor", display);
+    hideElemens("task-status", display);
+    hideElemens("task-ind", display);
 }
