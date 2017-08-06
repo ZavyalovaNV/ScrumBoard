@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!--Плагины-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="./js/select2.full.min.js"></script>
+  <!--Стили-->
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/select2.min.css">
+  <link rel="stylesheet" href="./css/styles_header.css">
+  <link rel="stylesheet" href="./css/styles_states.css">
+  <link rel="stylesheet" href="./css/styles_items.css">
+  <link rel="stylesheet" href="./css/styles_item.css">
+  <link rel="stylesheet" href="./css/styles.css">
+  <!--Шаблоны-->
+  <script type="text/x-my-template" id="template_states">
+    <span class="state-name">
+        <idName>
+    </span>
+  </script>
+  <script type="text/x-my-template" id="template_column">
+          <div class="items-list" id="items-list-<stateId>">
+            <div class="fake-items-column"></div>
+          </div>
+  </script>
+  <script type="text/x-my-template" id="template_item">
+    <div class="item-handle"></div>
+    <a class="item-delete" href="#" onclick="deleteItem()"></a>
+    <div class="item-content clearfix">
+        <div class="item-text"><text></div>   
+         
+        <div class="item-executor-compact" onclick="changeExecutor()">
+          <img class="item-executor-img-compact" src="css\img\user.svg" alt="Исполнитель" title="<executorName>"  />
+          <span class="item-executor-name"><executorName></span>
+        </div>
+        
+        <div class="item-data clearfix">   
+          <div class="item-executor" onclick="changeExecutor()">
+            <img class="item-executor-img" src="css\img\avatars\<executorPhoto>" alt="Исполнитель" title="<executorName>" />
+          </div>
+
+          <div class="item-requisites-left">
+            <div class="item-plan-hours">              
+              <planHours>
+            </div>
+          </div>
+          <div class="item-requisites-right">
+            <div class="item-number"><number></div>
+            <div class="item-priority"><priority></div>
+            <div class="item-plan-date"><planDate></div>
+          </div>
+        </div>
+        <div class="item-ind"></div>
+    </div>
+  </script>
+
+  <script>
+    $(init);
+    function init() {
+      $(".select-priority").select2();
+      $(".select-employee").select2();
+      $(".select-sprint").select2();
+      $(".select-issue-type").select2();
+
+      elemID = "filter-submenuID";
+      elem = document.getElementById(elemID);
+      if (elem != undefined) {
+        elem.style.display = "none";
+      }
+
+      $(".ui-sortable").sortable(
+        {
+          delay: 10,
+          opacity: 0.85,
+          stop: stopChangeState,
+          forcePlaceholderSize: true,
+          start: startChangeState,
+          placeholder: "item-placeholder",
+          forcePlaceholderSize: true
+        });
+
+      $(".ui-resizable").resizable(
+        {
+          autoHide: true,
+          handles: "e",
+          //resize: stopChangeSize
+        }
+      );
+
+      $(".datepicker").datepicker({
+        gotoCurrent: true,
+        dateFormat: "dd.mm.yy",
+        dayNames: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+        dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+        firstDay: 1,
+        monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+        monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+        autosize: true
+      });
+    };
+  </script>
+  <title></title>
+</head>
+<body draggable="false">
+  <nav class="header clearfix">
+    <div class="content-left">
+      <div class="menu-main-block">
+        <ul class="menu-main">
+          <li class="menu-main-item"><a class="btn new" href="#" onclick="addNewItem()">Новая запись</a></li>
+          <li class="menu-main-item"><a class="btn refresh" href="#" onclick="refreshItemList()">Обновить</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="content-right">
+      <div class="sprints-list">
+        <select class="select-sprint" onchange="setFilterItemListBySprint()">
+        </select>
+      </div>
+      <div class="menu-settings-block">
+        <ul class="menu-settings">
+          <li class="menu-settings-item">
+            <a class="btn settings" href="#" onclick="showFilterMenu()">Настройки</a>
+
+            <ul class="submenu-settings" id="filter-submenuID">
+              <li class="submenu-settings-item">Вид
+                <ul class="submenu-view">
+                  <li class="submenu-view-item">
+                    <label>
+                      <input name="view-kind" type="radio" checked="checked" onclick="changeItemMode(false)" />Полный
+                    </label>
+                  </li>
+                  <li class="submenu-view-item">
+                    <label>
+                      <input name="view-kind" type="radio" onclick="changeItemMode(true)" />Компактный
+                    </label>
+                  </li>
+                </ul>
+              </li>
+              <li class="submenu-filter-item">Фильтр
+                <ul class="submenu-filter">
+                  <li class="submenu-filter-item">
+                    <label class="label-input" for="employee">Работник</label>
+                    <select class="select-employee" multiple="multiple" onchange="setFilterItemListByEmployee()"></select>
+                  </li>
+                  <li class="submenu-filter-item">
+                    <label class="label-input" for="priority">Приоритет</label>
+                    <select class="select-priority" multiple="multiple" onchange="setFilterItemListByPriority()"></select>
+                  </li>
+                  <li class="submenu-filter-item">
+                    <label class="label-input" for="issue-type">Тип</label>
+                    <select class="select-issue-type" onchange="setFilterItemListByIssueType()"></select>
+                  </li>
+                  <li class="submenu-filter-item">
+                    <div class="clearfix">
+                      <span>План. дата</span>
+                      <div class="date-box-from">
+                        <label class="label-date" for="plan-date-from">С</label>
+                        <input class="datepicker" type="text" id="plan-date-from" onchange="setFilterItemListByDateFrom(event, this)" />
+                      </div>
+                      <div class="date-box-to">
+                        <label class="label-date" for="plan-date-to">По</label>
+                        <input class="datepicker" type="text" id="plan-date-to" onchange="setFilterItemListByDateTo(event, this)" />
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <header class="states">
+    <!--Записывается из скрипта-->
+  </header>
+  <main class="items-board">
+    <div class="item-row">
+      <div class="items-column ui-resizable">
+        <div class="items-list ui-sortable">
+          <div class="item wish">
+            <div class="item-handle"></div>
+            <a class="item-delete" href="#"></a>
+            <div class="item-content clearfix">
+              <div class="item-text">создано по фильтру 2</div>
+              <div class="item-executor-compact hidden">
+                <img title="Завьялова Наталия Владимировна" class="item-executor-img-compact" alt="Исполнитель" src="css\img\user.svg">
+                <span class="item-executor-name">Завьялова Наталия Владимировна</span>
+              </div>
+              <div class="item-data clearfix">
+                <div class="item-executor" onclick="changeExecutor()">
+                  <img title="Завьялова Наталия Владимировна" class="item-executor-img" alt="Исполнитель" src="css\img\avatars\1149425.jpg">
+                </div>
+                <div class="item-requisites-left">
+                  <div class="item-plan-hours"></div>
+                </div>
+                <div class="item-requisites-right">
+                  <div class="item-number">095-011</div>
+                  <div class="item-priority">Минимальный</div>
+                  <div class="item-plan-date"></div>
+                </div>
+              </div>
+              <div class="item-ind"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="items-column ui-resizable">
+        <div class="items-list ui-sortable"></div>
+      </div>
+      <div class="items-column ui-resizable">
+        <div class="items-list ui-sortable"></div>
+      </div>
+      <div class="items-column ui-resizable">
+        <div class="items-list ui-sortable"></div>
+      </div>
+      <div class="items-column ui-resizable">
+        <div class="items-list ui-sortable"></div>
+      </div>
+    </div>
+  </main>  
+  <script src="./js/script.js"></script>
+  <script src="./js/item.js"></script>
+</body>
+</html>

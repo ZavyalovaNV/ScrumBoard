@@ -1,0 +1,30 @@
+﻿body {
+    font-family: Arial,sans-serif;         
+}
+
+/*распорка*/
+.clearfix::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+
+/*общее*/
+.hidden {
+    display: none;
+}
+
+.disabled,
+.disabled:hover,
+.disabled:active {
+    background-color: transparent !important; 
+    cursor: default;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    height: 100%;
+}

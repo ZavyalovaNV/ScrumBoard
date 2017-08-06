@@ -1,0 +1,64 @@
+#items-column-873357 .item-handle {
+    background-color: #e4e4e4;
+}
+
+#items-column-873358 .item-handle {
+    background-color: #ff7e9a;
+}
+
+#items-column-873359 .item-handle {
+    background-color: #00c464;
+}
+
+#items-column-873360 .item-handle {
+    background-color: #8bace6;
+}
+
+#items-column-873361 .item-handle {
+    background-color: #000;
+}
+
+#items-column-873362 .item-handle {
+    background-color: #000;
+}
+
+#items-column-873363 .item-handle {
+    background-color: #353535;
+}
+
+/*блок статусов*/
+.states {        
+    background-color: white;    
+    box-shadow: 0px -3px 0px #cfd9db, 0px 2px 5px rgba(0,0,0,0.15);
+    height: 31px;  
+    font-size: 0px;
+    top: 42px;
+    width: auto;
+    white-space: nowrap;
+
+    position: fixed;
+    z-index: 20;
+}
+
+/*статус*/
+.state { 
+    border-right: 1px solid #cfd9db;
+    cursor: default;
+    display: inline-block;   
+    /*height: 100%;*/  
+    /*height: 100vh;*/
+}
+
+.state-name {
+    color: #6d6b6b;
+    display: inline-block;
+    font-size: 14px;       
+    margin: 8px 15px;
+    text-align: left;
+}
+
+/*колонка задач*/
+.state {
+    width: 239px;
+    min-width: 239px !important;
+}

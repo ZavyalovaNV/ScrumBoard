@@ -1,0 +1,193 @@
+﻿/*ШАПКА САЙТА*/
+
+/*блок кнопок*/
+.header {
+    background-color: #d8dedf;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.15);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 30;
+    width: 100%
+}
+
+.content-left {
+    float: left;
+}
+
+.content-inline-block {
+    display: inline-block;
+}
+
+.content-right {
+    float: right;
+}
+
+/*КНОПКИ*/
+.btn {
+    display: block;
+    font-size: 0px;
+    width: 42px;
+    height: 42px;    
+    margin: 0;
+    border: 0;
+    font-size: 0;
+    background: url("img/sprite.png") no-repeat #d8dedf;
+}
+.btn:hover { background-color: #cccccc; }
+.btn:active { background-color: #999999; }
+
+a.new {
+    background-position: 0 0;
+}
+a.refresh {
+    background-position: -42px 0;
+}
+a.settings {
+    background-position: -84px 0;
+}
+
+/*ФИЛЬТР ПО СПРИНТАМ*/
+.sprints-list {    
+    float: left;    
+    padding: 7px;
+    font-size: 12px;
+}
+
+.select-sprint {
+    float: left;
+    width: 300px;
+    font-size: 12px;
+}
+
+/*МЕНЮ*/
+.menu-main {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    background-color: azure;
+}
+
+.menu-main-item {
+    float: left;
+    white-space: nowrap;
+}
+
+.menu-settings {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 13px;
+}
+
+.menu-settings-block {
+    float: right;
+}
+
+.menu-settings-item {
+    position: relative;
+}
+
+/*ПОДМЕНЮ*/
+.submenu-settings {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 34px;
+    margin: 0;
+    padding: 2px;
+    list-style: none;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 1);    
+    border: 1px solid rgba(203, 219, 222, 1);
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgba(102, 102, 102, 1);
+}
+
+.submenu-settings-item {
+    padding-top: 3px;
+    padding-left: 10px;
+}
+
+.submenu-view {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 5px;
+    list-style: none;   
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.submenu-view-item {
+    padding-top: 5px;
+    padding-left: 10px;
+}
+
+.submenu-filter {
+    margin: 0;
+    padding: 0;
+    padding-bottom: 5px;
+    list-style: none;
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.submenu-filter-item {
+    padding: 5px;
+    padding-left: 10px;
+}
+
+.submenu-filter-item span {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.submenu-filter-item .label-input {
+    display: block;
+    margin-bottom: 3px;
+}
+
+.submenu-filter-item .label-date {
+    display: inline-block;
+    margin-bottom: 3px;
+    vertical-align: bottom;
+}
+
+/*СЕЛЕКТЫ ДАТ*/
+.date-box-from {
+    float: left;
+    width: 50%;
+}
+
+.date-box-to {  
+    float: right;
+    width: 50%;  
+}
+
+.datepicker {
+    width: 75%;    
+    border-radius: 2px;
+    padding: 5px;
+    border: 1px solid #aaa;
+}
+
+.ui-datepicker .ui-state-highlight {
+    border: 1px solid #77b0e6;
+    background: #86bdf1;
+    color: #325678;
+}
+
+.select-priority,
+.select-employee,
+.select-issue-type {
+    width: 270px;    
+    font-size: 10px;
+}
+
+.select2-results__option {
+    padding: 4px;
+    font-size: 12px;
+}
