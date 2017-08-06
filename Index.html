@@ -1,162 +1,185 @@
-﻿
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html lang="ru">
 <head>
-  <meta charset="windows-1251" />
-  <meta http-equiv="X-UA-Compatible" content="IE=9" />
-  <link rel="stylesheet" href="./styles/styles.css"> 
-  <link rel="stylesheet" href="./styles/styles_states.css">
-  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet"/>
-  <script src="./scripts/script.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!--Плагины-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+  <script src="./js/select2.full.min.js"></script>
+  <!--Стили-->
+  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/select2.min.css">
+  <link rel="stylesheet" href="./css/styles_states.css">
+  <link rel="stylesheet" href="./css/styles.css">
+  <!--Шаблоны-->
+  <script type="text/x-my-template" id="template_states">
+    <span class="state-name">
+        <idName>
+    </span>
+  </script>
+  <script type="text/x-my-template" id="template_column">
+          <div class="items-list" id="items-list-<stateId>">
+            <div class="fake-items-column"></div>
+          </div>
+  </script>
+  <script type="text/x-my-template" id="template_item">
+    <div class="item-handle"></div>
+    <a class="item-delete" href="#" onclick="deleteItem()"></a>
+    <div class="item-content clearfix">
+        <div class="item-text"><text></div>   
+         
+        <div class="item-executor-compact" onclick="changeExecutor()">
+          <img class="item-executor-img-compact" src="css\img\user.svg" alt="Исполнитель" title="<executorName>"  />
+          <span class="item-executor-name"><executorName></span>
+        </div>
+        
+        <div class="item-data clearfix">   
+          <div class="item-executor" onclick="changeExecutor()">
+            <img class="item-executor-img" src="css\img\avatars\<executorPhoto>" alt="Исполнитель" title="<executorName>" />
+          </div>
+
+          <div class="item-requisites-left">
+            <div class="item-plan-hours">              
+              <planHours>
+            </div>
+          </div>
+          <div class="item-requisites-right">
+            <div class="item-number"><number></div>
+            <div class="item-priority"><priority></div>
+            <div class="item-plan-date"><planDate></div>
+          </div>
+        </div>
+        <div class="item-ind"></div>
+    </div>
+  </script>
+
   <script>
     $(init);
     function init() {
-      elemID = "filter-submenu";
+      $(".select-priority").select2();
+      $(".select-employee").select2();
+      $(".select-sprint").select2();
+      $(".select-issue-type").select2();
+
+      elemID = "filter-submenuID";
       elem = document.getElementById(elemID);
-      elem.style.display = 'none';
+      elem.style.display = "none";
 
       $(".ui-sortable").sortable(
         {
           delay: 10,
-          opacity: helperOpacity,
+          opacity: 0.85,
           stop: stopChangeState,
           forcePlaceholderSize: true,
           start: startChangeState,
-          placeholder: "task-placeholder",
+          placeholder: "item-placeholder",
           forcePlaceholderSize: true
         });
-      // допустимые переходы  
-      $("#task-list_873357").sortable({ connectWith: "#task-list_873358"});
-      $("#task-list_873358").sortable({ connectWith: "#task-list_873359"});
-      $("#task-list_873359").sortable({ connectWith: "#task-list_873360,#task-list_873358"});
-      $("#task-list_873360").sortable({ connectWith: "#task-list_873363,#task-list_873359"});
-      $("#task-list_873363").sortable({ connectWith: "#task-list_873358"});
-            
+
       $(".ui-resizable").resizable(
         {
           autoHide: true,
-          handles: "e"          
+          handles: "e",
+          resize: stopChangeSize
         }
-      );            
-      $(".ui-resizable").bind("resize", stopChangeSize);
+      );
+
+      $(".datepicker").datepicker({
+        gotoCurrent: true,
+        dateFormat: "dd.mm.yy",
+        dayNames: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+        dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+        firstDay: 1,
+        monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+        monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+        autosize: true
+      });
     };
   </script>
   <title></title>
 </head>
 <body draggable="false">
-  <div class="header clearfix">
+  <nav class="header clearfix">
     <div class="content-left">
-      <ul class="main-menu">
-        <li><a class="btn new" href="#"><img src=".\img\new.png" /></a></li>
-        <li><a class="btn refresh" href="#"><img src=".\img\refresh.png" /></a></li>
-      </ul>
-    </div>
-    <div class="content-right">
-      <ul class="filter-menu">
-        <li>
-          <a class="btn settings" href="#" onclick="showFilterMenu()"><img src=".\img\settings.png" /></a>
-
-          <ul class="filter-submenu" id="filter-submenu">
-            <li>
-              Вид
-              <ul class="filter-submenu-view">
-                <li><label><input name="view-kind" type="radio" checked="checked" onclick="setFullMode()" />Полный</label></li>
-                <li><label><input name="view-kind" type="radio" onclick="setCompactMode()" />Компактный</label></li>
-              </ul>
-            </li>
-            <li>Фильтр</li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-  
-  <div class="states">
-    <div class="state ui-resizable" id="state_873357">
-      <span class="state-name">Зарегестирован</span>
-    </div>
-    <div class="state ui-resizable" id="state_873358">
-      <span class="state-name">Проектирование</span>
-    </div>
-    <div class="state ui-resizable" id="state_873359">
-      <span class="state-name">Разработка</span>
-    </div>
-    <div class="state ui-resizable" id="state_873360">
-      <span class="state-name">Тестирование</span>
-    </div>
-    <div class="state ui-resizable" id="state_873363">
-      <span class="state-name">Выполнен</span>
-    </div>    
-  </div>
-  
-  <div class="tasks-board">
-    <div class="tasks">
-      <div class="tasks-row">
-        <div class="fake-col-task">
-          <div style="height: 132px;"></div>
-        </div> 
-        <div class="col-task ui-resizable" id="col-task_873357">
-          <div class="task-group" id="task-group_873357">
-            <div class="task-list ui-sortable" id="task-list_873357">
-              <div class="task">
-                <div class="task-handle"></div>
-                <div class="task-body clearfix">
-                  <div class="task-text"><a href="#">При изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорционально</a></div>
-                  <div class="task-executor"><img src=".\img\avatars\empty_executor.jpg" alt="Исполнитель" /></div>
-                  <div class="task-status clearfix">
-                    <div class="task-priority"><span>Высокий</span></div>
-                    <div class="task-plan-date"><span>10.08.2016</span></div>
-                  </div>
-                  <div class="task-ind"></div>  
-                </div>
-              </div>
-            </div>  
-          </div>
-        </div>
-       <div class="col-task ui-resizable" id="col-task_873358">
-          <div class="task-group" id="task-group_873358">
-            <div class="task-list ui-sortable" id="task-list_873358">
-              
-            </div>  
-          </div>
-        </div>
-       <div class="col-task ui-resizable" id="col-task_873359">
-          <div class="task-group" id="task-group_873359">
-            <div class="task-list ui-sortable" id="task-list_873359">
-              <div class="task">
-                <div class="task-handle"></div>
-                <div class="task-body clearfix">
-                  <div class="task-text"><a href="#">При изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорциональноПри изменении масштаба страницы галочка "Запомнить" масштабируется обратнопропорциональноПри изменении масштаба страницы галочка "Запомнить" масштабируется обратнопро</a></div>
-                  <div class="task-executor"><img src=".\img\avatars\1149425.jpg" alt="Исполнитель" /></div>
-                  <div class="task-status clearfix">
-                    <div class="task-priority"><span>Сверхсрочно</span></div>
-                    <div class="task-plan-date"><span></span></div>
-                  </div>
-                  <div class="task-ind"></div>  
-                </div>
-              </div>
-            </div>  
-          </div>
-        </div>
-       <div class="col-task ui-resizable" id="col-task_873360">
-          <div class="task-group" id="task-group_873360">
-            <div class="task-list ui-sortable" id="task-list_873360">
-              
-            </div>  
-          </div>
-        </div>
-       <div class="col-task ui-resizable" id="col-task_873363">
-          <div class="task-group" id="task-group_873363">
-            <div class="task-list ui-sortable" id="task-list_873363">
-              
-            </div>  
-          </div>
-        </div>        
+      <div class="menu-main-block">
+        <ul class="menu-main">
+          <li class="menu-main-item"><a class="btn new" href="#" onclick="addNewItem()">Новая запись</a></li>
+          <li class="menu-main-item"><a class="btn refresh" href="#" onclick="refreshItemList()">Обновить</a></li>
+        </ul>
       </div>
     </div>
-  </div>
-  
+    <div class="content-right">
+      <div class="sprints-list">
+        <select class="select-sprint" onchange="setFilterItemListBySprint()">
+        </select>
+      </div>
+      <div class="menu-settings-block">
+        <ul class="menu-settings">
+          <li class="menu-settings-item">
+            <a class="btn settings" href="#" onclick="showFilterMenu()">Настройки</a>
+
+            <ul class="submenu-settings" id="filter-submenuID">
+              <li class="submenu-settings-item">Вид
+                <ul class="submenu-view">
+                  <li class="submenu-view-item">
+                    <label>
+                      <input name="view-kind" type="radio" checked="checked" onclick="changeItemMode(false)" />Полный
+                    </label>
+                  </li>
+                  <li class="submenu-view-item">
+                    <label>
+                      <input name="view-kind" type="radio" onclick="changeItemMode(true)" />Компактный
+                    </label>
+                  </li>
+                </ul>
+              </li>
+              <li class="submenu-filter-item">Фильтр
+                <ul class="submenu-filter">
+                  <li class="submenu-filter-item">
+                    <label class="label-input" for="employee">Работник</label>
+                    <select class="select-employee" multiple="multiple" onchange="setFilterItemListByEmployee()"></select>
+                  </li>
+                  <li class="submenu-filter-item">
+                    <label class="label-input" for="priority">Приоритет</label>
+                    <select class="select-priority" multiple="multiple" onchange="setFilterItemListByPriority()"></select>
+                  </li>
+                  <li class="submenu-filter-item">
+                    <label class="label-input" for="issue-type">Тип</label>
+                    <select class="select-issue-type" onchange="setFilterItemListByIssueType()"></select>
+                  </li>
+                  <li class="submenu-filter-item">
+                    <div class="clearfix">
+                      <span>План. дата</span>
+                      <div class="date-box-from">
+                        <label class="label-date" for="plan-date-from">С</label>
+                        <input class="datepicker" type="text" id="plan-date-from" onchange="setFilterItemListByDateFrom(event, this)" />
+                      </div>
+                      <div class="date-box-to">
+                        <label class="label-date" for="plan-date-to">По</label>
+                        <input class="datepicker" type="text" id="plan-date-to" onchange="setFilterItemListByDateTo(event, this)" />
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <header class="states">
+    <!--Записывается из скрипта-->
+  </header>
+
+  <main class="items-board">
+    <div class="items-row">
+      <div class="fake-items-column"></div>
+      <!--Записывается из скрипта-->
+    </div>    
+  </main>
+  <script src="./js/script.js"></script>
 </body>
-</html> 
+</html>
