@@ -1,17 +1,5 @@
 var TEMPLATE_ITEM = document.querySelector('#template_item').innerHTML;
 
-var data = new Object();
-data.id = 1;
-data.state = "111";
-var data1 = new Object();
-
-for (key in data) {
-    data1[key] = data[key];
-    /* ... делать что-то с obj[key] ... */
-}
-console.log(data1);
-
-
 Item = function (data) {
     // Свойства элемента
     this.update = function (data) {
@@ -128,15 +116,3 @@ Item = function (data) {
 
     this.update(data);
 }
-
-var data = new Object();
-data.id = 1;
-data.state = "22";
-
-item = new Item(data);
-console.dir(item);
-
-data.state = "33";
-console.dir(data);
-item.update(data);
-console.dir(item);
