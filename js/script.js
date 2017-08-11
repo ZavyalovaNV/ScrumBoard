@@ -33,11 +33,7 @@ var prevItemsList;
 var items;
 var application;
 
-/*Тестовые значения*/
-var testRecordID = 1556288;
-var testRefCode = 'AK_IT_Sprints';
-var isTesting = true;
-
+// Подключение к DIRECTUM
 try {
     form = window.external.Form;
     if (form === undefined) {
@@ -73,30 +69,6 @@ try {
    // throw err;
 }
 readOnly = false;
-/*
-
-// ИД открытого объекта
-try {
-    var component = window.external.Form.View.Component;
-    var componentParamList = component.Params;
-    var readOnly = componentParamList.FindItem('ReadOnly');
-
-    refCode = component.Name;
-
-    if (refCode == 'AK_IT_Sprints') {
-        projectID = component.Requisites("Ведущая аналитика").ValueID;
-        sprintID = component.Requisites("ИД").Value;
-    } else {
-        if (refCode == 'AK_IT_Projects') {
-            projectID = component.Requisites("ИД").Value;
-            sprintID = -1;
-        }
-    }
-}
-catch (err) {    
-    alert(err);
-    readOnly = true;
-}*/
 
 // По умолчанию фильтры равны исходным данным
 filterProjectID = projectID;
