@@ -23,6 +23,7 @@ Item = function (data) {
             element.innerHTML = document.querySelector('#template_item').innerHTML;
         }
 
+        // Соответствие частей элемента и их значений
         var compareValues = {
             '.item-text': this.text,
             '.item-priority': this.priority,
@@ -31,6 +32,7 @@ Item = function (data) {
             '.item-executor-compact span': this.executorName,
             ".item-number": this.number
         };
+        // Соответствение для рисунков
         var compareImages = {
             ".item-executor-img": ["css\\img\\avatars\\" + this.executorPhoto, this.executorName],
             ".item-executor-img-compact": ["css\\img\\user.svg", this.executorName]
