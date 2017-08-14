@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 
-  <meta charset="utf-8" />
+  <meta charset="windows-1251" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <!--Плагины-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -175,12 +175,13 @@
       </div>
     </div>
   </nav>
-  <header class="states">
+  <header class="states" id="states">
     <!--Записывается из скрипта-->
   </header>
   <main class="items-board">
-    <div class="item-row">
-      <div class="items-column ui-resizable">
+    <div class="item-row" id="item-row">
+      
+      <!--<div class="items-column ui-resizable">
         <div class="items-list ui-sortable">
           <div class="item wish">
             <div class="item-handle"></div>
@@ -220,13 +221,17 @@
       </div>
       <div class="items-column ui-resizable">
         <div class="items-list ui-sortable"></div>
-      </div>
+      </div>-->
     </div>
   </main>  
   <!--<script src="./js/script.js"></script>-->
-  <script src="./js/test.js"></script>
-  <script src="./js/states.js"></script>
   <script src="./js/test-data.js"></script>
+  
+  <script src="./js/states.js"></script>
+
+  <script src="./js/item-list.js"></script>
   <script src="./js/item.js"></script>
+
+  <script src="./js/test.js"></script>
 </body>
 </html>

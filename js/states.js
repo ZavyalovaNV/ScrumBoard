@@ -1,34 +1,79 @@
-п»їState = function (data) {
+State = function (data) {
+    // Свойства элемента
+    this.update = function (data) {
+        for (key in data) {
+            this[key] = data[key];
+        }
+    }
 
 
+    this.render = function (parent) {
+        if (parent === undefined || parent === null) {
+            throw 'Не определен контейнер для статуса'
+        }
 
-    this.render = function (parrent) {
         var className = "state";
-        var elementId = className + "-" + data.id;
+        var elementId = className + "-" + this.id;
 
-        // РќР°Р№С‚Рё РґР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚, С‡С‚РѕР±С‹ РЅРµ РїРµСЂРµСЂРёСЃРѕРІС‹РІР°С‚СЊ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё
+        // Найти данный элемент, чтобы не перерисовывать каждый раз
         var element;
         element = document.getElementById(elementId);
-        if (element === undefined) {
+        if (element === undefined || element === null) {
             element = document.createElement('div');
-            // Р—Р°РґР°С‚СЊ РР”
-            element.id = className + "-" + data.id;
+            // Задать ИД
+            element.id = elementId;
         }
 
-        // Р—Р°РґР°С‚СЊ РєР»Р°СЃСЃС‹
-        var classList = element.classList;
-
-        if (!classList.contains(className)) {
-            element.classList.add(className);
+        // Задать классы
+        var classList = [className, "ui-resizable"]
+        var elementClassList = element.classList;
+        for (var i = 0; i < classList.length; i++) {
+            className_ = classList[i];
+            if (!elementClassList.contains(className_)) {
+                elementClassList.add(className_);
+            }
         }
-        if (!classList.contains("ui-resizable")) {
-            element.classList.add("ui-resizable");
-        }
-
-        // РЎС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃС‚СЂРѕРєСѓ РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
-        var text = '<span class="state-name">' + data.name + '</span>'
-        element.innerHTML = text;
-
+        
+        // Сформировать строку внутри объекта
+        element.innerHTML = '<span class="state-name">' + this.name + '</span>';
         parent.appendChild(element);
     }
+
+    this.renderColumn = function (parent) {
+        if (parent === undefined || parent === null) {
+            throw 'Не определен контейнер для статуса'
+        }
+
+        var className = 'items-column';
+        var elementId = className + "-" + this.id;
+
+        var element;
+        element = document.getElementById(elementId);
+        if (element === undefined || element === null) {
+            element = document.createElement('div');
+            // Задать ИД
+            element.id = elementId;
+        }
+
+        // Задать классы
+        var classList = [className, "ui-resizable"]
+        var elementClassList = element.classList;
+        for (var i = 0; i < classList.length; i++) {
+            className_ = classList[i];
+            if (!elementClassList.contains(className_)) {
+                elementClassList.add(className_);
+            }
+        }
+
+        // Задать события
+        element.addEventListener('dblclick', function () { alert(1) });
+        // Сформировать строку внутри объекта
+        element.innerHTML = '<div class="items-list" id="items-list-' + this.id + '"></div>';
+        parent.appendChild(element);
+    }
+
+
+    this.update(data);
 }
+
+

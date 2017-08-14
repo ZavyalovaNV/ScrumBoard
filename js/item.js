@@ -10,52 +10,72 @@ Item = function (data) {
 
     // Отрисовка элемента
     this.render = function () {
-        // Установить заголовок элемента
-        var textElement = element.querySelector(".item-text");
-        textElement.innerHTML = data.text;
-        // Установить исполнителя
-        // В полном режиме
-        var executorElement = element.querySelector(".item-executor-img");
-        executorElement.setAttribute("src", "css\\img\\avatars\\" + data.executorPhoto);
-        executorElement.setAttribute("title", data.executorName);
-        // В компактном режиме
-        var executorCompactElement = element.querySelector('.item-executor-img-compact');
-        executorCompactElement.setAttribute("src", "css\\img\\user.svg");
-        executorCompactElement.setAttribute("title", data.executorName);
-        var executorCompactElementName = element.querySelector('.item-executor-compact span');
-        executorCompactElementName.innerHTML = data.executorName;
-        // Установить приоритет
-        var priorityElement = element.querySelector(".item-priority");
-        priorityElement.innerHTML = data.priority;
-        // Установить плановую дату
-        var planDateElement = element.querySelector(".item-plan-date");
-        planDateElement.innerHTML = data.planDate;
-        // Установить плановые трудозатраты
-        var planHoursElement = element.querySelector(".item-plan-hours");
-        if (data.planHours != '' && data.planHours != undefined) {
-            planHoursElement.innerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' ч.';
-        } else {
-            planHoursElement.innerHTML = '';
-        }
-        // Установить номер
-        var numberElement = element.querySelector(".item-number");
-        numberElement.innerHTML = data.number;
+        var className = "item";
+        var element;
+        // Найти элемент с таким же ИД
+        var elementId = className + "-" + this.id;
 
-        // Настройки классов
+        element = document.getElementById(elementId);
+        if (element === undefined || element === null) {
+            element = document.createElement('div');
+            // Задать ИД
+            element.id = elementId;
+            element.innerHTML = document.querySelector('#template_item').innerHTML;
+        }
+
+        var compareValues = {
+            '.item-text': this.text,
+            '.item-priority': this.priority,
+            '.item-plan-date': this.planDate,
+            '.item-plan-hours': this.planHours,
+            '.item-executor-compact span': this.executorName,
+            ".item-number": this.number
+        };
+        var compareImages = {
+            ".item-executor-img": ["css\\img\\avatars\\" + this.executorPhoto, this.executorName],
+            ".item-executor-img-compact": ["css\\img\\user.svg", this.executorName]
+        };
+
+        var innerElement;
+        for (key in compareValues) {
+            innerElement = element.querySelector(key);
+            if (innerElement !== null) {
+                innerElement.innerHTML = compareValues[key];
+            }
+        }
+        for (key in compareImages) {
+            innerElement = element.querySelector(key);
+            if (innerElement !== null) {
+                var arr = compareValues[key];
+                innerElement.setAttribute("src", arr[0]);
+                innerElement.setAttribute("title", arr[1]);
+            }
+        }
+
         // Установить тип элемента
         element.classList.remove('defect');
         element.classList.remove('wish');
-        if (data.issueTypeId == '1') {
+        if (this.issueTypeId == '1') {
             element.classList.add('defect');
         };
-        if (data.issueTypeId == '2') {
+        if (this.issueTypeId == '2') {
             element.classList.add('wish');
         };
 
-        // Компактный режим. Определить видимые области
-        setItemViewMode(modeCompact, element);
 
-        return element;
+        var parent = document.getElementById()
+
+        //if (data.planHours != '' && data.planHours != undefined) {
+        //    planHoursElement.innerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' ч.';
+        //} else {
+        //    planHoursElement.innerHTML = '';
+        //}
+
+        
+        // Компактный режим. Определить видимые области
+        //setItemViewMode(modeCompact, element);
+
+        //return element;
     }
 
     // Метод обновления элемента
