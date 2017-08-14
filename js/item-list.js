@@ -1,6 +1,24 @@
-
 ItemList = function () {
-    //
+    // функция получения статусов
+    this.states = function () {
+        //try {
+        //    var textData = executeScript('AK_SBGetStatesData', 0, 0, 0, readOnly);
+        //    var states = JSON.parse(textData);
+        //    createStatesCellsAndColumns(states);
+        //    return states
+        //}
+        //catch (err) {
+        //    alert(err);
+        //};
+        return states_test;
+    }
+
+    this.renderStates = function () {
+        for (data in this.states) {
+            var state = new State(data);
+            state.render()
+        }
+    }
 }
 
 

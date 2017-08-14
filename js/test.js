@@ -25,78 +25,16 @@ var filterSprintID = -1;
 var filterProjectID = 0;
 
 // Данные по текущей записи
-var sprintID = -1;
-var projectID = 0;
-var refCode = '';
+var sprintID = testSprintID;
+var projectID = testProjectID;
+var refCode = testRefCode;
 
 var prevItemsList;
 var items;
 var application;
 
-/*Тестовые значения*/
-var testRecordID = 1556288;
-var testRefCode = 'AK_IT_Sprints';
-var isTesting = true;
 
-try {
-    form = window.external.Form;
-    if (form === undefined) {
-        var obj = CreateObject("SBLogon.LoginPoint");
-        application = new ActiveXObject("SBLogon.LoginPoint").GetApplication("ServerName=m-sv-p-sql01;DBName=DIRECTUM_DEV;IsOSAuth=true")
-        if (application === undefined) {
-            throw 'Не удалось подключиться к DIRECTUM. Обратитесь к администратору.'
-        }
-        component = application.ReferencesFactory.ReferenceFactory(testRefCode).GetObjectByID(testRecordID);
-
-    } else {
-        component = form.View.Component;
-    }
-
-    refCode = component.Name;
-    application = component.Application;
-    var componentParamList = component.Params;
-    var readOnly = componentParamList.FindItem('ReadOnly');
-
-    if (refCode == 'AK_IT_Sprints') {
-        projectID = component.Requisites("Ведущая аналитика").ValueID;
-        sprintID = component.Requisites("ИД").Value;
-    } else {
-        if (refCode == 'AK_IT_Projects') {
-            projectID = component.Requisites("ИД").Value;
-            sprintID = -1;
-        }
-    }
-
-} catch (err) {
-    alert(err);
-    readOnly = true;
-    // throw err;
-}
 readOnly = false;
-/*
-
-// ИД открытого объекта
-try {
-    var component = window.external.Form.View.Component;
-    var componentParamList = component.Params;
-    var readOnly = componentParamList.FindItem('ReadOnly');
-
-    refCode = component.Name;
-
-    if (refCode == 'AK_IT_Sprints') {
-        projectID = component.Requisites("Ведущая аналитика").ValueID;
-        sprintID = component.Requisites("ИД").Value;
-    } else {
-        if (refCode == 'AK_IT_Projects') {
-            projectID = component.Requisites("ИД").Value;
-            sprintID = -1;
-        }
-    }
-}
-catch (err) {    
-    alert(err);
-    readOnly = true;
-}*/
 
 // По умолчанию фильтры равны исходным данным
 filterProjectID = projectID;
@@ -151,12 +89,16 @@ function getStatesData() {
     try {
         var textData = executeScript('AK_SBGetStatesData', 0, 0, 0, readOnly);
         var states = JSON.parse(textData);
+    }
+    catch (err) {
+        //alert(err);
+        states = states_test
+    };
+
+    if (states !== undefined) {
         createStatesCellsAndColumns(states);
         return states
     }
-    catch (err) {
-        alert(err);
-    };
 }
 
 // Реквизиты признаки: Приоритеты, Типы элемента
