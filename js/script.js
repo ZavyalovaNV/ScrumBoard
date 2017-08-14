@@ -1,4 +1,4 @@
-﻿var DELIMITER = '!"№;%:';
+var DELIMITER = '!"№;%:';
 var TEMPLATE_STATES = document.querySelector('#template_states').innerHTML;
 var TEMPLATE_COLUMN = document.querySelector('#template_column').innerHTML;
 var TEMPLATE_ITEM = document.querySelector('#template_item').innerHTML;

@@ -1,5 +1,5 @@
 ItemList = function () {
-    // функция получения статусов
+    // С„СѓРЅРєС†РёСЏ РїРѕР»СѓС‡РµРЅРёСЏ СЃС‚Р°С‚СѓСЃРѕРІ
     this.states = function () {
         //try {
         //    var textData = executeScript('AK_SBGetStatesData', 0, 0, 0, readOnly);
@@ -15,7 +15,7 @@ ItemList = function () {
 
     this.items = items_test;
 
-    // Отрисовать статусы
+    // РћС‚СЂРёСЃРѕРІР°С‚СЊ СЃС‚Р°С‚СѓСЃС‹
     this.renderStates = function () {
         var container = document.getElementById("states");
         var containerCols = document.getElementById("item-row");
@@ -24,48 +24,48 @@ ItemList = function () {
         states.forEach(function (data) {
             console.log(data);
 
-            // создать новый статус
+            // СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ СЃС‚Р°С‚СѓСЃ
             var state = new State(data);
-            // отрисовать статус
+            // РѕС‚СЂРёСЃРѕРІР°С‚СЊ СЃС‚Р°С‚СѓСЃ
             state.render(container);
-            state.renderColumn()
+            state.renderColumn(containerCols);
         });
     }
 
-    // Отрисовать элементы
+    // РћС‚СЂРёСЃРѕРІР°С‚СЊ СЌР»РµРјРµРЅС‚С‹
     this.renderItems = function () {
         var items = this.items;
         var container;
         items.forEach(function (data) {
             console.log(data);
-            // создать новый статус
+            // СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ СЃС‚Р°С‚СѓСЃ
             var item = new Item(data);
-            // отрисовать статус
-            item.render(container)
+            // РѕС‚СЂРёСЃРѕРІР°С‚СЊ СЃС‚Р°С‚СѓСЃ
+            item.render()
         });
     }
 }
 
 
 
-//// Создание ячейки статуса
+//// РЎРѕР·РґР°РЅРёРµ СЏС‡РµР№РєРё СЃС‚Р°С‚СѓСЃР°
 //function createStateElement(data) {
 //    var className = "state";
 
 //    var element = document.createElement('div');
-//    // Задать ИД
+//    // Р—Р°РґР°С‚СЊ РР”
 //    element.id = className + "-" + data.id;
-//    // Задать классы
+//    // Р—Р°РґР°С‚СЊ РєР»Р°СЃСЃС‹
 //    element.classList.add(className);
 //    element.classList.add("ui-resizable");
-//    // Сформировать строку внутри объекта
+//    // РЎС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃС‚СЂРѕРєСѓ РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
 //    var text = TEMPLATE_STATES.replace("<idName>", data.name);
 //    element.innerHTML = text;
 
 //    return element;
 //}
 
-//// Задать допустимые переходы
+//// Р—Р°РґР°С‚СЊ РґРѕРїСѓСЃС‚РёРјС‹Рµ РїРµСЂРµС…РѕРґС‹
 //function createStatesTransmissions(states) {
 //    states.forEach(function (state) {
 //        var divId = "#items-list-";
@@ -85,7 +85,7 @@ ItemList = function () {
 //    });
 //}
 
-//// Задать доступные фильтры для стандадартных данных ИД - Наименование
+//// Р—Р°РґР°С‚СЊ РґРѕСЃС‚СѓРїРЅС‹Рµ С„РёР»СЊС‚СЂС‹ РґР»СЏ СЃС‚Р°РЅРґР°РґР°СЂС‚РЅС‹С… РґР°РЅРЅС‹С… РР” - РќР°РёРјРµРЅРѕРІР°РЅРёРµ
 //function createSelectOption(options, containerId, optionClass, selectedValue, addAll) {
 //    var container = document.querySelector(containerId);
 //    var multiple = container.getAttribute('multiple');
@@ -94,12 +94,12 @@ ItemList = function () {
 //    var selected = false;
 //    var optionList = new Map();
 
-//    // Для немножественного выбора добавить пункт "Все"
+//    // Р”Р»СЏ РЅРµРјРЅРѕР¶РµСЃС‚РІРµРЅРЅРѕРіРѕ РІС‹Р±РѕСЂР° РґРѕР±Р°РІРёС‚СЊ РїСѓРЅРєС‚ "Р’СЃРµ"
 //    addAll = addAll && multiple != 'multiple';
 
 //    if (addAll) {
 //        var optionId = -1;
-//        var optionName = 'Все';
+//        var optionName = 'Р’СЃРµ';
 //        optionList.set(optionId, optionName);
 
 //        var allOption = document.createElement("option");
@@ -124,7 +124,7 @@ ItemList = function () {
 //                option.value = optionId;
 //                option.innerHTML = optionName;
 
-//                // Установить признак выбора
+//                // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїСЂРёР·РЅР°Рє РІС‹Р±РѕСЂР°
 //                if (selectedValue == optionId) {
 //                    option.setAttribute("selected", "selected");
 //                    selected = true;
@@ -155,20 +155,20 @@ ItemList = function () {
 //    return element;
 //}
 
-//// Создание столбца
+//// РЎРѕР·РґР°РЅРёРµ СЃС‚РѕР»Р±С†Р°
 //function createColumnElement(data, readOnly) {
 //    var className = 'items-column';
 
 //    var element = document.createElement('div');
-//    // Задать ИД
+//    // Р—Р°РґР°С‚СЊ РР”
 //    element.id = className + "-" + data.id;
-//    // Задать классы
+//    // Р—Р°РґР°С‚СЊ РєР»Р°СЃСЃС‹
 //    element.classList.add(className);
 //    element.classList.add("ui-resizable");
-//    // Задать события
+//    // Р—Р°РґР°С‚СЊ СЃРѕР±С‹С‚РёСЏ
 //    element.addEventListener('dblclick', addNewItem)
 //    element.addEventListener('dblclick', addNewItem)
-//    // Сформировать строку внутри объекта
+//    // РЎС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃС‚СЂРѕРєСѓ РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
 //    element.innerHTML = TEMPLATE_COLUMN;
 
 //    element = setColumnElementData(data, element, readOnly);
@@ -176,7 +176,7 @@ ItemList = function () {
 //    return element;
 //}
 
-//// Установить режим отображения элемента
+//// РЈСЃС‚Р°РЅРѕРІРёС‚СЊ СЂРµР¶РёРј РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р°
 //function setItemViewMode(modeCompact, element) {
 //    var elementData = element.querySelector('.item-data');
 //    var elementInd = element.querySelector('.item-ind');
@@ -192,41 +192,41 @@ ItemList = function () {
 //    }
 //}
 
-//// Заполнение данных элемента
+//// Р—Р°РїРѕР»РЅРµРЅРёРµ РґР°РЅРЅС‹С… СЌР»РµРјРµРЅС‚Р°
 //function setItemData(data, element) {
-//    // Установить заголовок элемента
+//    // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ Р·Р°РіРѕР»РѕРІРѕРє СЌР»РµРјРµРЅС‚Р°
 //    var textElement = element.querySelector(".item-text");
 //    textElement.innerHTML = data.text;
-//    // Установить исполнителя
-//    // В полном режиме
+//    // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РёСЃРїРѕР»РЅРёС‚РµР»СЏ
+//    // Р’ РїРѕР»РЅРѕРј СЂРµР¶РёРјРµ
 //    var executorElement = element.querySelector(".item-executor-img");
 //    executorElement.setAttribute("src", "css\\img\\avatars\\" + data.executorPhoto);
 //    executorElement.setAttribute("title", data.executorName);
-//    // В компактном режиме
+//    // Р’ РєРѕРјРїР°РєС‚РЅРѕРј СЂРµР¶РёРјРµ
 //    var executorCompactElement = element.querySelector('.item-executor-img-compact');
 //    executorCompactElement.setAttribute("src", "css\\img\\user.svg");
 //    executorCompactElement.setAttribute("title", data.executorName);
 //    var executorCompactElementName = element.querySelector('.item-executor-compact span');
 //    executorCompactElementName.innerHTML = data.executorName;
-//    // Установить приоритет
+//    // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїСЂРёРѕСЂРёС‚РµС‚
 //    var priorityElement = element.querySelector(".item-priority");
 //    priorityElement.innerHTML = data.priority;
-//    // Установить плановую дату
+//    // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїР»Р°РЅРѕРІСѓСЋ РґР°С‚Сѓ
 //    var planDateElement = element.querySelector(".item-plan-date");
 //    planDateElement.innerHTML = data.planDate;
-//    // Установить плановые трудозатраты
+//    // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РїР»Р°РЅРѕРІС‹Рµ С‚СЂСѓРґРѕР·Р°С‚СЂР°С‚С‹
 //    var planHoursElement = element.querySelector(".item-plan-hours");
 //    if (data.planHours != '' && data.planHours != undefined) {
-//        planHoursElement.innerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' ч.';
+//        planHoursElement.innerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' С‡.';
 //    } else {
 //        planHoursElement.innerHTML = '';
 //    }
-//    // Установить номер
+//    // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ РЅРѕРјРµСЂ
 //    var numberElement = element.querySelector(".item-number");
 //    numberElement.innerHTML = data.number;
 
-//    // Настройки классов
-//    // Установить тип элемента
+//    // РќР°СЃС‚СЂРѕР№РєРё РєР»Р°СЃСЃРѕРІ
+//    // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ С‚РёРї СЌР»РµРјРµРЅС‚Р°
 //    element.classList.remove('defect');
 //    element.classList.remove('wish');
 //    if (data.issueTypeId == '1') {
@@ -236,23 +236,23 @@ ItemList = function () {
 //        element.classList.add('wish');
 //    };
 
-//    // Компактный режим. Определить видимые области
+//    // РљРѕРјРїР°РєС‚РЅС‹Р№ СЂРµР¶РёРј. РћРїСЂРµРґРµР»РёС‚СЊ РІРёРґРёРјС‹Рµ РѕР±Р»Р°СЃС‚Рё
 //    setItemViewMode(modeCompact, element);
 
 //    return element;
 //}
 
-//// Создание элемента
+//// РЎРѕР·РґР°РЅРёРµ СЌР»РµРјРµРЅС‚Р°
 //function createItemElement(data) {
 //    var className = "item";
 
 //    var element = document.createElement('div');
-//    // Задать ИД
+//    // Р—Р°РґР°С‚СЊ РР”
 //    element.id = className + "-" + data.id;
-//    // Задать классы
+//    // Р—Р°РґР°С‚СЊ РєР»Р°СЃСЃС‹
 //    element.classList.add(className);
 //    element.innerHTML = TEMPLATE_ITEM;
-//    // Задать обработчики события
+//    // Р—Р°РґР°С‚СЊ РѕР±СЂР°Р±РѕС‚С‡РёРєРё СЃРѕР±С‹С‚РёСЏ
 //    element.addEventListener('click', openItem)
 
 //    element = setItemData(data, element);
@@ -260,33 +260,33 @@ ItemList = function () {
 //    return element;
 //}
 
-//// Обновление элемента
+//// РћР±РЅРѕРІР»РµРЅРёРµ СЌР»РµРјРµРЅС‚Р°
 //function updateItemElement(data, elementId) {
 //    var element = document.getElementById(elementId);
 //    element = setItemData(data, element)
 //    return element
 //}
 
-//// Создать блоки и столбцы по каждому статусу
+//// РЎРѕР·РґР°С‚СЊ Р±Р»РѕРєРё Рё СЃС‚РѕР»Р±С†С‹ РїРѕ РєР°Р¶РґРѕРјСѓ СЃС‚Р°С‚СѓСЃСѓ
 //function createStatesCellsAndColumns(states) {
 //    var containerStates = document.querySelector(".states");
 //    var containerColumns = document.querySelector(".items-row");
 //    states.forEach(function (state) {
-//        // Ячейка статуса
+//        // РЇС‡РµР№РєР° СЃС‚Р°С‚СѓСЃР°
 //        var stateElement = createStateElement(state);
 //        containerStates.appendChild(stateElement);
-//        // Столбец статуса
+//        // РЎС‚РѕР»Р±РµС† СЃС‚Р°С‚СѓСЃР°
 //        var columnElement = createColumnElement(state, readOnly);
 //        containerColumns.appendChild(columnElement);
 //    }
 //    );
-//    // Создать доступные переходы по статусам
+//    // РЎРѕР·РґР°С‚СЊ РґРѕСЃС‚СѓРїРЅС‹Рµ РїРµСЂРµС…РѕРґС‹ РїРѕ СЃС‚Р°С‚СѓСЃР°Рј
 //    createStatesTransmissions(states);
 //}
 
-//// Создать элементы
+//// РЎРѕР·РґР°С‚СЊ СЌР»РµРјРµРЅС‚С‹
 //function createItems(items, filterProject, filterSprint, filterEmployee, filterPriority, filterPlanDateFrom, filterPlanDateTo, filterIssueType) {
-//    // Очистить все контейнеры по статусам
+//    // РћС‡РёСЃС‚РёС‚СЊ РІСЃРµ РєРѕРЅС‚РµР№РЅРµСЂС‹ РїРѕ СЃС‚Р°С‚СѓСЃР°Рј
 //    var elements = document.querySelectorAll('.items-list');
 //    var element;
 //    for (var i = 0; i < elements.length; i++) {
@@ -295,45 +295,45 @@ ItemList = function () {
 //    }
 
 //    //alert(filterProject + ', ' + filterSprint + ', ' + filterEmployee + ', ' + filterPriority + ', ' + filterPlanDateFrom + ', ' + filterPlanDateTo)
-//    // Список уже очищенных контейнеров для элементов, чтобы повторно не очищать
+//    // РЎРїРёСЃРѕРє СѓР¶Рµ РѕС‡РёС‰РµРЅРЅС‹С… РєРѕРЅС‚РµР№РЅРµСЂРѕРІ РґР»СЏ СЌР»РµРјРµРЅС‚РѕРІ, С‡С‚РѕР±С‹ РїРѕРІС‚РѕСЂРЅРѕ РЅРµ РѕС‡РёС‰Р°С‚СЊ
 //    var cleanedContainers = new Map;
 
-//    // Фильтровать по работникам, выбрано хоть какое-то значение
+//    // Р¤РёР»СЊС‚СЂРѕРІР°С‚СЊ РїРѕ СЂР°Р±РѕС‚РЅРёРєР°Рј, РІС‹Р±СЂР°РЅРѕ С…РѕС‚СЊ РєР°РєРѕРµ-С‚Рѕ Р·РЅР°С‡РµРЅРёРµ
 //    var toFilterByEmployee = (filterEmployee.length > 0);
-//    // Фильтровать по приоритетам, выбрано хоть какое-то значение
+//    // Р¤РёР»СЊС‚СЂРѕРІР°С‚СЊ РїРѕ РїСЂРёРѕСЂРёС‚РµС‚Р°Рј, РІС‹Р±СЂР°РЅРѕ С…РѕС‚СЊ РєР°РєРѕРµ-С‚Рѕ Р·РЅР°С‡РµРЅРёРµ
 //    var toFilterByPriority = (filterPriority.length > 0);
-//    // Фильтровать по проекту, если задан проект
+//    // Р¤РёР»СЊС‚СЂРѕРІР°С‚СЊ РїРѕ РїСЂРѕРµРєС‚Сѓ, РµСЃР»Рё Р·Р°РґР°РЅ РїСЂРѕРµРєС‚
 //    var toFilterByProject = (filterProject > 0)
-//    // Фильтровать по спринту, если выбран спринт или Нераспределенные. 
-//    // У элементов без спринта, его ид = 0, поэтому фильтр по нераспределенным - это фильтр по 0
-//    // -1 = Все записи
+//    // Р¤РёР»СЊС‚СЂРѕРІР°С‚СЊ РїРѕ СЃРїСЂРёРЅС‚Сѓ, РµСЃР»Рё РІС‹Р±СЂР°РЅ СЃРїСЂРёРЅС‚ РёР»Рё РќРµСЂР°СЃРїСЂРµРґРµР»РµРЅРЅС‹Рµ. 
+//    // РЈ СЌР»РµРјРµРЅС‚РѕРІ Р±РµР· СЃРїСЂРёРЅС‚Р°, РµРіРѕ РёРґ = 0, РїРѕСЌС‚РѕРјСѓ С„РёР»СЊС‚СЂ РїРѕ РЅРµСЂР°СЃРїСЂРµРґРµР»РµРЅРЅС‹Рј - СЌС‚Рѕ С„РёР»СЊС‚СЂ РїРѕ 0
+//    // -1 = Р’СЃРµ Р·Р°РїРёСЃРё
 //    var toFilterBySprint = (filterSprint > -1);
-//    // Фильтровать по типу элемента
+//    // Р¤РёР»СЊС‚СЂРѕРІР°С‚СЊ РїРѕ С‚РёРїСѓ СЌР»РµРјРµРЅС‚Р°
 //    var toFilterByIssueType = (filterIssueType > -1);
-//    // Фильтровать по план дате с, если указано
+//    // Р¤РёР»СЊС‚СЂРѕРІР°С‚СЊ РїРѕ РїР»Р°РЅ РґР°С‚Рµ СЃ, РµСЃР»Рё СѓРєР°Р·Р°РЅРѕ
 //    var toFilterByPlanDateFrom = filterPlanDateFrom != '';
-//    // Фильтровать по план дате по, если указано
+//    // Р¤РёР»СЊС‚СЂРѕРІР°С‚СЊ РїРѕ РїР»Р°РЅ РґР°С‚Рµ РїРѕ, РµСЃР»Рё СѓРєР°Р·Р°РЅРѕ
 //    var toFilterByPlanDateTo = filterPlanDateTo != '';
 
 //    items.forEach(function (item) {
-//        // 1 часть условия: проверка должна быть + проверка прошла
-//        // или
-//        // 2 часть условия: проверки не должно быть
+//        // 1 С‡Р°СЃС‚СЊ СѓСЃР»РѕРІРёСЏ: РїСЂРѕРІРµСЂРєР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ + РїСЂРѕРІРµСЂРєР° РїСЂРѕС€Р»Р°
+//        // РёР»Рё
+//        // 2 С‡Р°СЃС‚СЊ СѓСЃР»РѕРІРёСЏ: РїСЂРѕРІРµСЂРєРё РЅРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ
 
-//        // Фильтр по проекту
+//        // Р¤РёР»СЊС‚СЂ РїРѕ РїСЂРѕРµРєС‚Сѓ
 //        var add = (toFilterByProject && (item.project == filterProject)) || (!toFilterByProject);
 //        if (add) {
-//            // Фильтр по спринту
+//            // Р¤РёР»СЊС‚СЂ РїРѕ СЃРїСЂРёРЅС‚Сѓ
 //            add = (toFilterBySprint && (item.sprint == filterSprint)) || (!toFilterBySprint);
 //            if (add) {
-//                // Фильтра по работникам
+//                // Р¤РёР»СЊС‚СЂР° РїРѕ СЂР°Р±РѕС‚РЅРёРєР°Рј
 //                add = (toFilterByEmployee && findElementInArray(filterEmployee, item.executorId)) || (!toFilterByEmployee);
 //                if (add) {
-//                    // Фильтр по приоритетам
+//                    // Р¤РёР»СЊС‚СЂ РїРѕ РїСЂРёРѕСЂРёС‚РµС‚Р°Рј
 //                    add = (toFilterByPriority && findElementInArray(filterPriority, item.priorityId)) || (!toFilterByPriority);
 //                    if (add) {
 //                        add = (toFilterByIssueType && (item.issueTypeId == filterIssueType)) || (!toFilterByIssueType);
-//                        // Фильтр по план. дате
+//                        // Р¤РёР»СЊС‚СЂ РїРѕ РїР»Р°РЅ. РґР°С‚Рµ
 //                        if (add) {
 //                            add = (toFilterByPlanDateFrom && (item.planDate >= filterPlanDateFrom)) || (!toFilterByPlanDateFrom);
 //                            if (add) {
@@ -356,7 +356,7 @@ ItemList = function () {
 //    );
 //}
 
-//// Задать доступных работников
+//// Р—Р°РґР°С‚СЊ РґРѕСЃС‚СѓРїРЅС‹С… СЂР°Р±РѕС‚РЅРёРєРѕРІ
 //function createEmployeeList(items) {
 //    var container = document.querySelector(".select-employee");
 //    container.innerHTML = "";
@@ -381,46 +381,46 @@ ItemList = function () {
 //    })
 //}
 
-////******************** Фильтры *****************************************
-//// Заполнить фильтр по работникам
+////******************** Р¤РёР»СЊС‚СЂС‹ *****************************************
+//// Р—Р°РїРѕР»РЅРёС‚СЊ С„РёР»СЊС‚СЂ РїРѕ СЂР°Р±РѕС‚РЅРёРєР°Рј
 //function setFilterItemListByEmployee() {
 //    filterEmployeeList = $(".select-employee").val();
 //    createItems(items, filterProjectID, filterSprintID, filterEmployeeList, filterPriorityList, filterPlanDateFrom, filterPlanDateTo, filterIssueTypeID);
 //}
 
-//// Заполнить фильтр по приоритетам
+//// Р—Р°РїРѕР»РЅРёС‚СЊ С„РёР»СЊС‚СЂ РїРѕ РїСЂРёРѕСЂРёС‚РµС‚Р°Рј
 //function setFilterItemListByPriority() {
 //    filterPriorityList = $(".select-priority").val();
 //    createItems(items, filterProjectID, filterSprintID, filterEmployeeList, filterPriorityList, filterPlanDateFrom, filterPlanDateTo, filterIssueTypeID);
 //}
 
-//// Заполнить фильтр по дате
+//// Р—Р°РїРѕР»РЅРёС‚СЊ С„РёР»СЊС‚СЂ РїРѕ РґР°С‚Рµ
 //function setFilterItemListByDateFrom() {
 //    var container = document.querySelector("#plan-date-from");
 //    filterPlanDateFrom = container.value;
 //    createItems(items, filterProjectID, filterSprintID, filterEmployeeList, filterPriorityList, filterPlanDateFrom, filterPlanDateTo, filterIssueTypeID);
 //}
 
-//// Заполнить фильтр по дате
+//// Р—Р°РїРѕР»РЅРёС‚СЊ С„РёР»СЊС‚СЂ РїРѕ РґР°С‚Рµ
 //function setFilterItemListByDateTo() {
 //    var container = document.querySelector("#plan-date-to");
 //    filterPlanDateTo = container.value;
 //    createItems(items, filterProjectID, filterSprintID, filterEmployeeList, filterPriorityList, filterPlanDateFrom, filterPlanDateTo, filterIssueTypeID);
 //}
 
-//// Фильтр по спринту
+//// Р¤РёР»СЊС‚СЂ РїРѕ СЃРїСЂРёРЅС‚Сѓ
 //function setFilterItemListBySprint() {
 //    filterSprintID = $(".select-sprint").val();
 //    createItems(items, filterProjectID, filterSprintID, filterEmployeeList, filterPriorityList, filterPlanDateFrom, filterPlanDateTo, filterIssueTypeID);
 //}
 
-//// Фильтр по приоритету
+//// Р¤РёР»СЊС‚СЂ РїРѕ РїСЂРёРѕСЂРёС‚РµС‚Сѓ
 //function setFilterItemListByIssueType() {
 //    filterIssueTypeID = $(".select-issue-type").val();
 //    createItems(items, filterProjectID, filterSprintID, filterEmployeeList, filterPriorityList, filterPlanDateFrom, filterPlanDateTo, filterIssueTypeID);
 //}
 
-////********************* Обработчики событий формы ************************
+////********************* РћР±СЂР°Р±РѕС‚С‡РёРєРё СЃРѕР±С‹С‚РёР№ С„РѕСЂРјС‹ ************************
 //function stopChangeSize(event, ui) {
 //    var divState = 'state';
 //    var divItemColumn = 'items-column';
@@ -429,41 +429,41 @@ ItemList = function () {
 //    var width = ui.size.width;
 //    var elementID = ui.element.attr("id");
 
-//    // Получить ИД статуса - последний блок в ИД элемента
+//    // РџРѕР»СѓС‡РёС‚СЊ РР” СЃС‚Р°С‚СѓСЃР° - РїРѕСЃР»РµРґРЅРёР№ Р±Р»РѕРє РІ РР” СЌР»РµРјРµРЅС‚Р°
 //    var id = getIdFromElementId(elementID)
 
-//    // Получить ИД связанных документов
+//    // РџРѕР»СѓС‡РёС‚СЊ РР” СЃРІСЏР·Р°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ
 //    var idItemColumn = '#' + divItemColumn + '-' + id;
 //    var idItemList = '#' + divItemList + '-' + id;
 //    var idState = '#' + divState + '-' + id;
 
 //    var ind = elementID.toLowerCase().indexOf(divState.toLowerCase());
 //    var element;
-//    // Изменить соответствеющие ширину объектов
+//    // РР·РјРµРЅРёС‚СЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІРµСЋС‰РёРµ С€РёСЂРёРЅСѓ РѕР±СЉРµРєС‚РѕРІ
 //    if (ind >= 0) {
-//        // Столбец
+//        // РЎС‚РѕР»Р±РµС†
 //        element = $(idItemColumn);
 //        element.width(width);
 //    } else {
-//        // Ячейка статуса
+//        // РЇС‡РµР№РєР° СЃС‚Р°С‚СѓСЃР°
 //        element = $(idState);
 //        element.width(width);
 //    }
-//    // Контейтер элементов
+//    // РљРѕРЅС‚РµР№С‚РµСЂ СЌР»РµРјРµРЅС‚РѕРІ
 //    element = $(idItemList);
 //    element.width(width);
 //}
 
 //function stopChangeState(event, ui) {
-//    // ИД элемента
+//    // РР” СЌР»РµРјРµРЅС‚Р°
 //    var elementID = ui.item.attr("id");
 //    var itemId = getIdFromElementId(elementID);
-//    // Определить предыдущий статус
-//    // ИД предыдущего родителя
+//    // РћРїСЂРµРґРµР»РёС‚СЊ РїСЂРµРґС‹РґСѓС‰РёР№ СЃС‚Р°С‚СѓСЃ
+//    // РР” РїСЂРµРґС‹РґСѓС‰РµРіРѕ СЂРѕРґРёС‚РµР»СЏ
 //    elementID = prevItemsList.id;
 //    var oldItemStateId = getIdFromElementId(elementID);
-//    // Определить новый статус
-//    // ИД предыдущего родителя
+//    // РћРїСЂРµРґРµР»РёС‚СЊ РЅРѕРІС‹Р№ СЃС‚Р°С‚СѓСЃ
+//    // РР” РїСЂРµРґС‹РґСѓС‰РµРіРѕ СЂРѕРґРёС‚РµР»СЏ
 //    var newItemsList = ui.item[0].parentElement;
 //    elementID = newItemsList.id;
 //    var newItemStateId = getIdFromElementId(elementID);
@@ -497,7 +497,7 @@ ItemList = function () {
 //    prevItemsList = ui.item[0].parentElement;
 //}
 
-//// Сменить отображение элеметов
+//// РЎРјРµРЅРёС‚СЊ РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ СЌР»РµРјРµС‚РѕРІ
 //function changeItemMode(mode) {
 //    modeCompact = mode;
 
@@ -528,8 +528,8 @@ ItemList = function () {
 //    element.style.display = 'none';
 //}
 
-////******************* Обработчики событий действий с элементами *******
-//// Добавить новый элемент (по отфильтрованным данным)
+////******************* РћР±СЂР°Р±РѕС‚С‡РёРєРё СЃРѕР±С‹С‚РёР№ РґРµР№СЃС‚РІРёР№ СЃ СЌР»РµРјРµРЅС‚Р°РјРё *******
+//// Р”РѕР±Р°РІРёС‚СЊ РЅРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ (РїРѕ РѕС‚С„РёР»СЊС‚СЂРѕРІР°РЅРЅС‹Рј РґР°РЅРЅС‹Рј)
 //function addNewItem() {
 //    var result = executeScript('AK_SBCreateItem', filterProjectID, filterSprintID, 0, readOnly);
 //    if (result) {
@@ -537,7 +537,7 @@ ItemList = function () {
 //    }
 //};
 
-//// Удалить элемент
+//// РЈРґР°Р»РёС‚СЊ СЌР»РµРјРµРЅС‚
 //function deleteItem() {
 //    var item = event.currentTarget.parentElement;
 
@@ -546,11 +546,11 @@ ItemList = function () {
 //    if (result) {
 //        items = getItemsData(projectID, sprintID, true);
 //    }
-//    // Остановить всплытие
+//    // РћСЃС‚Р°РЅРѕРІРёС‚СЊ РІСЃРїР»С‹С‚РёРµ
 //    event.stopPropagation()
 //};
 
-//// Открыть элемент
+//// РћС‚РєСЂС‹С‚СЊ СЌР»РµРјРµРЅС‚
 //function openItem() {
 //    var itemId = getIdFromElementId(this.id);
 
@@ -560,12 +560,12 @@ ItemList = function () {
 //    }
 //};
 
-//// Обновить список элементов
+//// РћР±РЅРѕРІРёС‚СЊ СЃРїРёСЃРѕРє СЌР»РµРјРµРЅС‚РѕРІ
 //function refreshItemList() {
 //    items = getData(projectID, sprintID, true);
 //}
 
-//// Обновить один элемент
+//// РћР±РЅРѕРІРёС‚СЊ РѕРґРёРЅ СЌР»РµРјРµРЅС‚
 //function refreshItem(elementId) {
 //    var itemId = getIdFromElementId(elementId);
 //    try {
@@ -578,11 +578,11 @@ ItemList = function () {
 //    };
 //}
 
-//// Изменить исполнителя
+//// РР·РјРµРЅРёС‚СЊ РёСЃРїРѕР»РЅРёС‚РµР»СЏ
 //function changeExecutor() {
 //    var itemClassName = 'item';
 
-//    // Определить самый верхний элемент, чтобы получить ИД записи
+//    // РћРїСЂРµРґРµР»РёС‚СЊ СЃР°РјС‹Р№ РІРµСЂС…РЅРёР№ СЌР»РµРјРµРЅС‚, С‡С‚РѕР±С‹ РїРѕР»СѓС‡РёС‚СЊ РР” Р·Р°РїРёСЃРё
 //    var element = event.currentTarget;
 //    var classList = element.classList;
 //    var toContunue = classList.contains(itemClassName);
@@ -608,7 +608,7 @@ ItemList = function () {
 //        refreshItem(elementId)
 //    }
 
-//    // Остановить всплытие
+//    // РћСЃС‚Р°РЅРѕРІРёС‚СЊ РІСЃРїР»С‹С‚РёРµ
 //    event.stopPropagation()
 //}
 

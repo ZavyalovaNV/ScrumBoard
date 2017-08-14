@@ -1,86 +1,104 @@
 var TEMPLATE_ITEM = document.querySelector('#template_item').innerHTML;
 
 Item = function (data) {
-    // Свойства элемента
+    // РЎРІРѕР№СЃС‚РІР° СЌР»РµРјРµРЅС‚Р°
     this.update = function (data) {
         for (key in data) {
             this[key] = data[key];
         }
     }
 
-    // Отрисовка элемента
+    // РћС‚СЂРёСЃРѕРІРєР° СЌР»РµРјРµРЅС‚Р°
     this.render = function () {
-        var className = "item";
-        var element;
-        // Найти элемент с таким же ИД
-        var elementId = className + "-" + this.id;
+        // РџРѕР»СѓС‡РёС‚СЊ СЂРѕР»РёС‚РµР»СЊСЃРєРёР№ РєРѕРЅС‚РµР№РЅРµСЂ
+        var parent = document.getElementById("items-list-" + this.stateId);
+        if (parent !== null) {
+            var className = "item";
+            var element;
+            // РќР°Р№С‚Рё СЌР»РµРјРµРЅС‚ СЃ С‚Р°РєРёРј Р¶Рµ РР”
+            var elementId = className + "-" + this.id;
 
-        element = document.getElementById(elementId);
-        if (element === undefined || element === null) {
-            element = document.createElement('div');
-            // Задать ИД
-            element.id = elementId;
-            element.innerHTML = document.querySelector('#template_item').innerHTML;
-        }
-
-        // Соответствие частей элемента и их значений
-        var compareValues = {
-            '.item-text': this.text,
-            '.item-priority': this.priority,
-            '.item-plan-date': this.planDate,
-            '.item-plan-hours': this.planHours,
-            '.item-executor-compact span': this.executorName,
-            ".item-number": this.number
-        };
-        // Соответствение для рисунков
-        var compareImages = {
-            ".item-executor-img": ["css\\img\\avatars\\" + this.executorPhoto, this.executorName],
-            ".item-executor-img-compact": ["css\\img\\user.svg", this.executorName]
-        };
-
-        var innerElement;
-        for (key in compareValues) {
-            innerElement = element.querySelector(key);
-            if (innerElement !== null) {
-                innerElement.innerHTML = compareValues[key];
+            element = document.getElementById(elementId);
+            if (element === undefined || element === null) {
+                element = document.createElement('div');
+                // РќРѕРІС‹Р№ СЌР»РµРјРµРЅС‚ РґРѕР±Р°РІР»СЏРµС‚СЃСЏ РІ РєРѕРЅС‚РµР№РЅРµСЂ
+                parent.appendChild(element);
+                // Р—Р°РґР°С‚СЊ РР”
+                element.id = elementId;
+                element.innerHTML = document.querySelector('#template_item').innerHTML;
             }
-        }
-        for (key in compareImages) {
-            innerElement = element.querySelector(key);
-            if (innerElement !== null) {
-                var arr = compareValues[key];
-                innerElement.setAttribute("src", arr[0]);
-                innerElement.setAttribute("title", arr[1]);
+
+            // РЎРѕРѕС‚РІРµС‚СЃС‚РІРёРµ С‡Р°СЃС‚РµР№ СЌР»РµРјРµРЅС‚Р° Рё РёС… Р·РЅР°С‡РµРЅРёР№
+            // РћР±РЅРѕРІРёС‚СЊ РїР»Р°РЅРѕРІСѓСЋ РґР°С‚Сѓ
+            var planHoursElementInnerHTML = '';
+            if (data.planHours != '' && data.planHours != undefined) {
+                planHoursElementInnerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' С‡.';
             }
+
+            var compareValues = {
+                '.item-text': this.text,
+                '.item-priority': this.priority,
+                '.item-plan-date': this.planDate,
+                '.item-plan-hours': this.planHours,
+                '.item-executor-compact span': this.executorName,
+                ".item-number": this.number,
+                ".item-plan-hours": planHoursElementInnerHTML
+            };
+
+            // РЎРѕРѕС‚РІРµС‚СЃС‚РІРµРЅРёРµ РґР»СЏ СЂРёСЃСѓРЅРєРѕРІ
+            var compareImages = {
+                ".item-executor-img": ["css\\img\\avatars\\" + this.executorPhoto, this.executorName],
+                ".item-executor-img-compact": ["css\\img\\user.svg", this.executorName]
+            };
+            // РћР±РЅРѕРІРёС‚СЊ РѕСЃРЅРѕРІРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
+            var innerElement;
+            for (key in compareValues) {
+                innerElement = element.querySelector(key);
+                if (innerElement !== null) {
+                    innerElement.innerHTML = compareValues[key];
+                }
+            }
+            // РћР±РЅРѕРІРёС‚СЊ СЂРёСЃСѓРЅРєРё
+            for (key in compareImages) {
+                innerElement = element.querySelector(key);
+                if (innerElement !== null) {
+                    var arr = compareImages[key];
+                    innerElement.setAttribute("src", arr[0]);
+                    innerElement.setAttribute("title", arr[1]);
+                }
+            }
+            
+
+            // РЈСЃС‚Р°РЅРѕРІРёС‚СЊ С‚РёРї СЌР»РµРјРµРЅС‚Р°
+            var elementClassList = element.classList;
+            if (!elementClassList.contains('item')) {
+                elementClassList.add('item')
+            };
+
+            elementClassList.remove('defect');
+            elementClassList.remove('wish');
+            if (this.issueTypeId == '1') {
+                elementClassList.add('defect');
+            };
+            if (this.issueTypeId == '2') {
+                elementClassList.add('wish');
+            };
+            
+            //if (data.planHours != '' && data.planHours != undefined) {
+            //    planHoursElement.innerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' С‡.';
+            //} else {
+            //    planHoursElement.innerHTML = '';
+            //}
+
+
+            // РљРѕРјРїР°РєС‚РЅС‹Р№ СЂРµР¶РёРј. РћРїСЂРµРґРµР»РёС‚СЊ РІРёРґРёРјС‹Рµ РѕР±Р»Р°СЃС‚Рё
+            //setItemViewMode(modeCompact, element);
+
+            //return element;
         }
-
-        // Установить тип элемента
-        element.classList.remove('defect');
-        element.classList.remove('wish');
-        if (this.issueTypeId == '1') {
-            element.classList.add('defect');
-        };
-        if (this.issueTypeId == '2') {
-            element.classList.add('wish');
-        };
-
-
-        var parent = document.getElementById()
-
-        //if (data.planHours != '' && data.planHours != undefined) {
-        //    planHoursElement.innerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' ч.';
-        //} else {
-        //    planHoursElement.innerHTML = '';
-        //}
-
-        
-        // Компактный режим. Определить видимые области
-        //setItemViewMode(modeCompact, element);
-
-        //return element;
     }
 
-    // Метод обновления элемента
+    // РњРµС‚РѕРґ РѕР±РЅРѕРІР»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р°
     this.refresh = function () {
         try {
             var textData = executeScript('AK_SBRefreshItem', this.projectID, this.sprintID, this.id, readOnly);
@@ -92,38 +110,38 @@ Item = function (data) {
         };
     }
 
-    // Метод открытия элемента
+    // РњРµС‚РѕРґ РѕС‚РєСЂС‹С‚РёСЏ СЌР»РµРјРµРЅС‚Р°
     this.open = function () {
         var result = executeScript('AK_SBOpenItem', this.projectID, this.sprintID, this.id, readOnly);
         if (result) {
-            // Обновить весь список объектов, т.к. могли создать новые/удалить
+            // РћР±РЅРѕРІРёС‚СЊ РІРµСЃСЊ СЃРїРёСЃРѕРє РѕР±СЉРµРєС‚РѕРІ, С‚.Рє. РјРѕРіР»Рё СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Рµ/СѓРґР°Р»РёС‚СЊ
             items = getData(this.projectID, this.sprintID, true);
         }
     }
 
-    // Метод удаления элемента
+    // РњРµС‚РѕРґ СѓРґР°Р»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р°
     this.delete = function () {
         var result = executeScript('AK_SBDeleteItem', this.projectID, this.sprintID, this.id, readOnly);
-        // Удалить объект в HTML
+        // РЈРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚ РІ HTML
         var element = document.getElementById("item-" + this.id);
         if (element === undefined) {
             element.parentNode.removeChild(element);
         }
     }
 
-    // Метод добавления элемента
+    // РњРµС‚РѕРґ РґРѕР±Р°РІР»РµРЅРёСЏ СЌР»РµРјРµРЅС‚Р°
     this.add = function () {
         var data = executeScript('AK_SBCreateItem', filterProjectID, filterSprintID, 0, readOnly);
         if (result) {
-            // Обновить весь список объектов, т.к. могли создать новые/удалить
+            // РћР±РЅРѕРІРёС‚СЊ РІРµСЃСЊ СЃРїРёСЃРѕРє РѕР±СЉРµРєС‚РѕРІ, С‚.Рє. РјРѕРіР»Рё СЃРѕР·РґР°С‚СЊ РЅРѕРІС‹Рµ/СѓРґР°Р»РёС‚СЊ
             items = getData(this.projectID, this.sprintID, true);
         }
     }
 
-    // Метод смены статуса элемента
+    // РњРµС‚РѕРґ СЃРјРµРЅС‹ СЃС‚Р°С‚СѓСЃР° СЌР»РµРјРµРЅС‚Р°
     
 
-    // Метод смены исполнителя элемента
+    // РњРµС‚РѕРґ СЃРјРµРЅС‹ РёСЃРїРѕР»РЅРёС‚РµР»СЏ СЌР»РµРјРµРЅС‚Р°
     this.changeExecutor = function () {
         try {
             var result = executeScript('AK_SBChangeExecutorItem', this.projectID, this.sprintID, this.id, readOnly);

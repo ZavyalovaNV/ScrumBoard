@@ -1,4 +1,4 @@
-﻿/*Тестовые значения*/
+/*Тестовые значения*/
 var testSprintID = 1556288;
 var testProjectID = 1543890;
 var testRefCode = 'AK_IT_Sprints';

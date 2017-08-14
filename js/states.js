@@ -1,5 +1,5 @@
 State = function (data) {
-    // Свойства элемента
+    // РЎРІРѕР№СЃС‚РІР° СЌР»РµРјРµРЅС‚Р°
     this.update = function (data) {
         for (key in data) {
             this[key] = data[key];
@@ -9,22 +9,23 @@ State = function (data) {
 
     this.render = function (parent) {
         if (parent === undefined || parent === null) {
-            throw 'Не определен контейнер для статуса'
+            throw 'РќРµ РѕРїСЂРµРґРµР»РµРЅ РєРѕРЅС‚РµР№РЅРµСЂ РґР»СЏ СЃС‚Р°С‚СѓСЃР°'
         }
 
         var className = "state";
         var elementId = className + "-" + this.id;
 
-        // Найти данный элемент, чтобы не перерисовывать каждый раз
+        // РќР°Р№С‚Рё РґР°РЅРЅС‹Р№ СЌР»РµРјРµРЅС‚, С‡С‚РѕР±С‹ РЅРµ РїРµСЂРµСЂРёСЃРѕРІС‹РІР°С‚СЊ РєР°Р¶РґС‹Р№ СЂР°Р·
         var element;
         element = document.getElementById(elementId);
         if (element === undefined || element === null) {
             element = document.createElement('div');
-            // Задать ИД
+            // Р—Р°РґР°С‚СЊ РР”
             element.id = elementId;
+            parent.appendChild(element);
         }
 
-        // Задать классы
+        // Р—Р°РґР°С‚СЊ РєР»Р°СЃСЃС‹
         var classList = [className, "ui-resizable"]
         var elementClassList = element.classList;
         for (var i = 0; i < classList.length; i++) {
@@ -34,14 +35,13 @@ State = function (data) {
             }
         }
         
-        // Сформировать строку внутри объекта
+        // РЎС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃС‚СЂРѕРєСѓ РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
         element.innerHTML = '<span class="state-name">' + this.name + '</span>';
-        parent.appendChild(element);
     }
 
     this.renderColumn = function (parent) {
         if (parent === undefined || parent === null) {
-            throw 'Не определен контейнер для статуса'
+            throw 'РќРµ РѕРїСЂРµРґРµР»РµРЅ РєРѕРЅС‚РµР№РЅРµСЂ РґР»СЏ СЃС‚Р°С‚СѓСЃР°'
         }
 
         var className = 'items-column';
@@ -51,11 +51,12 @@ State = function (data) {
         element = document.getElementById(elementId);
         if (element === undefined || element === null) {
             element = document.createElement('div');
-            // Задать ИД
+            // Р—Р°РґР°С‚СЊ РР”
             element.id = elementId;
+            parent.appendChild(element);
         }
 
-        // Задать классы
+        // Р—Р°РґР°С‚СЊ РєР»Р°СЃСЃС‹
         var classList = [className, "ui-resizable"]
         var elementClassList = element.classList;
         for (var i = 0; i < classList.length; i++) {
@@ -65,11 +66,10 @@ State = function (data) {
             }
         }
 
-        // Задать события
+        // Р—Р°РґР°С‚СЊ СЃРѕР±С‹С‚РёСЏ
         element.addEventListener('dblclick', function () { alert(1) });
-        // Сформировать строку внутри объекта
+        // РЎС„РѕСЂРјРёСЂРѕРІР°С‚СЊ СЃС‚СЂРѕРєСѓ РІРЅСѓС‚СЂРё РѕР±СЉРµРєС‚Р°
         element.innerHTML = '<div class="items-list" id="items-list-' + this.id + '"></div>';
-        parent.appendChild(element);
     }
 
 
