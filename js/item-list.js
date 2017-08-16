@@ -1,8 +1,11 @@
 ItemList = function (modeCompact) {
-    // Все элементы
-    this.items = items_test;
+    // Все элементы, как JSON
+    this.itemsData = items_test;
 
-    // Возможные статусы
+    // Список созданных объектов
+    this.items = [];
+
+    // Возможные статусы, как JSON
     this.states = states_test;
 
     // Отрисовать статусы
@@ -12,8 +15,6 @@ ItemList = function (modeCompact) {
 
         var states = this.states;
         states.forEach(function (data) {
-            console.log(data);
-
             // создать новый статус
             var state = new State(data);
             // отрисовать статус
@@ -21,39 +22,83 @@ ItemList = function (modeCompact) {
             state.renderColumn(containerCols);
         });
     }
+    
+    // Создать объекты
+    this.createItems = function () {        
+        var founded = false;
+        var items = this.items;
+        var itemsData = this.itemsData;
+
+        // Найти элементы, которых нет в новых данных и удалить их из списка и DOM
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var itemID = item.id;
+
+            founded = false;
+            for (var j = 0; j < itemsData.length; j++) {
+                founded = itemsData[j].id === itemID;
+                if (founded) { j = itemsData.length + 2}
+            }
+            if (!founded) {
+                item.delete(false);
+                items.splice(i, 1);
+            }
+        } 
+
+        // Добавить новые элементы
+        itemsData.forEach(function (data) {
+            // Найти в массиве
+            founded = false;
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                var itemID = item.id;
+
+                founded = (itemID === data.id)
+                if (founded) {
+                    i = items.length + 1
+                }
+            } 
+
+            // создать новый элемент и добавить в список, если его еще не было
+            if (!founded) {
+                var item = new Item(data);
+                items.push(item);
+            }
+        });
+
+        this.items = items;
+    };
 
     // Отрисовать элементы
     this.renderItems = function () {
         var items = this.items;
-        var container;
-        items.forEach(function (data) {
-            console.log(data);
-            // создать новый статус
-            var item = new Item(data);
-            // отрисовать статус
+       
+        for (var i = 0; i < this.items.length; i++) {
+            var item = this.items[i];
             item.render(this.modeCompact)
-        });
+        }
+    }
+
+    // Обновить элементы
+    this.refresh = function () {
+        // Получить данные с сервера
+        this.itemsData = items_test_new;
+
+        // Преобразовать их в JSON
+
+        // Создать элементы
+        this.createItems();
+
+        // Отрисовать элементы
+        this.renderItems();
+    }
+
+    this.addNew = function () {
+        var item = new Item();
+        item.add()
     }
 }
 
-
-
-//// Создание ячейки статуса
-//function createStateElement(data) {
-//    var className = "state";
-
-//    var element = document.createElement('div');
-//    // Задать ИД
-//    element.id = className + "-" + data.id;
-//    // Задать классы
-//    element.classList.add(className);
-//    element.classList.add("ui-resizable");
-//    // Сформировать строку внутри объекта
-//    var text = TEMPLATE_STATES.replace("<idName>", data.name);
-//    element.innerHTML = text;
-
-//    return element;
-//}
 
 //// Задать допустимые переходы
 //function createStatesTransmissions(states) {
@@ -132,122 +177,6 @@ ItemList = function (modeCompact) {
 //            container.value = ''
 //        }
 //    }
-//}
-
-//function setColumnElementData(data, element, readOnly) {
-//    var itemList = element.querySelector('.items-list');
-//    itemList.id = "items-list-" + data.id;
-
-//    if (!readOnly) {
-//        itemList.classList.add('ui-sortable');
-//    }
-
-//    return element;
-//}
-
-//// Создание столбца
-//function createColumnElement(data, readOnly) {
-//    var className = 'items-column';
-
-//    var element = document.createElement('div');
-//    // Задать ИД
-//    element.id = className + "-" + data.id;
-//    // Задать классы
-//    element.classList.add(className);
-//    element.classList.add("ui-resizable");
-//    // Задать события
-//    element.addEventListener('dblclick', addNewItem)
-//    element.addEventListener('dblclick', addNewItem)
-//    // Сформировать строку внутри объекта
-//    element.innerHTML = TEMPLATE_COLUMN;
-
-//    element = setColumnElementData(data, element, readOnly);
-
-//    return element;
-//}
-
-//// Установить режим отображения элемента
-//function setItemViewMode(modeCompact, element) {
-//    var elementData = element.querySelector('.item-data');
-//    var elementInd = element.querySelector('.item-ind');
-//    var elementCompactExecutor = element.querySelector('.item-executor-compact');
-//    if (modeCompact) {
-//        elementData.classList.add('hidden');
-//        elementInd.classList.add('hidden');
-//        elementCompactExecutor.classList.remove('hidden');
-//    } else {
-//        elementData.classList.remove('hidden');
-//        elementInd.classList.remove('hidden');
-//        elementCompactExecutor.classList.add('hidden');
-//    }
-//}
-
-//// Заполнение данных элемента
-//function setItemData(data, element) {
-//    // Установить заголовок элемента
-//    var textElement = element.querySelector(".item-text");
-//    textElement.innerHTML = data.text;
-//    // Установить исполнителя
-//    // В полном режиме
-//    var executorElement = element.querySelector(".item-executor-img");
-//    executorElement.setAttribute("src", "css\\img\\avatars\\" + data.executorPhoto);
-//    executorElement.setAttribute("title", data.executorName);
-//    // В компактном режиме
-//    var executorCompactElement = element.querySelector('.item-executor-img-compact');
-//    executorCompactElement.setAttribute("src", "css\\img\\user.svg");
-//    executorCompactElement.setAttribute("title", data.executorName);
-//    var executorCompactElementName = element.querySelector('.item-executor-compact span');
-//    executorCompactElementName.innerHTML = data.executorName;
-//    // Установить приоритет
-//    var priorityElement = element.querySelector(".item-priority");
-//    priorityElement.innerHTML = data.priority;
-//    // Установить плановую дату
-//    var planDateElement = element.querySelector(".item-plan-date");
-//    planDateElement.innerHTML = data.planDate;
-//    // Установить плановые трудозатраты
-//    var planHoursElement = element.querySelector(".item-plan-hours");
-//    if (data.planHours != '' && data.planHours != undefined) {
-//        planHoursElement.innerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' ч.';
-//    } else {
-//        planHoursElement.innerHTML = '';
-//    }
-//    // Установить номер
-//    var numberElement = element.querySelector(".item-number");
-//    numberElement.innerHTML = data.number;
-
-//    // Настройки классов
-//    // Установить тип элемента
-//    element.classList.remove('defect');
-//    element.classList.remove('wish');
-//    if (data.issueTypeId == '1') {
-//        element.classList.add('defect');
-//    };
-//    if (data.issueTypeId == '2') {
-//        element.classList.add('wish');
-//    };
-
-//    // Компактный режим. Определить видимые области
-//    setItemViewMode(modeCompact, element);
-
-//    return element;
-//}
-
-//// Создание элемента
-//function createItemElement(data) {
-//    var className = "item";
-
-//    var element = document.createElement('div');
-//    // Задать ИД
-//    element.id = className + "-" + data.id;
-//    // Задать классы
-//    element.classList.add(className);
-//    element.innerHTML = TEMPLATE_ITEM;
-//    // Задать обработчики события
-//    element.addEventListener('click', openItem)
-
-//    element = setItemData(data, element);
-
-//    return element;
 //}
 
 //// Обновление элемента

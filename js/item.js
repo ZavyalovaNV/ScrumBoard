@@ -8,23 +8,27 @@ Item = function (data) {
         }
     }
 
+    // Получить элемент DOM по ид
+    this.getElement = function () {
+        // Найти элемент с таким же ИД
+        return document.getElementById("item-" + this.id);
+    }
+
     // Отрисовка элемента
     this.render = function (modeCompact) {
         // Получить родительский контейнер
         var parent = document.getElementById("items-list-" + this.stateId);
         if (parent !== null) {
             var className = "item";
-            var element;
-            // Найти элемент с таким же ИД
-            var elementId = className + "-" + this.id;
 
-            element = document.getElementById(elementId);
+            // Найти элемент с таким же ИД
+            var element = this.getElement();
             if (element === undefined || element === null) {
                 element = document.createElement('div');
                 // Новый элемент добавляется в контейнер
                 parent.appendChild(element);
                 // Задать ИД
-                element.id = elementId;
+                element.id = className + "-" + this.id;
                 element.innerHTML = document.querySelector('#template_item').innerHTML;
             }
 
@@ -73,7 +77,7 @@ Item = function (data) {
             if (!elementClassList.contains('item')) {
                 elementClassList.add('item')
             };
-            // 
+            // Стиль в ависимости от типа элемента
             elementClassList.remove('defect');
             elementClassList.remove('wish');
             if (this.issueTypeId == '1') {
@@ -84,7 +88,27 @@ Item = function (data) {
             };
 
             // Компактный режим. Определить видимые области
-            setItemViewMode(modeCompact, element)           
+            this.setViewMode(modeCompact);
+        }
+    }
+
+    this.setViewMode = function (modeCompact) {
+        var element = this.getElement();
+        if (element !== undefined && element !== null) {
+            var elementData = element.querySelector('.item-data');
+            var elementInd = element.querySelector('.item-ind');
+            var elementCompactExecutor = element.querySelector('.item-executor-compact');
+            if (modeCompact) {
+                // В компактном режиме доступны только ФИО
+                elementData.classList.add('hidden');
+                elementInd.classList.add('hidden');
+                elementCompactExecutor.classList.remove('hidden');
+            } else {
+                // В полном режиме доступно еще фото
+                elementData.classList.remove('hidden');
+                elementInd.classList.remove('hidden');
+                elementCompactExecutor.classList.add('hidden');
+            }
         }
     }
 
@@ -110,12 +134,18 @@ Item = function (data) {
     }
 
     // Метод удаления элемента
-    this.delete = function () {
-        var result = executeScript('AK_SBDeleteItem', this.projectID, this.sprintID, this.id, readOnly);
+    this.delete = function (executeScript) {
+        // Удалить на сервере
+        var result = true;
+        if (executeScript) {
+            result = executeScript('AK_SBDeleteItem', this.projectID, this.sprintID, this.id, readOnly);
+        }
         // Удалить объект в HTML
-        var element = document.getElementById("item-" + this.id);
-        if (element === undefined) {
-            element.parentNode.removeChild(element);
+        if (result) {
+            var element = document.getElementById("item-" + this.id);
+            if (element !== undefined && element !== null) {
+                element.parentNode.removeChild(element);
+            }
         }
     }
 

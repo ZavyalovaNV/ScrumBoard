@@ -27,11 +27,8 @@ var filterProjectID = 0;
 
 var itemList = new ItemList(modeCompact);
 itemList.renderStates();
+itemList.createItems();
 itemList.renderItems();
-
-
-
-
 
 function stopChangeState(event, ui) {
     // ИД элемента
@@ -76,21 +73,6 @@ function startChangeState(event, ui) {
     prevItemsList = ui.item[0].parentElement;
 }
 
-// Установить режим отображения элемента
-function setItemViewMode(modeCompact, element) {
-    var elementData = element.querySelector('.item-data');
-    var elementInd = element.querySelector('.item-ind');
-    var elementCompactExecutor = element.querySelector('.item-executor-compact');
-    if (modeCompact) {
-        elementData.classList.add('hidden');
-        elementInd.classList.add('hidden');
-        elementCompactExecutor.classList.remove('hidden');
-    } else {
-        elementData.classList.remove('hidden');
-        elementInd.classList.remove('hidden');
-        elementCompactExecutor.classList.add('hidden');
-    }
-}
 //// Данные по текущей записи
 //var sprintID = testSprintID;
 //var projectID = testProjectID;
@@ -115,16 +97,16 @@ function setItemViewMode(modeCompact, element) {
 //// Реквизиты признаки
 //getPickRequisitesData();
 
-////************************* Общие функции *****************************
-//// Поиск элемента в массиве
-//function findElementInArray(array, element) {
-//    var result = false;
-//    for (var i = 0; i < array.length; i++) {
-//        if (array[i] == element)
-//            return true;
-//    }
-//    return result
-//}
+//************************* Общие функции *****************************
+// Поиск элемента в массиве
+function findElementInArray(array, element) {
+    var result = false;
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] == element)
+            return true;
+    }
+    return result
+}
 
 //// Вычленить ИД объекта из ИД элемента
 //function getIdFromElementId(elementId) {
@@ -604,39 +586,40 @@ function setItemViewMode(modeCompact, element) {
 //    createItems(items, filterProjectID, filterSprintID, filterEmployeeList, filterPriorityList, filterPlanDateFrom, filterPlanDateTo, filterIssueTypeID);
 //}
 
-////********************* Обработчики событий формы ************************
-//function stopChangeSize(event, ui) {
-//    var divState = 'state';
-//    var divItemColumn = 'items-column';
-//    var divItemList = 'items-list';
+//********************* Обработчики событий формы ************************
+function stopChangeSize(event, ui) {
+    var divState = 'state';
+    var divItemColumn = 'items-column';
+    var divItemList = 'items-list';
 
-//    var width = ui.size.width;
-//    var elementID = ui.element.attr("id");
+    var width = ui.size.width;
+    var elementID = ui.element.attr("id");
 
-//    // Получить ИД статуса - последний блок в ИД элемента
-//    var id = getIdFromElementId(elementID)
+    // Получить ИД статуса - последний блок в ИД элемента
+    var elemArray = elementID.split("-");
+    var id = elemArray[elemArray.length - 1];
+    
+    // Получить ИД связанных документов
+    var idItemColumn = '#' + divItemColumn + '-' + id;
+    var idItemList = '#' + divItemList + '-' + id;
+    var idState = '#' + divState + '-' + id;
 
-//    // Получить ИД связанных документов
-//    var idItemColumn = '#' + divItemColumn + '-' + id;
-//    var idItemList = '#' + divItemList + '-' + id;
-//    var idState = '#' + divState + '-' + id;
-
-//    var ind = elementID.toLowerCase().indexOf(divState.toLowerCase());
-//    var element;
-//    // Изменить соответствеющие ширину объектов
-//    if (ind >= 0) {
-//        // Столбец
-//        element = $(idItemColumn);
-//        element.width(width);
-//    } else {
-//        // Ячейка статуса
-//        element = $(idState);
-//        element.width(width);
-//    }
-//    // Контейтер элементов
-//    element = $(idItemList);
-//    element.width(width);
-//}
+    var ind = elementID.toLowerCase().indexOf(divState.toLowerCase());
+    var element;
+    // Изменить соответствеющие ширину объектов
+    if (ind >= 0) {
+        // Столбец
+        element = $(idItemColumn);
+        element.width(width);
+    } else {
+        // Ячейка статуса
+        element = $(idState);
+        element.width(width);
+    }
+    // Контейтер элементов
+    element = $(idItemList);
+    element.width(width);
+}
 
 //// Сменить отображение элеметов
 //function changeItemMode(mode) {
@@ -650,24 +633,6 @@ function setItemViewMode(modeCompact, element) {
 //    }
 //}
 
-//function showFilterMenu() {
-//    var elementID = "filter-submenuID";
-//    var element = document.getElementById(elementID);
-//    var display = element.style.display;
-
-//    if (display == 'none') {
-//        display = 'block'
-//    } else {
-//        display = 'none'
-//    }
-//    element.style.display = display;
-//}
-
-//function hideFilterMenu() {
-//    var elementID = "filter-submenuID";
-//    var element = document.getElementById(elementID);
-//    element.style.display = 'none';
-//}
 
 ////******************* Обработчики событий действий с элементами *******
 //// Добавить новый элемент (по отфильтрованным данным)

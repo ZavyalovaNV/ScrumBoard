@@ -87,7 +87,7 @@
         {
           autoHide: true,
           handles: "e",
-          //resize: stopChangeSize
+          resize: stopChangeSize
         }
       );
 
@@ -110,8 +110,8 @@
     <div class="content-left">
       <div class="menu-main-block">
         <ul class="menu-main">
-          <li class="menu-main-item"><a class="btn new" href="#" onclick="addNewItem()">Новая запись</a></li>
-          <li class="menu-main-item"><a class="btn refresh" href="#" onclick="refreshItemList()">Обновить</a></li>
+          <li class="menu-main-item"><a class="btn new" href="#" onclick="itemList.addNew()">Новая запись</a></li>
+          <li class="menu-main-item"><a class="btn refresh" href="#" onclick="itemList.refresh()">Обновить</a></li>
         </ul>
       </div>
     </div>
@@ -176,55 +176,16 @@
     </div>
   </nav>
   <header class="states" id="states">
-    <!--Записывается из скрипта-->
+        <!--Записывается из скрипта-->
   </header>
   <main class="items-board">
-    <div class="item-row" id="item-row">
-      
-      <!--<div class="items-column ui-resizable">
-        <div class="items-list ui-sortable">
-          <div class="item wish">
-            <div class="item-handle"></div>
-            <a class="item-delete" href="#"></a>
-            <div class="item-content clearfix">
-              <div class="item-text">создано по фильтру 2</div>
-              <div class="item-executor-compact hidden">
-                <img title="Завьялова Наталия Владимировна" class="item-executor-img-compact" alt="Исполнитель" src="css\img\user.svg">
-                <span class="item-executor-name">Завьялова Наталия Владимировна</span>
-              </div>
-              <div class="item-data clearfix">
-                <div class="item-executor" onclick="changeExecutor()">
-                  <img title="Завьялова Наталия Владимировна" class="item-executor-img" alt="Исполнитель" src="css\img\avatars\1149425.jpg">
-                </div>
-                <div class="item-requisites-left">
-                  <div class="item-plan-hours"></div>
-                </div>
-                <div class="item-requisites-right">
-                  <div class="item-number">095-011</div>
-                  <div class="item-priority">Минимальный</div>
-                  <div class="item-plan-date"></div>
-                </div>
-              </div>
-              <div class="item-ind"></div>
-            </div>
-          </div>
+        <div class="item-row" id="item-row">
+            <!--Записывается из скрипта-->
         </div>
-      </div>
-      <div class="items-column ui-resizable">
-        <div class="items-list ui-sortable"></div>
-      </div>
-      <div class="items-column ui-resizable">
-        <div class="items-list ui-sortable"></div>
-      </div>
-      <div class="items-column ui-resizable">
-        <div class="items-list ui-sortable"></div>
-      </div>
-      <div class="items-column ui-resizable">
-        <div class="items-list ui-sortable"></div>
-      </div>-->
-    </div>
   </main>  
   <!--<script src="./js/script.js"></script>-->
+  <script src="./js/menu.js"></script>
+
   <script src="./js/test-data.js"></script>
   
   <script src="./js/states.js"></script>

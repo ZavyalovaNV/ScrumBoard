@@ -81,6 +81,7 @@
 .item-executor-img {
     border: 0px solid lightgray;
     height: 50px;
+    max-width: 50px;
 }
 
 .item-executor-img-compact {
@@ -102,13 +103,13 @@
 .item-requisites-left,
 .item-requisites-right {
     position: absolute;
-    bottom: 3px;
+    bottom: 5px;
     text-align: right;
     vertical-align: bottom;
 }
 
 .item-requisites-left {
-    left: 50px;    
+    left: 55px;    
 }
 
 .item-requisites-right {

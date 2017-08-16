@@ -6,6 +6,11 @@ State = function (data) {
         }
     }
 
+    // Получить элемент DOM по ид
+    this.getElement = function () {
+        // Найти элемент с таким же ИД
+        return document.getElementById("state-" + this.id);
+    }
 
     this.render = function (parent) {
         if (parent === undefined || parent === null) {
@@ -13,15 +18,13 @@ State = function (data) {
         }
 
         var className = "state";
-        var elementId = className + "-" + this.id;
-
+        
         // Найти данный элемент, чтобы не перерисовывать каждый раз
-        var element;
-        element = document.getElementById(elementId);
+        var element = this.getElement();        
         if (element === undefined || element === null) {
             element = document.createElement('div');
             // Задать ИД
-            element.id = elementId;
+            element.id = className + "-" + this.id;
             parent.appendChild(element);
         }
 
