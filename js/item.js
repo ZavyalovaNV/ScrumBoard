@@ -2,15 +2,15 @@ var TEMPLATE_ITEM = document.querySelector('#template_item').innerHTML;
 
 Item = function (data) {
     // Свойства элемента
-    this.update = function (data) {
+    this.update = function (data, itemList) {
         for (key in data) {
             this[key] = data[key];
         }
     }
 
     // Отрисовка элемента
-    this.render = function () {
-        // Получить ролительский контейнер
+    this.render = function (modeCompact) {
+        // Получить родительский контейнер
         var parent = document.getElementById("items-list-" + this.stateId);
         if (parent !== null) {
             var className = "item";
@@ -68,13 +68,12 @@ Item = function (data) {
                 }
             }
             
-
-            // Установить тип элемента
+            // Установить стили элемента
             var elementClassList = element.classList;
             if (!elementClassList.contains('item')) {
                 elementClassList.add('item')
             };
-
+            // 
             elementClassList.remove('defect');
             elementClassList.remove('wish');
             if (this.issueTypeId == '1') {
@@ -83,18 +82,9 @@ Item = function (data) {
             if (this.issueTypeId == '2') {
                 elementClassList.add('wish');
             };
-            
-            //if (data.planHours != '' && data.planHours != undefined) {
-            //    planHoursElement.innerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' ч.';
-            //} else {
-            //    planHoursElement.innerHTML = '';
-            //}
-
 
             // Компактный режим. Определить видимые области
-            //setItemViewMode(modeCompact, element);
-
-            //return element;
+            setItemViewMode(modeCompact, element)           
         }
     }
 

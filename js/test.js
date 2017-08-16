@@ -25,11 +25,13 @@ var filterSprintID = -1;
 var filterProjectID = 0;
 
 
-var itemList = new ItemList();
-console.log(itemList);
+var itemList = new ItemList(modeCompact);
 itemList.renderStates();
-
 itemList.renderItems();
+
+
+
+
 
 function stopChangeState(event, ui) {
     // ИД элемента
@@ -74,6 +76,21 @@ function startChangeState(event, ui) {
     prevItemsList = ui.item[0].parentElement;
 }
 
+// Установить режим отображения элемента
+function setItemViewMode(modeCompact, element) {
+    var elementData = element.querySelector('.item-data');
+    var elementInd = element.querySelector('.item-ind');
+    var elementCompactExecutor = element.querySelector('.item-executor-compact');
+    if (modeCompact) {
+        elementData.classList.add('hidden');
+        elementInd.classList.add('hidden');
+        elementCompactExecutor.classList.remove('hidden');
+    } else {
+        elementData.classList.remove('hidden');
+        elementInd.classList.remove('hidden');
+        elementCompactExecutor.classList.add('hidden');
+    }
+}
 //// Данные по текущей записи
 //var sprintID = testSprintID;
 //var projectID = testProjectID;

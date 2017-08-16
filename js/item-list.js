@@ -1,19 +1,9 @@
-ItemList = function () {
-    // функция получения статусов
-    this.states = function () {
-        //try {
-        //    var textData = executeScript('AK_SBGetStatesData', 0, 0, 0, readOnly);
-        //    var states = JSON.parse(textData);
-        //    createStatesCellsAndColumns(states);
-        //    return states
-        //}
-        //catch (err) {
-        //    alert(err);
-        //};
-        return states_test;
-    }();
-
+ItemList = function (modeCompact) {
+    // Все элементы
     this.items = items_test;
+
+    // Возможные статусы
+    this.states = states_test;
 
     // Отрисовать статусы
     this.renderStates = function () {
@@ -41,7 +31,7 @@ ItemList = function () {
             // создать новый статус
             var item = new Item(data);
             // отрисовать статус
-            item.render()
+            item.render(this.modeCompact)
         });
     }
 }
