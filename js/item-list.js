@@ -1,12 +1,53 @@
-ItemList = function (modeCompact) {
+ItemList = function (_modeCompact) {
+    // Фильтр
+    this.filter = {
+        _type: '',
+        _employeeList: [],
+        _priorityList: [],
+        _dateFrom: '',
+        _dateTo: '',
+        _sprintId: null,
+        _projectId: null
+    };
+
+    // Настройка отображения
+    this.modeCompact = _modeCompact;
+
     // Все элементы, как JSON
     this.itemsData = items_test;
+
+    // Работники
+    this.employeeList = new EmployeeList();
 
     // Список созданных объектов
     this.items = [];
 
     // Возможные статусы, как JSON
     this.states = states_test;
+
+    // Получить элемент из массива по его ИД
+    this.getItemById = function (id) {
+        var items = this.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var itemID = item.id;
+
+            if (id === itemID) {
+                return item;
+            }
+        }
+    };
+
+    // Получить элемент из массива JSON по его ИД
+    this.getItemDataById = function (id) {
+        var itemsData = this.itemsData;
+        for (var j = 0; j < itemsData.length; j++) {
+            var data = itemsData[j];
+            if (data.id === id) {
+                return data
+            }
+        }
+    };
 
     // Отрисовать статусы
     this.renderStates = function () {
@@ -24,50 +65,77 @@ ItemList = function (modeCompact) {
     }
     
     // Создать объекты
-    this.createItems = function () {        
-        var founded = false;
+    this.createItems = function () {
         var items = this.items;
         var itemsData = this.itemsData;
+        var employeeList = this.employeeList;
+        var item, check, toDelete;
 
-        // Найти элементы, которых нет в новых данных и удалить их из списка и DOM
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
-            var itemID = item.id;
+        // Прохождение по текущим данным
+        var itemsToDelete = [];
+        var newItems = items.filter(
+            function (item) {
+                // Проверить прохождение элемента по фильтру
+                toDelete = !this.checkByFilter(item);
 
-            founded = false;
-            for (var j = 0; j < itemsData.length; j++) {
-                founded = itemsData[j].id === itemID;
-                if (founded) { j = itemsData.length + 2}
+                // Если проверка фильтров пройдена
+                if (!toDelete) {
+                    // Проверить наличие в JSON данных
+                    itemData = this.getItemDataById(item.id);
+                    toDelete = (itemData === undefined)
+                }
+
+                // Если не прошел элемент по фильтрам или его больше нет в JSON, удалить из списка элементов и DOM
+                if (toDelete) {
+                    itemsToDelete.push(item)
+                }
+
+                return !toDelete
+            }, this
+        )
+
+        // Удалить объекты из DOM
+        for (var i = 0; i < itemsToDelete.length; i++) {
+            item = itemsToDelete[i];
+            item.delete(false);
+        }
+
+        items = newItems;
+
+        // Сформировать список отображаемых элементов на основе фильтра        
+        for (var i = 0; i < itemsData.length; i++) {
+            // Элемент из JSON
+            var itemData = itemsData[i];
+
+            // Добавить исполнителя в список
+            var employee = employeeList.getEmployeeById(itemData.executorId);
+            if (employee === undefined) {
+                employee = new Employee(itemData.executorId, itemData.executorName);
+                employeeList.add(employee);
             }
-            if (!founded) {
+
+            // Проверить прохождение по фильтру
+            check = this.checkByFilter(itemData);
+
+            // Найти его в списке текущих элементов
+            item = this.getItemById(itemData.id);
+        
+            // Если данный элемент есть в списке, но его не нужно отбражать - удалить из списка и DOM
+            if (item !== undefined && !check) {
                 item.delete(false);
                 items.splice(i, 1);
-            }
-        } 
-
-        // Добавить новые элементы
-        itemsData.forEach(function (data) {
-            // Найти в массиве
-            founded = false;
-            for (var i = 0; i < items.length; i++) {
-                var item = items[i];
-                var itemID = item.id;
-
-                founded = (itemID === data.id)
-                if (founded) {
-                    i = items.length + 1
-                }
             } 
 
-            // создать новый элемент и добавить в список, если его еще не было
-            if (!founded) {
-                var item = new Item(data);
+            // Если данный элемент не был найден в списке и его требуется отбразить - создать и отобразить
+            if (item === undefined && check) {
+                // создать новый элемент и добавить в список, если его еще не было
+                item = new Item(itemData);
                 items.push(item);
             }
-        });
-
+        }
+       
         this.items = items;
-    };
+    }
 
     // Отрисовать элементы
     this.renderItems = function () {
@@ -82,9 +150,11 @@ ItemList = function (modeCompact) {
     // Обновить элементы
     this.refresh = function () {
         // Получить данные с сервера
-        this.itemsData = items_test_new;
 
         // Преобразовать их в JSON
+        
+
+        this.itemsData = items_test_new;
 
         // Создать элементы
         this.createItems();
@@ -93,12 +163,139 @@ ItemList = function (modeCompact) {
         this.renderItems();
     }
 
+    // Добавить новый элемент
     this.addNew = function () {
         var item = new Item();
-        item.add()
+        item.add();
+        this.items.push(item);
+        item.render();
+    }
+
+    // Сменить режим отображения Полный/Компактный
+    this.setViewMode = function (viewMode_) {
+        this.modeCompact = viewMode_;
+
+        var elements = document.querySelectorAll('.item');
+        var element, arr, item;
+        for (var i = 0; i < elements.length; i++) {
+            element = elements[i];
+            arr = element.id.split("-");
+            item = this.getItemById(arr[arr.length - 1]);
+            if (item !== undefined) {
+                item.setViewMode(this.modeCompact);
+            }
+        }
+    }
+
+    // ФИЛЬТРЫ
+    this.setFilter = function (selector) {
+        var COMPARE = {
+            ".select-employee": '_employeeList',
+            ".select-priority": '_priorityList',
+            ".select-issue-type": '_type',
+            "#plan-date-from": '_dateFrom',
+            "#plan-date-to": '_dateTo',
+            ".select-sprint": '_sprintId'
+        };
+        
+        var filterValue = $(selector).val();        
+        if (filterValue === undefined) {
+            filterValue = $(selector).value
+        }
+        var filterName = COMPARE[selector];        
+        this.filter[filterName] = filterValue;        
+
+        this.refresh();
+    }
+
+    this.checkByFilter = function (item) {
+        var filter = this.filter;
+        var checked = false;
+
+        // Проверка по спринту
+        var filterSprintId = filter._sprintId;
+        checked = (filterSprintId === item.sprintId) || filterSprintId == '' || filterSprintId == null || filterSprintId == -1 || filterSprintId == undefined;
+
+        if (checked) {
+            // Проверка по работнику
+            var filterEmployeeList = filter._employeeList;
+            checked = (filterEmployeeList.indexOf(item.executorId) > -1) || filterEmployeeList.length == 0 || filterEmployeeList == null || filterEmployeeList == undefined;
+
+            // Проверка по приоритету
+            if (checked) {
+                var filterPriorityList = filter._priorityList;
+                checked = (filterPriorityList.indexOf(item.priorityId) > -1) || filterPriorityList.length == 0 || filterPriorityList == null || filterPriorityList == undefined;
+
+                // Проверка по типу
+                if (checked) {
+                    var filterType = filter._type;
+                    checked = (filterType === item.issueTypeId) || filterType == '' || filterType == null || filterType == -1 || filterType == undefined
+
+                    // Проверка по дате с
+                    if (checked) {
+                        var filterPlanDateFrom = filter._dateFrom;
+                        checked = (item.planDate >= filterPlanDateFrom) || filterPlanDateFrom == '' || filterPlanDateFrom == null || filterPlanDateFrom == undefined
+
+                        // Проверка по дате по
+                        if (checked) {
+                            var filterPlanDateTo = filter._dateTo;
+                            checked = (item.planDate <= filterPlanDateTo) || filterPlanDateTo == '' || filterPlanDateTo == null || filterPlanDateTo == undefined
+                        }
+                    }
+                }
+            }
+        }
+                
+        return checked
     }
 }
 
+Employee = function (_id, _name) {
+    this.id = _id;
+    this.name = _name;
+
+    this.render = function () {
+        var container = document.querySelector(".select-employee");
+        var optionList = container.options;
+        
+        // Найти работника в списке
+        var founded = false;
+        for (var i = 0; i < optionList.length; i++) {
+            var option = optionList[i];
+            founded = option.value === this.id;
+            if (founded) { break; }
+        }
+        if (!founded) {
+            // Создать работника в списке
+            var element = document.createElement("option");
+            element.classList.add('select-employee-option');
+            element.value = this.id;
+            element.innerHTML = this.name;
+            container.appendChild(element);
+        }
+    }
+}
+
+EmployeeList = function (data) {
+    this.data = [];
+    this.employees = [];
+
+    this.add = function (employee) {
+        this.employees.push(employee);
+        this.data.push({ id: employee.id, text: employee.name });
+        employee.render();
+    }
+
+    this.getEmployeeById = function (_id) {
+        var data = this.data;
+        for (var i = 0; i < data.length; i++) {
+            employee = data[i];
+            if (employee.id === _id) {
+                return employee
+            }
+        }
+    }
+}
 
 //// Задать допустимые переходы
 //function createStatesTransmissions(states) {

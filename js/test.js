@@ -1,7 +1,6 @@
-﻿var DELIMITER = '!"№;%:';
-var TEMPLATE_STATES = document.querySelector('#template_states').innerHTML;
-var TEMPLATE_COLUMN = document.querySelector('#template_column').innerHTML;
-var TEMPLATE_ITEM = document.querySelector('#template_item').innerHTML;
+﻿//var TEMPLATE_STATES = document.querySelector('#template_states').innerHTML;
+//var TEMPLATE_COLUMN = document.querySelector('#template_column').innerHTML;
+//var TEMPLATE_ITEM = document.querySelector('#template_item').innerHTML;
 
 // Признак отображения компактного режима
 var modeCompact = false;
@@ -52,12 +51,13 @@ function stopChangeState(event, ui) {
     getTextData.Params.Add('NewItemState', newItemStateId);
     getTextData.Params.Add('ReadOnly', readOnly);
 
+    var result;
     try {
-        var result = getTextData.Execute();
+        result = getTextData.Execute();
     }
     catch (err) {
         alert(err);
-        var result = true
+        result = true
     }
 
     if (result) {
@@ -723,3 +723,61 @@ function stopChangeSize(event, ui) {
 //    var states = document.querySelector('.states');
 //    states.style.left = -scrolled + 'px';
 //}
+
+
+
+$(init);
+function init() {
+    $(".select-priority").select2({
+        placeholder: "Выберите...",
+        data: priorities_test
+    });
+    $(".select-employee").select2({
+        placeholder: "Выберите...",
+        data: itemList.employeeList.data
+    });
+    $(".select-sprint").select2({
+        placeholder: "Выберите..."
+    });
+    $(".select-issue-type").select2({
+        placeholder: "Выберите...",
+        allowClear: true,
+        data: issueTypes_test
+    });
+
+    elemID = "filter-submenuID";
+    elem = document.getElementById(elemID);
+    if (elem != undefined) {
+        elem.style.display = "none";
+    }
+
+    $(".ui-sortable").sortable(
+        {
+            delay: 10,
+            opacity: 0.85,
+            stop: stopChangeState,
+            forcePlaceholderSize: true,
+            start: startChangeState,
+            placeholder: "item-placeholder",
+            forcePlaceholderSize: true
+        });
+
+    $(".ui-resizable").resizable(
+        {
+            autoHide: true,
+            handles: "e",
+            resize: stopChangeSize
+        }
+    );
+
+    $(".datepicker").datepicker({
+        gotoCurrent: true,
+        dateFormat: "dd.mm.yy",
+        dayNames: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
+        dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+        firstDay: 1,
+        monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+        monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+        autosize: true
+    });
+};

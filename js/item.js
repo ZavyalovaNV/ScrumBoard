@@ -1,4 +1,32 @@
-var TEMPLATE_ITEM = document.querySelector('#template_item').innerHTML;
+let TEMPLATE_ITEM =
+`<div class="item-handle"></div> 
+    <a class="item-delete" href= "#" onclick= "deleteItem()" ></a>
+        <div class="item-content">
+            <div class="item-text"><text></div>   
+         
+                <div class="item-executor-compact" onclick="changeExecutor()">
+                    <img class="item-executor-img-compact" src="" alt="Исполнитель" title="<executorName>" />
+                    <span class="item-executor-name"><executorName></span>
+        </div>
+        
+                    <div class="item-data clearfix">
+                        <div class="item-executor" onclick="changeExecutor()">
+                            <img class="item-executor-img" src="css\img\avatars\<executorPhoto>" alt="Исполнитель" title="<executorName>" />
+                        </div>
+
+                        <div class="item-requisites-left">
+                            <div class="item-plan-hours">
+                                <planHours>
+            </div>
+                            </div>
+                            <div class="item-requisites-right">
+                                <div class="item-number"><number></div>
+                                    <div class="item-priority"><priority></div>
+                                        <div class="item-plan-date"><planDate></div>
+                                        </div>
+                                    </div>
+                                    <div class="item-ind"></div>
+                                </div>`;
 
 Item = function (data) {
     // Свойства элемента
@@ -43,7 +71,6 @@ Item = function (data) {
                 '.item-text': this.text,
                 '.item-priority': this.priority,
                 '.item-plan-date': this.planDate,
-                '.item-plan-hours': this.planHours,
                 '.item-executor-compact span': this.executorName,
                 ".item-number": this.number,
                 ".item-plan-hours": planHoursElementInnerHTML
@@ -86,12 +113,14 @@ Item = function (data) {
             if (this.issueTypeId == '2') {
                 elementClassList.add('wish');
             };
+            elementClassList.add('ui-sortable');
 
             // Компактный режим. Определить видимые области
             this.setViewMode(modeCompact);
         }
     }
 
+    // Установить режим отображения Полный/Компактный
     this.setViewMode = function (modeCompact) {
         var element = this.getElement();
         if (element !== undefined && element !== null) {

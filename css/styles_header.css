@@ -32,19 +32,19 @@
     height: 42px;    
     margin: 0;
     border: 0;
-    font-size: 0;
+    
     background: url("img/sprite.png") no-repeat #d8dedf;
 }
 .btn:hover { background-color: #cccccc; }
 .btn:active { background-color: #999999; }
 
-a.new {
+.new {
     background-position: 0 0;
 }
-a.refresh {
+.refresh {
     background-position: -42px 0;
 }
-a.settings {
+.settings {
     background-position: -84px 0;
 }
 

@@ -266,7 +266,7 @@ function createSelectOption(options, containerId, optionClass, selectedValue, ad
                 var optionName = option.name;
                 optionList.set(optionId, optionName);
 
-                var option = document.createElement("option");
+                option = document.createElement("option");
                 option.classList.add(optionClass);
                 option.value = optionId;
                 option.innerHTML = optionName;
@@ -623,12 +623,14 @@ function stopChangeState(event, ui) {
     getTextData.Params.Add('NewItemState', newItemStateId);
     getTextData.Params.Add('ReadOnly', readOnly);
 
+    var result;
+
     try {
-        var result = getTextData.Execute();
+        result = getTextData.Execute();
     }
     catch (err) {
         alert(err);
-        var result = true
+        result = true
     }
 
     if (result) {
@@ -743,11 +745,12 @@ function changeExecutor() {
     var elementId = element.id;
     var itemId = getIdFromElementId(elementId);
 
+    var result;
     try {
-        var result = executeScript('AK_SBChangeExecutorItem', projectID, sprintID, itemId, readOnly);
+        result = executeScript('AK_SBChangeExecutorItem', projectID, sprintID, itemId, readOnly);
     }
     catch (err) {
-        var result = false;
+        result = false;
         alert(err);
     }
 

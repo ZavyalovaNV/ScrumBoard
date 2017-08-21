@@ -14,6 +14,7 @@
                 return application.ReferencesFactory.ReferenceFactory(this.refCode).GetObjectByID(this.recordID);
             }
             catch (err) {
+                alert(err)
             }
         }
     }
