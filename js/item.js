@@ -30,9 +30,16 @@ let TEMPLATE_ITEM =
 
 Item = function (data) {
     // Свойства элемента
-    this.update = function (data, itemList) {
+    this.update = function (data, itemList) {        
         for (key in data) {
-            this[key] = data[key];
+            // Для плановой даты преобразовать строку в Дату, чтобы дальше работать как с датами
+            if (key === 'planDate') {
+                var valueStr = data[key];
+                var value = parseDate(valueStr);
+            } else {
+                value = data[key]
+            }
+            this[key] = value;
         }
     }
 
@@ -70,7 +77,7 @@ Item = function (data) {
             var compareValues = {
                 '.item-text': this.text,
                 '.item-priority': this.priority,
-                '.item-plan-date': this.planDate,
+                '.item-plan-date': dateToStr(this.planDate),
                 '.item-executor-compact span': this.executorName,
                 ".item-number": this.number,
                 ".item-plan-hours": planHoursElementInnerHTML

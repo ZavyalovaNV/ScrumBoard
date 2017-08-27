@@ -29,6 +29,31 @@ itemList.renderStates();
 itemList.createItems();
 itemList.renderItems();
 
+// Функции для работы с датами
+function parseDate(valueStr) {
+    var value = '';
+    if (valueStr != "") {
+        // Попробовать распарсить строку на случай, если данные сразу пришли в готово виде
+        var date = Date.parse(valueStr);
+        // Если не удалось, попробовать через точки
+        if (isNaN(date)) {
+            var split = valueStr.split(".");
+            value = new Date(split[2], split[1] - 1, split[0]);
+        }
+    }
+    return value;
+}
+
+function dateToStr(date) {
+    var options = {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+    };
+
+    return date.toLocaleString("ru", options);
+}
+
 function stopChangeState(event, ui) {
     // ИД элемента
     var elementID = ui.item.attr("id");
@@ -743,6 +768,10 @@ function init() {
         placeholder: "Выберите...",
         allowClear: true,
         data: issueTypes_test
+    });
+    $(".select-sort").select2({
+        allowClear: true,
+        data: sort_test
     });
 
     elemID = "filter-submenuID";

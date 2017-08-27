@@ -10,6 +10,12 @@ ItemList = function (_modeCompact) {
         _projectId: null
     };
 
+    // Сортировка
+    this.sort = {
+        field: '',
+        dest: 'desc'
+    }
+
     // Настройка отображения
     this.modeCompact = _modeCompact;
 
@@ -69,6 +75,7 @@ ItemList = function (_modeCompact) {
         var items = this.items;
         var itemsData = this.itemsData;
         var employeeList = this.employeeList;
+        var sort = this.sort;
         var item, check, toDelete;
 
         // Прохождение по текущим данным
@@ -133,7 +140,26 @@ ItemList = function (_modeCompact) {
                 items.push(item);
             }
         }
-       
+
+        // Отсортировать
+        items = items.sort(
+            function (item1, item2) {
+                var sortField = sort['field'];
+                var sortDest = sort['dest'];
+
+                var value1 = item1[sortField];
+                var value2 = item2[sortField];
+
+                var koef = 1;
+                if (sortDest === 'acs') {
+                    koef = -1
+                }
+
+                if (value1 > value2) { return -1 * koef }
+                else { return 1 * koef };
+            }
+        );
+
         this.items = items;
     }
 
@@ -197,11 +223,18 @@ ItemList = function (_modeCompact) {
             "#plan-date-to": '_dateTo',
             ".select-sprint": '_sprintId'
         };
+        var element = $(selector);
+        var classList = element[0].classList;
+        var filterValue = element.val();
+        // Если это дата - распарсить к дате
+        if (classList.contains("datepicker")) {
+            filterValue = $.datepicker.parseDate("dd.mm.yy", filterValue) 
+        } else {            
+            if (filterValue === undefined) {
+                filterValue = element.value
+            }
+        }        
         
-        var filterValue = $(selector).val();        
-        if (filterValue === undefined) {
-            filterValue = $(selector).value
-        }
         var filterName = COMPARE[selector];        
         this.filter[filterName] = filterValue;        
 
@@ -234,12 +267,15 @@ ItemList = function (_modeCompact) {
                     // Проверка по дате с
                     if (checked) {
                         var filterPlanDateFrom = filter._dateFrom;
-                        checked = (item.planDate >= filterPlanDateFrom) || filterPlanDateFrom == '' || filterPlanDateFrom == null || filterPlanDateFrom == undefined
+                        //console.log(typeof item.planDate);
+                        //console.log(typeof filterPlanDateFrom);
+
+                        checked = (item.planDate >= filterPlanDateFrom) || filterPlanDateFrom === '' || filterPlanDateFrom === null// || filterPlanDateFrom == undefined
 
                         // Проверка по дате по
                         if (checked) {
                             var filterPlanDateTo = filter._dateTo;
-                            checked = (item.planDate <= filterPlanDateTo) || filterPlanDateTo == '' || filterPlanDateTo == null || filterPlanDateTo == undefined
+                            checked = (item.planDate <= filterPlanDateTo) || filterPlanDateTo === '' || filterPlanDateTo === null || filterPlanDateTo == undefined
                         }
                     }
                 }
@@ -248,7 +284,27 @@ ItemList = function (_modeCompact) {
                 
         return checked
     }
+
+    // СОРТИРОВКА
+    this.setSort = function (par) {
+        var newField = par.value;
+        var newDest = 'desc';
+
+        var curSort = this.sort;
+        if (curSort['field'] === newField) {
+            if (curSort['dest'] === 'desc') {
+                newDest = 'asc'
+            }
+        } 
+
+        this.sort['field'] = newField;
+        this.sort['dest'] = newDest;
+
+        this.refresh();
+    }
 }
+
+
 
 Employee = function (_id, _name) {
     this.id = _id;

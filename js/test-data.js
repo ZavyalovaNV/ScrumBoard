@@ -5,6 +5,12 @@ var testRefCode = 'AK_IT_Sprints';
 var isTesting = true;
 
 
+var sort_test = [
+    { "id": "number", "text": "Номер" },
+    { "id": "priorityId", "text": "Приоритет" },
+    { "id": "planDate", "text": "Дата создания" }
+];
+
 var states_test = [
     { "id": "873357", "name": "Зарегистровано", "availableStates": [873363, 873359, 873358, 873360] },
     { "id": "873358", "name": "Проектирование", "availableStates": [873359, 873358] },
