@@ -33,7 +33,7 @@ Item = function (data) {
     this.update = function (data, itemList) {        
         for (key in data) {
             // Для плановой даты преобразовать строку в Дату, чтобы дальше работать как с датами
-            if (key === 'planDate') {
+            if (key === 'planDate' || key === 'regDate') {
                 var valueStr = data[key];
                 var value = parseDate(valueStr);
             } else {

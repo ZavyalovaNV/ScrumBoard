@@ -12,8 +12,8 @@ ItemList = function (_modeCompact) {
 
     // Сортировка
     this.sort = {
-        field: '',
-        dest: 'desc'
+        field: 'number',
+        dest: 'acs'
     }
 
     // Настройка отображения
@@ -55,21 +55,6 @@ ItemList = function (_modeCompact) {
         }
     };
 
-    // Отрисовать статусы
-    this.renderStates = function () {
-        var container = document.getElementById("states");
-        var containerCols = document.getElementById("item-row");
-
-        var states = this.states;
-        states.forEach(function (data) {
-            // создать новый статус
-            var state = new State(data);
-            // отрисовать статус
-            state.render(container);
-            state.renderColumn(containerCols);
-        });
-    }
-    
     // Создать объекты
     this.createItems = function () {
         var items = this.items;
@@ -126,12 +111,12 @@ ItemList = function (_modeCompact) {
 
             // Найти его в списке текущих элементов
             item = this.getItemById(itemData.id);
-        
+
             // Если данный элемент есть в списке, но его не нужно отбражать - удалить из списка и DOM
             if (item !== undefined && !check) {
                 item.delete(false);
                 items.splice(i, 1);
-            } 
+            }
 
             // Если данный элемент не был найден в списке и его требуется отбразить - создать и отобразить
             if (item === undefined && check) {
@@ -151,19 +136,55 @@ ItemList = function (_modeCompact) {
                 var value2 = item2[sortField];
 
                 var koef = 1;
-                if (sortDest === 'acs') {
+                if (sortDest === 'decs') {
                     koef = -1
                 }
 
-                if (value1 > value2) { return -1 * koef }
-                else { return 1 * koef };
+                var res = 1;
+                if (sortField === 'priorityId') {
+                    if (value1 > value2) {
+                        res = -1
+                    }
+                } else {
+                    if (value1 < value2) {
+                        res = -1
+                    }
+                }
+
+                return res * koef;
             }
         );
 
         this.items = items;
     }
 
-    // Отрисовать элементы
+    // Отрисовать статусы
+    this.renderStates = function () {
+        var container = document.getElementById("states");
+        var containerCols = document.getElementById("item-row");
+
+        var states = this.states;
+        states.forEach(function (data) {
+            // создать новый статус
+            var state = new State(data);
+            // отрисовать статус
+            state.render(container);
+            state.renderColumn(containerCols);
+        });
+    }
+    
+    // Очистить область от элементов
+    this.clear = function () {
+        var elements = document.querySelectorAll('.item');
+        for (var i = 0; i < elements.length; i++) {
+            element = elements[i];
+            console.log(element);
+
+            element.parentNode.removeChild(element);
+        }
+    }
+
+    // Отрисовать все элементы
     this.renderItems = function () {
         var items = this.items;
        
@@ -214,6 +235,7 @@ ItemList = function (_modeCompact) {
     }
 
     // ФИЛЬТРЫ
+    // Установить текущее значение фильтра
     this.setFilter = function (selector) {
         var COMPARE = {
             ".select-employee": '_employeeList',
@@ -236,8 +258,11 @@ ItemList = function (_modeCompact) {
         }        
         
         var filterName = COMPARE[selector];        
-        this.filter[filterName] = filterValue;        
+        this.filter[filterName] = filterValue;
+    }
 
+    // Применить фильтр к значениям
+    this.applyFilter = function () {
         this.refresh();
     }
 
@@ -288,19 +313,56 @@ ItemList = function (_modeCompact) {
     // СОРТИРОВКА
     this.setSort = function (par) {
         var newField = par.value;
-        var newDest = 'desc';
+        var newDest = 'asc';
 
         var curSort = this.sort;
         if (curSort['field'] === newField) {
-            if (curSort['dest'] === 'desc') {
-                newDest = 'asc'
+            if (curSort['asc'] === 'asc') {
+                newDest = 'desc'
             }
         } 
 
         this.sort['field'] = newField;
-        this.sort['dest'] = newDest;
+        this.sort['dest'] = newDest;        
+    }
 
-        this.refresh();
+    // Отсортировать
+    this.applySort = function () {
+        var sort = this.sort;
+        var items = this.items;
+
+        items = items.sort(
+            function (item1, item2) {
+                var value1 = item1[sort.field];
+                var value2 = item2[sort.field];
+
+                var koef = 1;
+                if (sort.dest === 'desc') {
+                    koef = -1
+                }
+
+                console.log("value1 " + value1);
+                console.log("value2 " + value2);
+
+                var res = 1;
+                if (sort.field === 'priorityId') {
+                    if (value1 > value2) {
+                        res = -1
+                    }
+                } else {
+                    if (value1 < value2) {
+                        res = -1
+                    }
+                }
+
+                return res * koef;
+            }
+        );
+        console.log(items);
+        this.items = items;
+
+        this.clear();
+        this.renderItems();
     }
 }
 

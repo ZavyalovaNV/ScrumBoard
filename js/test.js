@@ -770,7 +770,7 @@ function init() {
         data: issueTypes_test
     });
     $(".select-sort").select2({
-        allowClear: true,
+        //allowClear: true,
         data: sort_test
     });
 
