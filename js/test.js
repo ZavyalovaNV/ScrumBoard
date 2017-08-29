@@ -26,7 +26,7 @@ var filterProjectID = 0;
 
 var itemList = new ItemList(modeCompact);
 itemList.renderStates();
-itemList.createItems();
+itemList.setItems();
 itemList.renderItems();
 
 // Функции для работы с датами
