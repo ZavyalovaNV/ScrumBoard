@@ -1,4 +1,5 @@
 ItemList = function (_modeCompact) {
+    /***********Свойства отображения*********/
     // Фильтр
     this.filter = {
         _type: '',
@@ -12,25 +13,31 @@ ItemList = function (_modeCompact) {
 
     // Сортировка
     this.sort = {
+        // Значения по умолчанию
         field: 'number',
         dest: 'acs'
     }
 
     // Настройка отображения
     this.modeCompact = _modeCompact;
+    /*****************************************/
 
-    // Все элементы, как JSON
-    this.itemsData = items_test;
-
+    /***********Свойства списка***************/
     // Работники
     this.employeeList = new EmployeeList();
-
-    // Список созданных объектов
-    this.items = [];
 
     // Возможные статусы, как JSON
     this.states = states_test;
 
+    // Все элементы, как JSON - т.е. все выгруженные значения без фильтров и сортировок
+    this.itemsData = items_test;
+
+    // Список созданных объектов с учетом фильтров и сортировок
+    this.items = [];
+    /*****************************************/
+
+
+    /***********Основные методы работы со списком***************/
     // Получить элемент из массива по его ИД
     this.getItemById = function (id) {
         var items = this.items;
@@ -55,14 +62,156 @@ ItemList = function (_modeCompact) {
         }
     };
 
-    // Создать объекты
+    // Очистить текущий список объектов
+    this.deleteItems = function () {
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            item.delete()
+        }
+    }
+
+    // Создать новый список на основе JSON
     this.createItems = function () {
+        var items = this.items;
+        for (var i = 0; i < itemsData.length; i++) {
+            // Элемент из JSON
+            var itemData = itemsData[i];
+            // создать новый элемент и добавить в список, если его еще не было
+            item = new Item(itemData);
+            items.push(item);
+        }
+    }
+
+    // Применить фильтр к значениям
+    this.applyFilter = function () {
+        var items = this.items;
+        var filter = this.filter;
+        
+        console.log("Начальное значение:");
+        console.log(items);
+
+        items = items.filter(
+            function (element, index, array) {
+                var checked = element.checkByFilter(filter);
+                return checked;
+            }
+        )
+        
+        console.log("Отфильтрованное значение:");
+        console.log(items);
+        this.items = items;
+    }
+
+    // Применить сортировку
+    this.applySort = function () {
+        var items = this.items;
+        var sortField = this.sort.field;
+        var sortDest = this.sort.dest;
+        // Коэффициент направления сортировки
+        var koefDest = 1;
+        // Дополнительный коэффициент для сортировки, когда большее значение соответсвует меньшему: приоритет 0 выше приоритета 1
+        var koef = 1;
+
+        // Результат сравнения:
+        var result = 0;
+
+        console.log("Начальное значение:");
+        console.log(items);
+
+        items = items.sort(
+            function (item1, item2) {
+                // В field хранится поле, по которому идет сравнение
+                var value1 = item1[sortField];
+                var value2 = item2[sortField];
+
+                // Если текущие значения не отличаются - не сортировать
+                if (value1 != value2) {
+                    // Если сортировка по убыванию, то всё наоборот - результат умножается на -1
+                    koefDest = sortDest === 'desc' ? -1 : 1;
+
+                    // Сравнение
+                    // Для поля Приоритет - чем выше значение, тем ниже приоритет
+                    koef = sortField === 'priorityId' ? -1 : 1;
+
+                    // Результат сравнения:
+                    //Если compareFunction(a, b) меньше 0, сортировка поставит a по меньшему индексу, чем b, то есть, a идёт первым.
+                    //Если compareFunction(a, b) вернёт 0, сортировка оставит a и b неизменными по отношению друг к другу, но отсортирует их по отношению ко всем другим элементам.Обратите внимание: стандарт ECMAscript не гарантирует данное поведение, и ему следуют не все браузеры (например, версии Mozilla по крайней мере, до 2003 года).
+                    //Если compareFunction(a, b) больше 0, сортировка поставит b по меньшему индексу, чем a.
+                    result = value1 < value2 ? -1 : 1;
+                    result = result * koef * koefDest;
+                }
+               
+                return result;
+            }
+        );
+
+        console.log("Отсортированное значение:");
+        console.log(items);
+        this.items = items;
+    }
+}
+
+    this.checkByFilter = function (item) {
+        var filter = this.filter;
+        var checked = false;
+
+        // Проверка по спринту
+        var filterSprintId = filter._sprintId;
+        checked = (filterSprintId === item.sprintId) || filterSprintId == '' || filterSprintId == null || filterSprintId == -1 || filterSprintId == undefined;
+
+        if (checked) {
+            // Проверка по работнику
+            var filterEmployeeList = filter._employeeList;
+            checked = (filterEmployeeList.indexOf(item.executorId) > -1) || filterEmployeeList.length == 0 || filterEmployeeList == null || filterEmployeeList == undefined;
+
+            // Проверка по приоритету
+            if (checked) {
+                var filterPriorityList = filter._priorityList;
+                checked = (filterPriorityList.indexOf(item.priorityId) > -1) || filterPriorityList.length == 0 || filterPriorityList == null || filterPriorityList == undefined;
+
+                // Проверка по типу
+                if (checked) {
+                    var filterType = filter._type;
+                    checked = (filterType === item.issueTypeId) || filterType == '' || filterType == null || filterType == -1 || filterType == undefined
+
+                    // Проверка по дате с
+                    if (checked) {
+                        var filterPlanDateFrom = filter._dateFrom;
+                        //console.log(typeof item.planDate);
+                        //console.log(typeof filterPlanDateFrom);
+
+                        checked = (item.planDate >= filterPlanDateFrom) || filterPlanDateFrom === '' || filterPlanDateFrom === null// || filterPlanDateFrom == undefined
+
+                        // Проверка по дате по
+                        if (checked) {
+                            var filterPlanDateTo = filter._dateTo;
+                            checked = (item.planDate <= filterPlanDateTo) || filterPlanDateTo === '' || filterPlanDateTo === null || filterPlanDateTo == undefined
+                        }
+                    }
+                }
+            }
+        }
+
+        return checked
+    }
+
+
+    // Получить объекты из JSON с учетом фильтров и сортировок
+    this.setItems = function () {
         var items = this.items;
         var itemsData = this.itemsData;
         var employeeList = this.employeeList;
         var sort = this.sort;
         var item, check, toDelete;
 
+        // // Очистить текущий список
+        items.deleteItems();
+
+        // // Создать новый список
+        items.createItems();
+
+
+        
         // Прохождение по текущим данным
         var itemsToDelete = [];
         var newItems = items.filter(
@@ -186,6 +335,8 @@ ItemList = function (_modeCompact) {
 
     // Отрисовать все элементы
     this.renderItems = function () {
+        this.clear();
+
         var items = this.items;
        
         for (var i = 0; i < this.items.length; i++) {
@@ -204,7 +355,7 @@ ItemList = function (_modeCompact) {
         this.itemsData = items_test_new;
 
         // Создать элементы
-        this.createItems();
+        this.setItems();
 
         // Отрисовать элементы
         this.renderItems();
@@ -261,55 +412,6 @@ ItemList = function (_modeCompact) {
         this.filter[filterName] = filterValue;
     }
 
-    // Применить фильтр к значениям
-    this.applyFilter = function () {
-        this.refresh();
-    }
-
-    this.checkByFilter = function (item) {
-        var filter = this.filter;
-        var checked = false;
-
-        // Проверка по спринту
-        var filterSprintId = filter._sprintId;
-        checked = (filterSprintId === item.sprintId) || filterSprintId == '' || filterSprintId == null || filterSprintId == -1 || filterSprintId == undefined;
-
-        if (checked) {
-            // Проверка по работнику
-            var filterEmployeeList = filter._employeeList;
-            checked = (filterEmployeeList.indexOf(item.executorId) > -1) || filterEmployeeList.length == 0 || filterEmployeeList == null || filterEmployeeList == undefined;
-
-            // Проверка по приоритету
-            if (checked) {
-                var filterPriorityList = filter._priorityList;
-                checked = (filterPriorityList.indexOf(item.priorityId) > -1) || filterPriorityList.length == 0 || filterPriorityList == null || filterPriorityList == undefined;
-
-                // Проверка по типу
-                if (checked) {
-                    var filterType = filter._type;
-                    checked = (filterType === item.issueTypeId) || filterType == '' || filterType == null || filterType == -1 || filterType == undefined
-
-                    // Проверка по дате с
-                    if (checked) {
-                        var filterPlanDateFrom = filter._dateFrom;
-                        //console.log(typeof item.planDate);
-                        //console.log(typeof filterPlanDateFrom);
-
-                        checked = (item.planDate >= filterPlanDateFrom) || filterPlanDateFrom === '' || filterPlanDateFrom === null// || filterPlanDateFrom == undefined
-
-                        // Проверка по дате по
-                        if (checked) {
-                            var filterPlanDateTo = filter._dateTo;
-                            checked = (item.planDate <= filterPlanDateTo) || filterPlanDateTo === '' || filterPlanDateTo === null || filterPlanDateTo == undefined
-                        }
-                    }
-                }
-            }
-        }
-                
-        return checked
-    }
-
     // СОРТИРОВКА
     this.setSort = function (par) {
         var newField = par.value;
@@ -326,45 +428,7 @@ ItemList = function (_modeCompact) {
         this.sort['dest'] = newDest;        
     }
 
-    // Отсортировать
-    this.applySort = function () {
-        var sort = this.sort;
-        var items = this.items;
-
-        items = items.sort(
-            function (item1, item2) {
-                var value1 = item1[sort.field];
-                var value2 = item2[sort.field];
-
-                var koef = 1;
-                if (sort.dest === 'desc') {
-                    koef = -1
-                }
-
-                console.log("value1 " + value1);
-                console.log("value2 " + value2);
-
-                var res = 1;
-                if (sort.field === 'priorityId') {
-                    if (value1 > value2) {
-                        res = -1
-                    }
-                } else {
-                    if (value1 < value2) {
-                        res = -1
-                    }
-                }
-
-                return res * koef;
-            }
-        );
-        console.log(items);
-        this.items = items;
-
-        this.clear();
-        this.renderItems();
-    }
-}
+    
 
 
 

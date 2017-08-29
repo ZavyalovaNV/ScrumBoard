@@ -210,5 +210,45 @@ Item = function (data) {
         }
     }
 
+    this.checkByFilter = function (filter) {
+        var checked = false;
+
+        // Проверка по спринту
+        var filterSprintId = filter._sprintId;
+        checked = (filterSprintId === this.sprintId) || filterSprintId == '' || filterSprintId == null || filterSprintId == -1 || filterSprintId == undefined;
+
+        if (checked) {
+            // Проверка по работнику
+            var filterEmployeeList = filter._employeeList;
+            checked = (filterEmployeeList.indexOf(this.executorId) > -1) || filterEmployeeList.length == 0 || filterEmployeeList == null || filterEmployeeList == undefined;
+
+            // Проверка по приоритету
+            if (checked) {
+                var filterPriorityList = filter._priorityList;
+                checked = (filterPriorityList.indexOf(this.priorityId) > -1) || filterPriorityList.length == 0 || filterPriorityList == null || filterPriorityList == undefined;
+
+                // Проверка по типу
+                if (checked) {
+                    var filterType = filter._type;
+                    checked = (filterType === this.issueTypeId) || filterType == '' || filterType == null || filterType == -1 || filterType == undefined
+
+                    // Проверка по дате с
+                    if (checked) {
+                        var filterPlanDateFrom = filter._dateFrom;
+                        checked = (this.planDate >= filterPlanDateFrom) || filterPlanDateFrom === '' || filterPlanDateFrom === null || filterPlanDateFrom == undefined
+
+                        // Проверка по дате по
+                        if (checked) {
+                            var filterPlanDateTo = filter._dateTo;
+                            checked = (this.planDate <= filterPlanDateTo) || filterPlanDateTo === '' || filterPlanDateTo === null || filterPlanDateTo == undefined
+                        }
+                    }
+                }
+            }
+        }
+
+        return checked
+    }
+
     this.update(data);
 }
