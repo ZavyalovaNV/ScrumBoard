@@ -200,7 +200,8 @@ Item = function (data) {
 
         // Удалить объект в HTML
         if (result) {
-            this.parentNode.removeChild(this);            
+            var element = item.getElement(item.id);
+            element.parentNode.removeChild(element);            
         }
     }
     // Метод удаления элемента
