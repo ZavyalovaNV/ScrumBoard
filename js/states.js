@@ -1,3 +1,53 @@
+StateList = function () {
+    // Получить данные по спринту/проекту
+    this.getData = function () {
+        var params = {
+            sprintId: this.sprintId,
+            projectId: this.projectId
+        }
+
+        var result = connector.executeScript("AK_SBGetStatesData", params)
+        if (!result) {
+            result = states_test
+        }
+        return result;
+    };
+
+    // Отрисовать статусы
+    this.render = function () {
+        var container = document.getElementById("states");
+        var containerCols = document.getElementById("item-row");
+
+        var states = this.states;
+        states.forEach(function (state) {
+            // отрисовать статус
+            state.render(container);
+            state.renderColumn(containerCols);
+        });
+    }
+
+    // Создать статусы на основе JSON
+    this.createStates = function () {
+        this.states = [];
+        var newStates = [];
+
+        var statesData = this.statesData;
+        statesData.forEach(function (data) {
+            // создать новый статус
+            var state = new State(data);
+            newStates.push(state);
+        });
+
+        this.states = newStates;
+    }
+
+    // Получить все статусы как JSON
+    this.statesData = this.getData();
+
+    // Создать статусы
+    this.createStates();
+}
+
 State = function (data) {
     // Свойства элемента
     this.update = function (data) {
@@ -75,16 +125,14 @@ State = function (data) {
             
             var elementId = this.id;
             if (elementId != undefined && elementId != null) {
-                var arr = elementId.split("-");
-                stateId = arr[arr.length - 1];
+                stateId = getIdByElementId(elementId);
             }
 
-            itemList.addNew(stateId)
+            itemList.addItem(stateId)
         });
         // Сформировать строку внутри объекта
         element.innerHTML = '<div class="items-list" id="items-list-' + this.id + '"></div>';
     }
-
 
     this.update(data);
 }

@@ -1,10 +1,10 @@
 let TEMPLATE_ITEM =
 `<div class="item-handle"></div> 
-    <a class="item-delete" href= "#" onclick= "deleteItem()" ></a>
+    <a class="item-delete" href= "#"></a>
         <div class="item-content">
             <div class="item-text"><text></div>   
          
-                <div class="item-executor-compact" onclick="changeExecutor()">
+                <div class="item-executor-compact" onclick="itemList.changeExecutor()">
                     <img class="item-executor-img-compact" src="" alt="Исполнитель" title="<executorName>" />
                     <span class="item-executor-name"><executorName></span>
         </div>
@@ -64,7 +64,7 @@ Item = function (data) {
                 parent.appendChild(element);
                 // Задать ИД
                 element.id = className + "-" + this.id;
-                element.innerHTML = document.querySelector('#template_item').innerHTML;
+                element.innerHTML = TEMPLATE_ITEM;
             }
 
             // Соответствие частей элемента и их значений
@@ -124,6 +124,14 @@ Item = function (data) {
 
             // Компактный режим. Определить видимые области
             this.setViewMode(modeCompact);
+
+            // Задать обработчики события
+            // Открытие элемента
+            element.addEventListener('click', this.openElement)
+            // Удаление элемента
+            deleteElement = element.querySelector('.item-delete');
+            console.dir(deleteElement);
+            element.addEventListener('click', this.deleteElement)
         }
     }
 
@@ -160,29 +168,55 @@ Item = function (data) {
         };
     }
 
-    // Метод открытия элемента
-    this.open = function () {
-        var result = executeScript('AK_SBOpenItem', this.projectID, this.sprintID, this.id, readOnly);
-        if (result) {
-            // Обновить весь список объектов, т.к. могли создать новые/удалить
-            items = getData(this.projectID, this.sprintID, true);
-        }
+    // Метод открытия элемента DOM (событие клика)
+    this.openElement = function () {
+        // Выделить ИД итема
+        var itemId = getIdByElementId(this.id);
+        // Найти итем
+        var item = itemList.getItemById(itemId);
+        item.open();     
     }
-
-    // Метод удаления элемента
-    this.delete = function (executeScript) {
-        // Удалить на сервере
-        var result = true;
-        if (executeScript) {
-            result = executeScript('AK_SBDeleteItem', this.projectID, this.sprintID, this.id, readOnly);
+    // Открытие самого элемента
+    this.open = function () {
+        var params = {
+            SprintId: this.sprint,
+            ProjectId: this.project,
+            ItemID: this.id
         }
+
+        var result = connector.executeScript("AK_SBOpenItem", params)
+        if (result) {
+            // Обновить весь список объектов, т.к. могли создать новые/удалить    
+            itemList.update();
+        }        
+    }
+    // Метод удаления элемента
+    this.deleteElement = function () {
+        // Выделить ИД итема
+        var itemId = getIdByElementId(this.id);
+        // Найти итем
+        var item = itemList.getItemById(itemId);
+        var result = item.delete();
+
         // Удалить объект в HTML
         if (result) {
-            var element = document.getElementById("item-" + this.id);
-            if (element !== undefined && element !== null) {
-                element.parentNode.removeChild(element);
-            }
+            this.parentNode.removeChild(this);            
         }
+    }
+    // Метод удаления элемента
+    this.delete = function () {
+        var params = {
+            SprintId: this.sprint,
+            ProjectId: this.project,
+            ItemID: this.id
+        }
+
+        var result = connector.executeScript("AK_SBDeleteItem", params)
+        if (result) {
+            // Обновить весь список объектов, т.к. могли создать новые/удалить    
+            itemList.update();
+        }
+        return result;
     }
 
     // Метод добавления элемента
@@ -256,5 +290,5 @@ Item = function (data) {
         return checked
     }
 
-    this.update(data);
+    this.update(data);    
 }

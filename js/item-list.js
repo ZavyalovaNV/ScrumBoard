@@ -1,4 +1,4 @@
-ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
+ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList) {
     /***********Свойства отображения*********/
     // Спринт
     this.sprintId = _sprintId;
@@ -8,6 +8,8 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
     this.modeCompact = _modeCompact;
     // Толкьо чтение
     this.readOnly = _readOnly;
+    // Статусы 
+    this.states = _stateList;
 
     // Фильтр
     this.filter = {
@@ -28,13 +30,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
     }
     /*****************************************/
 
-    /***********Свойства списка***************/
-    // Работники
-    this.employeeList = new EmployeeList();
-
-    // Возможные статусы, как JSON
-    this.states = states_test;
-
     // Получить данные по спринту/проекту
     this.getData = function () {
         var params = {
@@ -48,12 +43,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
         }
         return result;
     };
-    // Все элементы, как JSON - т.е. все выгруженные значения без фильтров и сортировок
-    this.itemsData = this.getData();
-
-    // Список созданных объектов с учетом фильтров и сортировок
-    this.items = [];
-    /*****************************************/
 
     /***********Основные методы работы со списком***************/
     // Получить элемент из массива по его ИД
@@ -190,21 +179,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
         this.applySort();
     }
 
-    // Отрисовать статусы
-    this.renderStates = function () {
-        var container = document.getElementById("states");
-        var containerCols = document.getElementById("item-row");
-
-        var states = this.states;
-        states.forEach(function (data) {
-            // создать новый статус
-            var state = new State(data);
-            // отрисовать статус
-            state.render(container);
-            state.renderColumn(containerCols);
-        });
-    }
-
     // Очистить область от элементов
     this.clear = function () {
         var elements = document.querySelectorAll('.item');
@@ -217,7 +191,7 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
     }
 
     // Отрисовать все элементы
-    this.renderItems = function () {
+    this.render = function () {
         this.clear();
 
         var items = this.items;
@@ -245,11 +219,11 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
         this.setItems();
 
         // Отрисовать элементы
-        this.renderItems();
+        this.render();
     }
 
     // Добавить новый элемент
-    this.addNew = function (stateId) {
+    this.addItem = function (stateId) {
         var item = new Item(stateId);
         var data = item.add();
         // Добавить результат в JSON список
@@ -267,11 +241,11 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
         this.modeCompact = viewMode_;
 
         var elements = document.querySelectorAll('.item');
-        var element, arr, item;
+        var element, item, itemId;
         for (var i = 0; i < elements.length; i++) {
             element = elements[i];
-            arr = element.id.split("-");
-            item = this.getItemById(arr[arr.length - 1]);
+            itemId = getIdByElementId(element.id)
+            item = this.getItemById(itemId);
             if (item !== undefined) {
                 item.setViewMode(this.modeCompact);
             }
@@ -324,7 +298,14 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
         this.refresh();
     }
 
-    this.itemsData();
+    // Все элементы, как JSON - т.е. все выгруженные значения без фильтров и сортировок
+    this.itemsData = this.getData();
+
+    // Список созданных объектов с учетом фильтров и сортировок
+    this.items = [];
+
+    // Работники
+    this.employeeList = new EmployeeList();
 }
 
 Employee = function (_id, _name) {

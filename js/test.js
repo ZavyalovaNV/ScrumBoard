@@ -27,10 +27,18 @@ var filterProjectID = 0;
 var connector = new Connector(testRefCode, testSprintID);
 console.log(connector);
 
-var itemList = new ItemList(modeCompact, testProjectID, testSprintID, readOnly);
-itemList.renderStates();
+var stateList = new StateList();
+stateList.render();
+
+var itemList = new ItemList(modeCompact, testProjectID, testSprintID, readOnly, stateList);
 itemList.setItems();
-itemList.renderItems();
+itemList.render();
+
+// Выделить ИД элемента, которому соответствует элемент ДОМ
+function getIdByElementId(elementId) {
+    var arr = elementId.split("-");
+    return arr[arr.length - 1];
+}
 
 // Функции для работы с датами
 function parseDate(valueStr) {
