@@ -1,5 +1,14 @@
-ItemList = function (_modeCompact) {
+ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly) {
     /***********Свойства отображения*********/
+    // Спринт
+    this.sprintId = _sprintId;
+    // Проект
+    this.projectId = _projectId;
+    // Настройка режима отображения элементов: компактно или нет
+    this.modeCompact = _modeCompact;
+    // Толкьо чтение
+    this.readOnly = _readOnly;
+
     // Фильтр
     this.filter = {
         _type: '',
@@ -17,9 +26,6 @@ ItemList = function (_modeCompact) {
         field: 'number',
         dest: 'acs'
     }
-
-    // Настройка отображения
-    this.modeCompact = _modeCompact;
     /*****************************************/
 
     /***********Свойства списка***************/
@@ -29,13 +35,25 @@ ItemList = function (_modeCompact) {
     // Возможные статусы, как JSON
     this.states = states_test;
 
+    // Получить данные по спринту/проекту
+    this.getData = function () {
+        var params = {
+            sprintId: this.sprintId,
+            projectId: this.projectId
+        }
+
+        var result = connector.executeScript("AK_SBGetItemsData", params)
+        if (!result) {
+            result = items_test
+        }
+        return result;
+    };
     // Все элементы, как JSON - т.е. все выгруженные значения без фильтров и сортировок
-    this.itemsData = items_test;
+    this.itemsData = this.getData();
 
     // Список созданных объектов с учетом фильтров и сортировок
     this.items = [];
     /*****************************************/
-
 
     /***********Основные методы работы со списком***************/
     // Получить элемент из массива по его ИД
@@ -94,9 +112,11 @@ ItemList = function (_modeCompact) {
         console.log("Начальное значение:");
         console.log(this.items);
 
+        // Создать заново элементы из JSON
         this.deleteItems();
         this.createItems();
 
+        // Результатом будут только подходящие под фильтр элементы
         var newItems = this.items.filter(
             function (element, index, array) {
                 var checked = element.checkByFilter(filter);
@@ -125,6 +145,7 @@ ItemList = function (_modeCompact) {
         console.log("Начальное значение:");
         console.log(this.items);
 
+        // Результатом будут отсортированные элементы
         var newItems = this.items.sort(
             function (item1, item2) {
                 // Результат сравнения:
@@ -228,11 +249,12 @@ ItemList = function (_modeCompact) {
     }
 
     // Добавить новый элемент
-    this.addNew = function () {
-        var item = new Item();
-        item.add();
-        this.items.push(item);
-        item.render();
+    this.addNew = function (stateId) {
+        var item = new Item(stateId);
+        var data = item.add();
+        // Добавить результат в JSON список
+        this.itemsData.push(data);
+        this.refresh();
     }
 
     // Удалить элемент
@@ -302,6 +324,7 @@ ItemList = function (_modeCompact) {
         this.refresh();
     }
 
+    this.itemsData();
 }
 
 Employee = function (_id, _name) {

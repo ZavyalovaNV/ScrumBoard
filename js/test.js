@@ -5,7 +5,7 @@
 // Признак отображения компактного режима
 var modeCompact = false;
 // Признак возможности редактировать
-var readOnly = true;
+var readOnly = false;
 
 // Текущие фильтры
 // Работники
@@ -24,7 +24,10 @@ var filterSprintID = -1;
 var filterProjectID = 0;
 
 
-var itemList = new ItemList(modeCompact);
+var connector = new Connector(testRefCode, testSprintID);
+console.log(connector);
+
+var itemList = new ItemList(modeCompact, testProjectID, testSprintID, readOnly);
 itemList.renderStates();
 itemList.setItems();
 itemList.renderItems();
@@ -743,11 +746,12 @@ function stopChangeSize(event, ui) {
 //    event.stopPropagation()
 //}
 
-//window.onscroll = function () {
-//    var scrolled = window.pageXOffset || document.documentElement.scrollLeft;
-//    var states = document.querySelector('.states');
-//    states.style.left = -scrolled + 'px';
-//}
+
+window.onscroll = function () {
+    var scrolled = window.pageXOffset || document.documentElement.scrollLeft;
+    var states = document.querySelector('.states');
+    states.style.left = -scrolled + 'px';
+}
 
 
 

@@ -70,7 +70,17 @@ State = function (data) {
         }
 
         // Задать события
-        element.addEventListener('dblclick', function () { alert(1) });
+        element.addEventListener('dblclick', function () {
+            var stateId;
+            
+            var elementId = this.id;
+            if (elementId != undefined && elementId != null) {
+                var arr = elementId.split("-");
+                stateId = arr[arr.length - 1];
+            }
+
+            itemList.addNew(stateId)
+        });
         // Сформировать строку внутри объекта
         element.innerHTML = '<div class="items-list" id="items-list-' + this.id + '"></div>';
     }

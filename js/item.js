@@ -186,12 +186,18 @@ Item = function (data) {
     }
 
     // Метод добавления элемента
-    this.add = function () {
-        var data = executeScript('AK_SBCreateItem', filterProjectID, filterSprintID, 0, readOnly);
+    this.add = function (stateId) {
+        // Если задан статус, то передать его как значение по умолчанию
+        if (stateId != undefined) {
+
+        }
+        var data = { "stateId": "873359", "project": "1543890", "sprint": "1556288", "id": "1562158", "link": "", "text": "Новая запись! Свеженькая!", "executorId": "1149425", "executorName": "Завьялова Наталия Владимировна", "executorPhoto": "1149425.jpg", "priority": "Максимальный", "priorityId": "2", "issueType": "Пожелание", "issueTypeId": "2", "planDate": "", "number": "095-020", "planHours": "", "regDate": "20.07.2017" }
+        /*var data = executeScript('AK_SBCreateItem', filterProjectID, filterSprintID, 0, readOnly);
         if (result) {
             // Обновить весь список объектов, т.к. могли создать новые/удалить
             items = getData(this.projectID, this.sprintID, true);
-        }
+        }*/
+        return data;
     }
 
     // Метод смены статуса элемента
