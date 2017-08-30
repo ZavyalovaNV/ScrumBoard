@@ -48,8 +48,15 @@
         var result = false;
         // Получить сценарий
         var application = this.application;
-        if (application != null) {
+        try {
+            if (application === null) {
+                throw 'Не удалось определить приложение DIRECTUM. Обратитесь к администратору.'
+            }
+
             var script = application.ScriptFactory.GetObjectByName(scriptName);
+            if (script === null) {
+                throw 'Не удалось определить сценарий ' + script + ' DIRECTUM. Обратитесь к администратору.'
+            }
             // Заполнить параметры сценария
             var paramScriptList = script.Params;
             for (paramName in params) {
@@ -59,14 +66,10 @@
                 paramScriptList.Add(paramName, params[paramName])
             }
             // Выполнить сценарий        
-            try {
-                result = script.Execute();
-            }
-            catch (err) {
-                alert(err);
-            }
-        } else {
-            alert("Не удалось определить приложение!")
+            result = script.Execute();
+        }
+        catch (err) {
+            alert(err)
         }
         return result
     }
