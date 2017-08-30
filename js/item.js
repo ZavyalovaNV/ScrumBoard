@@ -130,7 +130,6 @@ Item = function (data) {
             element.addEventListener('click', this.openElement)
             // Удаление элемента
             deleteElement = element.querySelector('.item-delete');
-            console.dir(deleteElement);
             element.addEventListener('click', this.deleteElement)
         }
     }

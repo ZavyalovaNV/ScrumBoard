@@ -26,7 +26,7 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
     this.sort = {
         // Значения по умолчанию
         field: 'number',
-        dest: 'acs'
+        dest: 'asc'
     }
     /*****************************************/
 
@@ -98,9 +98,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
     this.applyFilter = function () {
         var filter = this.filter;
 
-        console.log("Начальное значение:");
-        console.log(this.items);
-
         // Создать заново элементы из JSON
         this.deleteItems();
         this.createItems();
@@ -113,8 +110,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
             }
         )
 
-        console.log("Отфильтрованное значение:");
-        console.log(newItems);
         this.items = newItems;
     }
 
@@ -130,9 +125,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
         // Дополнительный коэффициент для сортировки, когда большее значение соответсвует меньшему: приоритет 0 выше приоритета 1
         // Для поля Приоритет - чем выше значение, тем ниже приоритет
         var koef = sortField === 'priorityId' ? -1 : 1;
-
-        console.log("Начальное значение:");
-        console.log(this.items);
 
         // Результатом будут отсортированные элементы
         var newItems = this.items.sort(
@@ -159,8 +151,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
             }
         );
 
-        console.log("Отсортированное значение:");
-        console.log(newItems);
         this.items = newItems;
     }
 
@@ -184,8 +174,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
         var elements = document.querySelectorAll('.item');
         for (var i = 0; i < elements.length; i++) {
             element = elements[i];
-            console.log(element);
-
             element.parentNode.removeChild(element);
         }
     }
@@ -280,24 +268,35 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
         this.refresh();
     }
 
-    // Установить текущее значение сортировки и применить её
-    this.setSort = function (par) {
-        var newField = par.value;
-        var newDest = 'asc';
-
-        var curSort = this.sort;
-        if (curSort['field'] === newField) {
-            if (curSort['asc'] === 'asc') {
-                newDest = 'desc'
-            }
-        }
-
-        this.sort['field'] = newField;
-        this.sort['dest'] = newDest;
-
+    // Установить текущее значение ПОЛЯ сортировки и применить её
+    this.setSortField = function (element) {
+        console.dir(element);
+        this.sort['field'] = element.value;
         this.refresh();
     }
 
+    // Установить текущее значение НАПРАВЛЕНИЯ сортировки и применить её
+    this.setSortDest = function (element) {
+        // Текущее направление сортировки
+        var curSortDest = this.sort.dest;
+        // Новое направление сортировки противоположно текущему
+        var newSortDest = curSortDest == 'asc' ? 'desc' : 'asc';
+        // Обновить настройку
+        this.sort.dest = newSortDest;
+
+        // Стиль в ависимости от направления - поменять иконку
+        var elementClassList = element.classList;
+        elementClassList.remove('sort-down');
+        elementClassList.remove('sort-up');
+        if (newSortDest == 'asc') {
+            elementClassList.add('sort-down');
+        } else {
+            elementClassList.add('sort-up');
+        };
+
+        this.refresh();
+    }
+        
     // Все элементы, как JSON - т.е. все выгруженные значения без фильтров и сортировок
     this.itemsData = this.getData();
 

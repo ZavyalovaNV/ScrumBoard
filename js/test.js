@@ -755,11 +755,11 @@ function stopChangeSize(event, ui) {
 //}
 
 
-window.onscroll = function () {
-    var scrolled = window.pageXOffset || document.documentElement.scrollLeft;
-    var states = document.querySelector('.states');
-    states.style.left = -scrolled + 'px';
-}
+//window.onscroll = function () {
+//    var scrolled = window.pageXOffset || document.documentElement.scrollLeft;
+//    var states = document.querySelector('.states');
+//    states.style.left = -scrolled + 'px';
+//}
 
 
 

@@ -79,7 +79,7 @@ State = function (data) {
         }
 
         // Задать классы
-        var classList = [className, "ui-resizable"]
+        var classList = [className];//, "ui-resizable"]
         var elementClassList = element.classList;
         for (var i = 0; i < classList.length; i++) {
             className_ = classList[i];
@@ -110,7 +110,7 @@ State = function (data) {
         }
 
         // Задать классы
-        var classList = [className, "ui-resizable"]
+        var classList = [className];//, "ui-resizable"]
         var elementClassList = element.classList;
         for (var i = 0; i < classList.length; i++) {
             className_ = classList[i];
@@ -129,6 +129,11 @@ State = function (data) {
             }
 
             itemList.addItem(stateId)
+        });
+        element.addEventListener('resize', function () {
+            var elements = document.querySelectorAll('.' + className);
+            console.log(elements);
+            alert("1");
         });
         // Сформировать строку внутри объекта
         element.innerHTML = '<div class="items-list" id="items-list-' + this.id + '"></div>';

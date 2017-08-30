@@ -1,8 +1,7 @@
 ﻿﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
-
-    <meta charset="windows-1251" />
+    <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!--Плагины-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -16,56 +15,16 @@
     <link rel="stylesheet" href="./css/styles_items.css">
     <link rel="stylesheet" href="./css/styles_item.css">
     <link rel="stylesheet" href="./css/styles.css">
-    <!--Шаблоны-->
-    <script type="text/x-my-template" id="template_states">
-        <span class="state-name">
-            <idName>
-        </span>
-    </script>
-    <script type="text/x-my-template" id="template_column">
-        <div class="items-list" id="items-list-<stateId>">
-            <div class="fake-items-column"></div>
-        </div>
-    </script>
-    <script type="text/x-my-template" id="template_item">
-        <div class="item-handle"></div>
-        <a class="item-delete" href="#" onclick="deleteItem()"></a>
-        <div class="item-content">
-            <div class="item-text"><text></div>
-
-            <div class="item-executor-compact" onclick="changeExecutor()">
-                <img class="item-executor-img-compact" src="css\img\user.svg" alt="Исполнитель" title="<executorName>" />
-                <span class="item-executor-name"><executorName></span>
-            </div>
-
-            <div class="item-data clearfix">
-                <div class="item-executor" onclick="changeExecutor()">
-                    <img class="item-executor-img" src="css\img\avatars\<executorPhoto>" alt="Исполнитель" title="<executorName>" />
-                </div>
-
-                <div class="item-requisites-left">
-                    <div class="item-plan-hours">
-                        <planHours>
-                    </div>
-                </div>
-                <div class="item-requisites-right">
-                    <div class="item-number"><number></div>
-                    <div class="item-priority"><priority></div>
-                    <div class="item-plan-date"><planDate></div>
-                </div>
-            </div>
-            <div class="item-ind"></div>
-        </div>
-    </script>
-    <title></title>
+    
+    <title>Scrum boars</title>
 </head>
-<body draggable="false">
+<body>
     <nav class="header clearfix">
         <div class="content-left">
             <div class="menu-main-block">
                 <ul class="menu-main">
-                    <li class="menu-main-item"><a class="btn new" href="#" onclick="itemList.addNew()">Новая запись</a></li>
-                    <li class="menu-main-item"><a class="btn refresh" href="#" onclick="itemList.update()">Обновить</a></li>
+                    <li class="menu-main-item"><a class="btn header-btn new" href="#" onclick="itemList.addItem()">Новая запись</a></li>
+                    <li class="menu-main-item"><a class="btn header-btn refresh" href="#" onclick="itemList.update()">Обновить</a></li>
                 </ul>
             </div>
         </div>
@@ -76,7 +35,7 @@
             <div class="menu-settings-block">
                 <ul class="menu-settings">
                     <li class="menu-settings-item">
-                        <a class="btn settings" href="#" onclick="showFilterMenu()">Настройки</a>
+                        <a class="btn header-btn settings" href="#" onclick="showFilterMenu()">Настройки</a>
 
                         <ul class="submenu-settings" id="filter-submenuID">
                             <li class="submenu-settings-item">
@@ -110,26 +69,30 @@
                                         <select class="select-issue-type" onchange="itemList.setFilter('.select-issue-type')"></select>
                                     </li>
                                     <li class="submenu-filter-item">
-                                        <div class="clearfix">
+                                        <div>
                                             <span>План. дата</span>
-                                            <div class="date-box-from">
-                                                <label class="label-date" for="plan-date-from">С</label>
-                                                <input class="datepicker" type="text" id="plan-date-from" onchange="itemList.setFilter('#plan-date-from')" />
+                                            <div class="clearfix">
+                                                <div class="date-box-from  content-left">
+                                                    <label class="label-date" for="plan-date-from">С</label>
+                                                    <input class="datepicker" type="text" id="plan-date-from" onchange="itemList.setFilter('#plan-date-from')" />
+                                                </div>
+                                                <div class="date-box-to  content-right">
+                                                    <label class="label-date" for="plan-date-to">По</label>
+                                                    <input class="datepicker" type="text" id="plan-date-to" onchange="itemList.setFilter('#plan-date-to')" />
+                                                </div>
                                             </div>
-                                            <div class="date-box-to">
-                                                <label class="label-date" for="plan-date-to">По</label>
-                                                <input class="datepicker" type="text" id="plan-date-to" onchange="itemList.setFilter('#plan-date-to')" />
-                                            </div>
-                                        </div>
+                                         </div>
                                     </li>
                                 </ul>
                             </li>
                             <li class="submenu-filter-item">
                                 Сортировка
                                 <ul class="submenu-filter">
-                                    <li class="submenu-filter-item">
-                                        <label class="label-input" for="employee"></label>
-                                        <select class="select-sort" onchange="itemList.setSort(this)"></select>
+                                    <li class="submenu-filter-item clearfix">
+                                        <div class="content-left field-sort">
+                                            <select class="select-sort" onchange="itemList.setSortField(this)"></select>
+                                        </div>
+                                        <a href="#" class="btn sort-btn sort-up content-right" onclick="itemList.setSortDest(this)">Обратно</a>
                                     </li>
                                 </ul>
                             </li>

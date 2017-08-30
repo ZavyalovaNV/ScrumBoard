@@ -25,18 +25,21 @@
 }
 
 /*КНОПКИ*/
+
 .btn {
     display: block;
     font-size: 0px;
-    width: 42px;
-    height: 42px;    
     margin: 0;
-    border: 0;
-    
+    border: 0;    
     background: url("img/sprite.png") no-repeat #d8dedf;
 }
 .btn:hover { background-color: #cccccc; }
 .btn:active { background-color: #999999; }
+
+.header-btn {
+    width: 42px;
+    height: 42px;        
+}
 
 .new {
     background-position: 0 0;
@@ -46,6 +49,23 @@
 }
 .settings {
     background-position: -84px 0;
+}
+
+.sort-btn {
+    width: 26px;
+    height: 26px;
+    background-color: #fff;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+/*Сортировка по убывани*/
+.sort-down {
+    background-position: -176px -11px;
+}
+/*Сортирвока по возрастанию*/
+.sort-up {
+    background-position: -218px -3px;
 }
 
 /*ФИЛЬТР ПО СПРИНТАМ*/
@@ -151,27 +171,45 @@
 }
 
 .submenu-filter-item .label-date {
-    display: inline-block;
+    /*display: inline-block;
     margin-bottom: 3px;
     vertical-align: bottom;
+    width: 15px;*/
+}
+
+.label-date {
+    position: relative;
+    top: 8px;
+    left: 0;
+
+    /*display: inline-block;
+    margin-bottom: 3px;
+    vertical-align: bottom;
+    width: 15px;
+    text-align: left;*/
 }
 
 /*СЕЛЕКТЫ ДАТ*/
 .date-box-from {
     float: left;
-    width: 50%;
+    width: 49%;
 }
 
 .date-box-to {  
     float: right;
-    width: 50%;  
+    width: 49%;
 }
 
 .datepicker {
-    width: 75%;    
+    width: 85%;
     border-radius: 2px;
     padding: 5px;
     border: 1px solid #aaa;
+    /*margin: 5px;*/
+    margin-top: -15px;
+    margin-left: 20px;
+
+    display: block;
 }
 
 .ui-datepicker .ui-state-highlight {
@@ -190,4 +228,8 @@
 .select2-results__option {
     padding: 4px;
     font-size: 12px;
+}
+
+.field-sort {
+    width: 85%;
 }
