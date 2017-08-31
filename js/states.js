@@ -6,9 +6,12 @@ StateList = function () {
             projectId: this.projectId
         }
 
-        var result = connector.executeScript("AK_SBGetStatesData", params)
-        if (!result) {
+        var result;
+        if (isTesting) {
             result = states_test
+        } else {
+            var data = connector.executeScript("AK_SBGetSprintesData", params);
+            result = JSON.parse(data);
         }
         return result;
     };
@@ -32,11 +35,12 @@ StateList = function () {
         var newStates = [];
 
         var statesData = this.statesData;
-        statesData.forEach(function (data) {
+        for (var i = 0; i < statesData.length; i++) {
+            var data = statesData[i];
             // создать новый статус
             var state = new State(data);
             newStates.push(state);
-        });
+        };
 
         this.states = newStates;
     }

@@ -6,16 +6,20 @@
     this.application = null;
     this.component = null;
 
+    // Приложение DIRECTUM
     this.getApplication = function () {
         var form = window.external.Form;
         if (form === undefined) {
-            
+            var application = new ActiveXObject("SBLogon.LoginPoint").GetApplication("ServerName=m-sv-p-sql01;DBName=DIRECTUM_DEV;IsOSAuth=true")
         } else {
-            this.component = form.View.Component
-            this.application = component.application
+            application = form.View.Component.application
         }
+
+        console.dir(application);
+        return application;
     }
 
+    // Справочник
     this.getComponent = function () {
         var component = null;
 
@@ -24,7 +28,7 @@
         // Если запуск вне Web Control - например, в ИЕ, получить Директум через ActiveXObject
         if (form === undefined) {
             try {
-                var application = new ActiveXObject("SBLogon.LoginPoint").GetApplication("ServerName=m-sv-p-sql01;DBName=DIRECTUM_DEV;IsOSAuth=true")
+                var application = this.getApplication();
                 if (application === undefined) {
                     throw 'Не удалось подключиться к DIRECTUM. Обратитесь к администратору.'
                 }
@@ -38,10 +42,11 @@
             }
         } else {
             component = form.View.Component;
-            this.application = component.application;
+            this.application = this.getApplication();
         }
 
-        return component
+        console.dir(component);
+        return component;
     }
 
     this.executeScript = function (scriptName, params) {

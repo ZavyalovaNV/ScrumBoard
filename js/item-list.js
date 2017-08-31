@@ -36,10 +36,13 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
             sprintId: this.sprintId,
             projectId: this.projectId
         }
+        var result;
 
-        var result = connector.executeScript("AK_SBGetItemsData", params)
-        if (!result) {
+        if (isTesting) {
             result = items_test
+        } else {
+            var data = connector.executeScript("AK_SBGetItemsData", params);
+            result = JSON.parse(data);
         }
         return result;
     };
@@ -105,6 +108,7 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
         // Результатом будут только подходящие под фильтр элементы
         var newItems = this.items.filter(
             function (element, index, array) {
+                console.dir(element);
                 var checked = element.checkByFilter(filter);
                 return checked;
             }

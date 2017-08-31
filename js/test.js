@@ -2,6 +2,8 @@
 //var TEMPLATE_COLUMN = document.querySelector('#template_column').innerHTML;
 //var TEMPLATE_ITEM = document.querySelector('#template_item').innerHTML;
 
+var isTesting = true;
+
 // Признак отображения компактного режима
 var modeCompact = false;
 // Признак возможности редактировать
@@ -24,8 +26,8 @@ var filterSprintID = -1;
 var filterProjectID = 0;
 
 
+// Создать или получить подключение к DIRECTUM
 var connector = new Connector(testRefCode, testSprintID);
-console.log(connector);
 
 var stateList = new StateList();
 stateList.render();
@@ -109,6 +111,16 @@ function startChangeState(event, ui) {
     prevItemsList = ui.item[0].parentElement;
 }
 
+// Поиск элемента в массиве
+function findElementInArray(array, element) {
+    var result = false;
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] == element)
+            return true;
+    }
+    return result
+}
+
 //// Данные по текущей записи
 //var sprintID = testSprintID;
 //var projectID = testProjectID;
@@ -134,16 +146,6 @@ function startChangeState(event, ui) {
 //getPickRequisitesData();
 
 //************************* Общие функции *****************************
-// Поиск элемента в массиве
-function findElementInArray(array, element) {
-    var result = false;
-    for (var i = 0; i < array.length; i++) {
-        if (array[i] == element)
-            return true;
-    }
-    return result
-}
-
 //// Вычленить ИД объекта из ИД элемента
 //function getIdFromElementId(elementId) {
 //    var elemArray = elementId.split("-");
