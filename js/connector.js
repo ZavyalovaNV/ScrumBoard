@@ -1,25 +1,23 @@
-﻿Connector = function (refCode, recordID) {
-    this.refCode = refCode;
-    this.recordID = recordID;
-
-    this.paramList = [];
+﻿Connector = function () {
     this.application = null;
     this.component = null;
 
-    // Приложение DIRECTUM
+    this.projectId = 0;
+    this.sprintId = 0;
+
+    // Получить приложение DIRECTUM
     this.getApplication = function () {
+        var application;
         var form = window.external.Form;
         if (form === undefined) {
-            var application = new ActiveXObject("SBLogon.LoginPoint").GetApplication("ServerName=m-sv-p-sql01;DBName=DIRECTUM_DEV;IsOSAuth=true")
+            application = new ActiveXObject("SBLogon.LoginPoint").GetApplication("ServerName=m-sv-p-sql01;DBName=DIRECTUM_DEV;IsOSAuth=true")
         } else {
             application = form.View.Component.application
         }
-
-        console.dir(application);
         return application;
     }
 
-    // Справочник
+    // Получить справочник
     this.getComponent = function () {
         var component = null;
 
@@ -45,31 +43,54 @@
             this.application = this.getApplication();
         }
 
-        console.dir(component);
+        // Получить значения ключевах реквизитов из компоненты
+        if (component != undefined) {
+            var refCode = component.Name;
+
+            if (refCode == 'AK_IT_Sprints') {
+                this.projectId = component.Requisites("Ведущая аналитика").ValueID;
+                this.sprintId = component.Requisites("ИД").Value;
+            } else {
+                if (refCode == 'AK_IT_Projects') {
+                    this.projectId = component.Requisites("ИД").Value;
+                    this.sprintId = -1;
+                }
+            }
+            this.refCode = refCode;
+        } else {
+            // Заполнить тестовыми значениями
+            this.projectId = testProjectID;
+            this.sprintId = testSprintID;
+            this.refCode = testRefCode;
+        }
+
         return component;
     }
 
+    // Выполнить сценарий DIR
     this.executeScript = function (scriptName, params) {
         var result = false;
-        // Получить сценарий
+
+        // Получить приложение
         var application = this.application;
         try {
-            if (application === null) {
+            if (application === null || application === undefined) {
                 throw 'Не удалось определить приложение DIRECTUM. Обратитесь к администратору.'
             }
 
+            // Получить сам сценарий
             var script = application.ScriptFactory.GetObjectByName(scriptName);
-            if (script === null) {
+            if (script === null || script === undefined) {
                 throw 'Не удалось определить сценарий ' + script + ' DIRECTUM. Обратитесь к администратору.'
             }
-            // Заполнить параметры сценария
+
+            // Передать параметры сценария
             var paramScriptList = script.Params;
             for (paramName in params) {
-                console.log(paramName);
-                console.log(params[paramName]);
-
+                console.log(paramName + " = " + params[paramName]);
                 paramScriptList.Add(paramName, params[paramName])
             }
+
             // Выполнить сценарий        
             result = script.Execute();
         }
@@ -79,5 +100,5 @@
         return result
     }
 
-    this.getComponent();
+    this.component = this.getComponent();
 }

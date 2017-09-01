@@ -1,7 +1,7 @@
-let TEMPLATE_ITEM = document.getElementById("template_item");
+let TEMPLATE_ITEM = document.getElementById("template_item").innerHTML;
 
 Item = function (data) {
-    // Свойства элемента
+    // Задать свойства элемента
     this.update = function (data, itemList) {        
         for (key in data) {
             // Для плановой даты преобразовать строку в Дату, чтобы дальше работать как с датами
@@ -25,7 +25,7 @@ Item = function (data) {
     this.render = function (modeCompact) {
         // Получить родительский контейнер
         var parent = document.getElementById("items-list-" + this.stateId);
-        if (parent !== null) {
+        if (parent !== null && parent != undefined) {
             var className = "item";
 
             // Найти элемент с таким же ИД
@@ -39,13 +39,13 @@ Item = function (data) {
                 element.innerHTML = TEMPLATE_ITEM;
             }
 
-            // Соответствие частей элемента и их значений
-            // Обновить плановую дату
+            // Подстановка для плановой даты
             var planHoursElementInnerHTML = '';
             if (data.planHours != '' && data.planHours != undefined) {
                 planHoursElementInnerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' ч.';
             }
 
+            // Соответствие частей элемента и их значений
             var compareValues = {
                 '.item-text': this.text,
                 '.item-priority': this.priority,
@@ -60,18 +60,28 @@ Item = function (data) {
                 ".item-executor-img": ["css\\img\\avatars\\" + this.executorPhoto, this.executorName],
                 ".item-executor-img-compact": ["css\\img\\user.svg", this.executorName]
             };
+
+            var elementExecutor = element.querySelector(".item-executor");
+            if (elementExecutor != null) {
+                elementExecutor.id = "item-executor-" + this.executorId;
+                // На клике происходит смена исполнителя
+                elementExecutor.addEventListener('click', this.changeExecutor)
+            }
+
             // Обновить основные значения
             var innerElement;
             for (key in compareValues) {
+                // Получить вложенный элемент
                 innerElement = element.querySelector(key);
-                if (innerElement !== null) {
+                if (innerElement !== null && innerElement != undefined) {
                     innerElement.innerHTML = compareValues[key];
                 }
             }
             // Обновить рисунки
             for (key in compareImages) {
+                // Получить вложенный элемент
                 innerElement = element.querySelector(key);
-                if (innerElement !== null) {
+                if (innerElement !== null && innerElement != undefined) {
                     var arr = compareImages[key];
                     innerElement.setAttribute("src", arr[0]);
                     innerElement.setAttribute("title", arr[1]);
@@ -92,17 +102,20 @@ Item = function (data) {
             if (this.issueTypeId == '2') {
                 elementClassList.add('wish');
             };
-            elementClassList.add('ui-sortable');
+            //elementClassList.add('ui-sortable');
 
             // Компактный режим. Определить видимые области
             this.setViewMode(modeCompact);
 
             // Задать обработчики события
             // Открытие элемента
-            element.addEventListener('click', this.openElement)
+            //element.addEventListener('click', this.openElement)
             // Удаление элемента
             deleteElement = element.querySelector('.item-delete');
-            element.addEventListener('click', this.deleteElement)
+            if (deleteElement !== null && deleteElement != undefined) {
+                deleteElement.id = "item-delete-" + this.id;
+                deleteElement.addEventListener('click', this.deleteElement)
+            }
         }
     }
 
@@ -145,8 +158,10 @@ Item = function (data) {
         var itemId = getIdByElementId(this.id);
         // Найти итем
         var item = itemList.getItemById(itemId);
-        item.open();     
+        item.open();
+        event.stopPropagation();
     }
+
     // Открытие самого элемента
     this.open = function () {
         var params = {
@@ -161,6 +176,7 @@ Item = function (data) {
             itemList.update();
         }        
     }
+
     // Метод удаления элемента
     this.deleteElement = function () {
         // Выделить ИД итема
@@ -174,13 +190,15 @@ Item = function (data) {
             var element = item.getElement(item.id);
             element.parentNode.removeChild(element);            
         }
+        event.stopPropagation();
     }
+
     // Метод удаления элемента
     this.delete = function () {
         var params = {
-            SprintId: this.sprint,
-            ProjectId: this.project,
-            ItemID: this.id
+            sprintId: this.sprint,
+            projectId: this.project,
+            itemID: this.id
         }
 
         var result = connector.executeScript("AK_SBDeleteItem", params)
@@ -193,33 +211,91 @@ Item = function (data) {
 
     // Метод добавления элемента
     this.add = function (stateId) {
+        var result;
+        var params = {
+            sprintId: this.sprint,
+            projectId: this.project,
+            itemID: this.id
+        }
+
         // Если задан статус, то передать его как значение по умолчанию
         if (stateId != undefined) {
-
+            params['stateId'] = stateId;
         }
-        var data = { "stateId": "873359", "project": "1543890", "sprint": "1556288", "id": "1562158", "link": "", "text": "Новая запись! Свеженькая!", "executorId": "1149425", "executorName": "Завьялова Наталия Владимировна", "executorPhoto": "1149425.jpg", "priority": "Максимальный", "priorityId": "2", "issueType": "Пожелание", "issueTypeId": "2", "planDate": "", "number": "095-020", "planHours": "", "regDate": "20.07.2017" }
-        /*var data = executeScript('AK_SBCreateItem', filterProjectID, filterSprintID, 0, readOnly);
-        if (result) {
-            // Обновить весь список объектов, т.к. могли создать новые/удалить
-            items = getData(this.projectID, this.sprintID, true);
-        }*/
-        return data;
+
+        var data = connector.executeScript("AK_SBDeleteItem", params)
+        if (data != false) {
+            result = JSON.parse(data);
+        } else {
+            result = { "stateId": "873359", "project": "1543890", "sprint": "1556288", "id": "1562158", "link": "", "text": "Новая запись! Свеженькая!", "executorId": "1149425", "executorName": "Завьялова Наталия Владимировна", "executorPhoto": "1149425.jpg", "priority": "Максимальный", "priorityId": "2", "issueType": "Пожелание", "issueTypeId": "2", "planDate": "", "number": "095-020", "planHours": "", "regDate": "20.07.2017" }
+        }
+
+        // Обновить весь список объектов, т.к. могли создать новые/удалить    
+        itemList.update();
+        return result;        
     }
 
     // Метод смены статуса элемента
-    
+    this.changeState = function (newItemStateId) {
+        // Предыдущий статус еще в свойствах
+        var prevItemStateId = item.stateId;
+        
+        var result;
+        var params = {
+            sprintId: item.sprint,
+            projectId: item.project,
+            itemID: item.id,
+            prevItemStateId: prevItemStateId,
+            newItemStateId: newItemStateId
+        }
+
+        var data = connector.executeScript("AK_SBChangeStateItem", params)
+        if (data != false) {
+            result = JSON.parse(data);
+        } else {
+            result = { "stateId": "873359", "project": "1543890", "sprint": "1556288", "id": this.id, "link": "", "text": "Новая запись! Свеженькая!", "executorId": "1149425", "executorName": "Завьялова Наталия Владимировна", "executorPhoto": "1149425.jpg", "priority": "Максимальный", "priorityId": "2", "issueType": "Пожелание", "issueTypeId": "2", "planDate": "", "number": "095-020", "planHours": "", "regDate": "20.07.2017" }
+        }
+
+        this.update(result);
+        this.render();
+        return result;
+    }
 
     // Метод смены исполнителя элемента
     this.changeExecutor = function () {
-        try {
-            var result = executeScript('AK_SBChangeExecutorItem', this.projectID, this.sprintID, this.id, readOnly);
-            if (result) {
-                this.refresh();
-            }
+        event.stopPropagation();
+
+        // Дойти до родителя с классом item
+        var parent = this.parentElement;        
+        var parentClassList = parent.classList;
+        var parentIsItem = parentClassList.contains("item");
+        while (!parentIsItem) {
+            parent = parent.parentElement;
+            parentClassList = parent.classList
+            parentIsItem = parentClassList.contains("item");
         }
-        catch (err) {
-            alert(err);
+
+        // Выделить ИД итема
+        var itemId = getIdByElementId(parent.id);
+        // Найти итем
+        var item = itemList.getItemById(itemId);
+
+        var result;
+        var params = {
+            sprintId: item.sprint,
+            projectId: item.project,
+            itemID: item.id
         }
+
+        var data = connector.executeScript("AK_SBChangeExecutorItem", params)
+        if (data != false) {
+            result = JSON.parse(data);
+        } else {
+            result = { "stateId": "873359", "project": "1543890", "sprint": "1556288", "id": "1562158", "link": "", "text": "Новая запись! Свеженькая!", "executorId": "1149425", "executorName": "Завьялова Наталия Владимировна", "executorPhoto": "1149425.jpg", "priority": "Максимальный", "priorityId": "2", "issueType": "Пожелание", "issueTypeId": "2", "planDate": "", "number": "095-020", "planHours": "", "regDate": "20.07.2017" }
+        }
+
+        // Обновить весь список объектов, т.к. могли создать новые/удалить    
+        return result;
     }
 
     this.checkByFilter = function (filter) {

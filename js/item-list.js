@@ -1,9 +1,10 @@
-ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList) {
+ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     /***********Свойства отображения*********/
+    this.connector = _connector;
     // Спринт
-    this.sprintId = _sprintId;
+    this.sprintId = _connector.sprintId;
     // Проект
-    this.projectId = _projectId;
+    this.projectId = _connector.projectId;
     // Настройка режима отображения элементов: компактно или нет
     this.modeCompact = _modeCompact;
     // Толкьо чтение
@@ -108,7 +109,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
         // Результатом будут только подходящие под фильтр элементы
         var newItems = this.items.filter(
             function (element, index, array) {
-                console.dir(element);
                 var checked = element.checkByFilter(filter);
                 return checked;
             }
@@ -221,11 +221,7 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
         // Добавить результат в JSON список
         this.itemsData.push(data);
         this.refresh();
-    }
-
-    // Удалить элемент
-    this.deleteItem = function () {
-        console.log(this)
+        event.stopPropagation();
     }
 
     // Сменить режим отображения Полный/Компактный
@@ -274,7 +270,6 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
 
     // Установить текущее значение ПОЛЯ сортировки и применить её
     this.setSortField = function (element) {
-        console.dir(element);
         this.sort['field'] = element.value;
         this.refresh();
     }
@@ -292,10 +287,10 @@ ItemList = function (_modeCompact, _projectId, _sprintId, _readOnly, _stateList)
         var elementClassList = element.classList;
         elementClassList.remove('sort-down');
         elementClassList.remove('sort-up');
-        if (newSortDest == 'asc') {
-            elementClassList.add('sort-down');
-        } else {
+        if (newSortDest === 'asc') {
             elementClassList.add('sort-up');
+        } else {
+            elementClassList.add('sort-down');
         };
 
         this.refresh();

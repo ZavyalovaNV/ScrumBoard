@@ -1,12 +1,14 @@
-StateList = function () {
+StateList = function (_connector) {
+    this.connector = _connector;    
+
     // Получить данные по спринту/проекту
     this.getData = function () {
         var params = {
-            sprintId: this.sprintId,
-            projectId: this.projectId
+            sprintId: this.connector.sprintId,
+            projectId: this.connector.projectId
         }
-
         var result;
+
         if (isTesting) {
             result = states_test
         } else {
@@ -22,11 +24,12 @@ StateList = function () {
         var containerCols = document.getElementById("item-row");
 
         var states = this.states;
-        states.forEach(function (state) {
+        for (var i = 0; i < states.length; i++) {
+            var state = states[i];
             // отрисовать статус
             state.render(container);
             state.renderColumn(containerCols);
-        });
+        };
     }
 
     // Создать статусы на основе JSON
@@ -83,7 +86,7 @@ State = function (data) {
         }
 
         // Задать классы
-        var classList = [className];//, "ui-resizable"]
+        var classList = [className, "ui-resizable"]
         var elementClassList = element.classList;
         for (var i = 0; i < classList.length; i++) {
             className_ = classList[i];
@@ -114,7 +117,7 @@ State = function (data) {
         }
 
         // Задать классы
-        var classList = [className];//, "ui-resizable"]
+        var classList = [className, "ui-resizable"]
         var elementClassList = element.classList;
         for (var i = 0; i < classList.length; i++) {
             className_ = classList[i];
@@ -134,13 +137,26 @@ State = function (data) {
 
             itemList.addItem(stateId)
         });
-        element.addEventListener('resize', function () {
-            var elements = document.querySelectorAll('.' + className);
-            console.log(elements);
-            alert("1");
-        });
+        
         // Сформировать строку внутри объекта
         element.innerHTML = '<div class="items-list" id="items-list-' + this.id + '"></div>';
+        var elementItemList = element.querySelector(".items-list");
+        elementItemList.classList.add('ui-sortable');
+
+        // Задать доступные перемещения
+        this.setTransmissions();
+    }
+
+    // Задать доступные перемещения
+    this.setTransmissions = function () {
+        var CLASS_NAME = "items-list";
+        var elementId = "#" + CLASS_NAME + "-" + this.id;
+
+        // Сформировать переходы как ИД доступных столбцов
+        var availableStatesStr = "#" + CLASS_NAME + "-" + this.availableStates.join(",#" + CLASS_NAME + "-");
+       
+        var element = $(elementId);
+        element.sortable({ connectWith: availableStatesStr });
     }
 
     this.update(data);
