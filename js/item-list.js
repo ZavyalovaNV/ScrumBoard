@@ -107,7 +107,8 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         this.createItems();
 
         // Результатом будут только подходящие под фильтр элементы
-        var newItems = this.items.filter(
+        var currentItems = this.items;
+        var newItems = currentItems.filter(
             function (element, index, array) {
                 var checked = element.checkByFilter(filter);
                 return checked;
@@ -131,7 +132,8 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         var koef = sortField === 'priorityId' ? -1 : 1;
 
         // Результатом будут отсортированные элементы
-        var newItems = this.items.sort(
+        var currentItems = this.items;
+        var newItems = currentItems.sort(
             function (item1, item2) {
                 // Результат сравнения:
                 var result = 0;

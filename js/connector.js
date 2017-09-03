@@ -87,7 +87,6 @@
             // Передать параметры сценария
             var paramScriptList = script.Params;
             for (paramName in params) {
-                console.log(paramName + " = " + params[paramName]);
                 paramScriptList.Add(paramName, params[paramName])
             }
 

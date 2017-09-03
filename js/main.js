@@ -1,8 +1,8 @@
-var isTesting = true;
+п»їvar isTesting = false;
 
-// Создать или получить подключение к DIRECTUM
+// РЎРѕР·РґР°С‚СЊ РёР»Рё РїРѕР»СѓС‡РёС‚СЊ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє DIRECTUM
 var connector = new Connector();
-// Поулчить статусы
+// РџРѕСѓР»С‡РёС‚СЊ СЃС‚Р°С‚СѓСЃС‹
 var stateList = new StateList(connector);
 stateList.render();
 
@@ -10,19 +10,19 @@ var itemList = new ItemList(false, connector, false, stateList);
 itemList.setItems();
 itemList.render();
 
-// Выделить ИД элемента, которому соответствует элемент ДОМ
+// Р’С‹РґРµР»РёС‚СЊ РР” СЌР»РµРјРµРЅС‚Р°, РєРѕС‚РѕСЂРѕРјСѓ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓРµС‚ СЌР»РµРјРµРЅС‚ Р”РћРњ
 function getIdByElementId(elementId) {
     var arr = elementId.split("-");
     return arr[arr.length - 1];
 }
 
-// Функции для работы с датами
+// Р¤СѓРЅРєС†РёРё РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ РґР°С‚Р°РјРё
 function parseDate(valueStr) {
     var value = '';
     if (valueStr != "") {
-        // Попробовать распарсить строку на случай, если данные сразу пришли в готово виде
+        // РџРѕРїСЂРѕР±РѕРІР°С‚СЊ СЂР°СЃРїР°СЂСЃРёС‚СЊ СЃС‚СЂРѕРєСѓ РЅР° СЃР»СѓС‡Р°Р№, РµСЃР»Рё РґР°РЅРЅС‹Рµ СЃСЂР°Р·Сѓ РїСЂРёС€Р»Рё РІ РіРѕС‚РѕРІРѕ РІРёРґРµ
         var date = Date.parse(valueStr);
-        // Если не удалось, попробовать через точки
+        // Р•СЃР»Рё РЅРµ СѓРґР°Р»РѕСЃСЊ, РїРѕРїСЂРѕР±РѕРІР°С‚СЊ С‡РµСЂРµР· С‚РѕС‡РєРё
         if (isNaN(date)) {
             var split = valueStr.split(".");
             value = new Date(split[2], split[1] - 1, split[0]);
@@ -47,7 +47,7 @@ function stopChangeState(event, ui) {
     var itemId = getIdByElementId(elementID);
     var item = itemList.getItemById(itemId);
 
-    // Новый статус получить на основе нового родителя для элемента
+    // РќРѕРІС‹Р№ СЃС‚Р°С‚СѓСЃ РїРѕР»СѓС‡РёС‚СЊ РЅР° РѕСЃРЅРѕРІРµ РЅРѕРІРѕРіРѕ СЂРѕРґРёС‚РµР»СЏ РґР»СЏ СЌР»РµРјРµРЅС‚Р°
     var newItemsList = ui.item[0].parentElement;
     var newItemStateId = getIdByElementId(newItemsList.id);
 
@@ -59,7 +59,7 @@ function startChangeState(event, ui) {
     prevItemsList = ui.item[0].parentElement;
 }
 
-// Поиск элемента в массиве
+// РџРѕРёСЃРє СЌР»РµРјРµРЅС‚Р° РІ РјР°СЃСЃРёРІРµ
 function findElementInArray(array, element) {
     var result = false;
     for (var i = 0; i < array.length; i++) {
@@ -69,7 +69,7 @@ function findElementInArray(array, element) {
     return result
 }
 
-//********************* Обработчики событий формы ************************
+//********************* РћР±СЂР°Р±РѕС‚С‡РёРєРё СЃРѕР±С‹С‚РёР№ С„РѕСЂРјС‹ ************************
 function stopChangeSize(event, ui) {
     var divState = 'state';
     var divItemColumn = 'items-column';
@@ -78,28 +78,28 @@ function stopChangeSize(event, ui) {
     var width = ui.size.width;
     var elementID = ui.element.attr("id");
 
-    // Получить ИД статуса - последний блок в ИД элемента
+    // РџРѕР»СѓС‡РёС‚СЊ РР” СЃС‚Р°С‚СѓСЃР° - РїРѕСЃР»РµРґРЅРёР№ Р±Р»РѕРє РІ РР” СЌР»РµРјРµРЅС‚Р°
     var elemArray = elementID.split("-");
     var id = elemArray[elemArray.length - 1];
 
-    // Получить ИД связанных документов
+    // РџРѕР»СѓС‡РёС‚СЊ РР” СЃРІСЏР·Р°РЅРЅС‹С… РґРѕРєСѓРјРµРЅС‚РѕРІ
     var idItemColumn = '#' + divItemColumn + '-' + id;
     var idItemList = '#' + divItemList + '-' + id;
     var idState = '#' + divState + '-' + id;
 
     var ind = elementID.toLowerCase().indexOf(divState.toLowerCase());
     var element;
-    // Изменить соответствеющие ширину объектов
+    // РР·РјРµРЅРёС‚СЊ СЃРѕРѕС‚РІРµС‚СЃС‚РІРµСЋС‰РёРµ С€РёСЂРёРЅСѓ РѕР±СЉРµРєС‚РѕРІ
     if (ind >= 0) {
-        // Столбец
+        // РЎС‚РѕР»Р±РµС†
         element = $(idItemColumn);
         element.width(width);
     } else {
-        // Ячейка статуса
+        // РЇС‡РµР№РєР° СЃС‚Р°С‚СѓСЃР°
         element = $(idState);
         element.width(width);
     }
-    // Контейтер элементов
+    // РљРѕРЅС‚РµР№С‚РµСЂ СЌР»РµРјРµРЅС‚РѕРІ
     element = $(idItemList);
     element.width(width);
 }
@@ -114,18 +114,18 @@ window.onscroll = function () {
 $(init);
 function init() {
     $(".select-priority").select2({
-        placeholder: "Выберите...",
+        placeholder: "Р’С‹Р±РµСЂРёС‚Рµ...",
         data: priorities_test
     });
     $(".select-employee").select2({
-        placeholder: "Выберите...",
+        placeholder: "Р’С‹Р±РµСЂРёС‚Рµ...",
         data: itemList.employeeList.data
     });
     $(".select-sprint").select2({
-        placeholder: "Выберите..."
+        placeholder: "Р’С‹Р±РµСЂРёС‚Рµ..."
     });
     $(".select-issue-type").select2({
-        placeholder: "Выберите...",
+        placeholder: "Р’С‹Р±РµСЂРёС‚Рµ...",
         allowClear: true,
         data: issueTypes_test
     });
@@ -162,11 +162,11 @@ function init() {
     $(".datepicker").datepicker({
         gotoCurrent: true,
         dateFormat: "dd.mm.yy",
-        dayNames: ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"],
-        dayNamesMin: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
+        dayNames: ["Р’РѕСЃРєСЂРµСЃРµРЅСЊРµ", "РџРѕРЅРµРґРµР»СЊРЅРёРє", "Р’С‚РѕСЂРЅРёРє", "РЎСЂРµРґР°", "Р§РµС‚РІРµСЂРі", "РџСЏС‚РЅРёС†Р°", "РЎСѓР±Р±РѕС‚Р°"],
+        dayNamesMin: ["Р’СЃ", "РџРЅ", "Р’С‚", "РЎСЂ", "Р§С‚", "РџС‚", "РЎР±"],
         firstDay: 1,
-        monthNames: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
-        monthNamesShort: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+        monthNames: ["РЇРЅРІР°СЂСЊ", "Р¤РµРІСЂР°Р»СЊ", "РњР°СЂС‚", "РђРїСЂРµР»СЊ", "РњР°Р№", "РСЋРЅСЊ", "РСЋР»СЊ", "РђРІРіСѓСЃС‚", "РЎРµРЅС‚СЏР±СЂСЊ", "РћРєС‚СЏР±СЂСЊ", "РќРѕСЏР±СЂСЊ", "Р”РµРєР°Р±СЂСЊ"],
+        monthNamesShort: ["РЇРЅРІ", "Р¤РµРІ", "РњР°СЂ", "РђРїСЂ", "РњР°Р№", "РСЋРЅ", "РСЋР»", "РђРІРі", "РЎРµРЅ", "РћРєС‚", "РќРѕСЏ", "Р”РµРє"],
         autosize: true
     });
 };

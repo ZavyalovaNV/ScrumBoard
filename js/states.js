@@ -12,7 +12,7 @@ StateList = function (_connector) {
         if (isTesting) {
             result = states_test
         } else {
-            var data = connector.executeScript("AK_SBGetSprintesData", params);
+            var data = connector.executeScript("AK_SBGetStatesData", params);
             result = JSON.parse(data);
         }
         return result;

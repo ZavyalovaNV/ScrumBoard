@@ -1,4 +1,4 @@
-let TEMPLATE_ITEM = document.getElementById("template_item").innerHTML;
+TEMPLATE_ITEM = document.getElementById("template_item").innerHTML;
 
 Item = function (data, itemList, stateId) {
     // Задать свойства элемента
