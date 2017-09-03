@@ -1,121 +1,157 @@
 ﻿﻿<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <!--Плагины-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-  <script src="./js/select2.full.min.js"></script>
-  <!--Стили-->
-  <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" />
-  <link rel="stylesheet" href="./css/select2.min.css">
-  <link rel="stylesheet" href="./css/styles_header.css">
-  <link rel="stylesheet" href="./css/styles_states.css">
-  <link rel="stylesheet" href="./css/styles_items.css">
-  <link rel="stylesheet" href="./css/styles_item.css">
-  <link rel="stylesheet" href="./css/styles.css">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-  <title>Scrum boars</title>
+    <title>Scrum boars</title>
+
+    <!--Плагины-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="./js/select2.full.min.js"></script>
+    <!--Стили-->
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/select2.min.css">
+    <link rel="stylesheet" href="./css/styles_header.css">
+    <link rel="stylesheet" href="./css/styles_states.css">
+    <link rel="stylesheet" href="./css/styles_items.css">
+    <link rel="stylesheet" href="./css/styles_item.css">
+    <link rel="stylesheet" href="./css/styles.css">
+
+    <!--Шаблоны-->
+    <script type="text/x-my-template" id="template_item">
+        <div class="item-handle"></div>
+        <a class="item-delete" href="#"></a>
+        <div class="item-content">
+            <div class="item-text"><text></div>
+
+            <div class="item-executor-compact">
+                <img class="item-executor-img-compact" src="" alt="Исполнитель" title="<executorName>" />
+                <span class="item-executor-name"><executorName></span>
+            </div>
+
+            <div class="item-data clearfix">
+                <div class="item-executor">
+                    <img class="item-executor-img" src="css\img\avatars\<executorPhoto>" alt="Исполнитель" title="<executorName>" />
+                </div>
+
+                <div class="item-requisites-left">
+                    <div class="item-plan-hours">
+                        <planHours>
+                    </div>
+                </div>
+                <div class="item-requisites-right">
+                    <div class="item-number"><number></div>
+                    <div class="item-priority"><priority></div>
+                    <div class="item-plan-date"><planDate></div>
+                </div>
+            </div>
+            <div class="item-ind"></div>
+        </div>
+    </script>
 </head>
 <body>
-  <nav class="header clearfix">
-    <div class="content-left">
-      <div class="menu-main-block">
-        <ul class="menu-main">
-          <li class="menu-main-item"><a class="btn header-btn new" href="#" onclick="itemList.addItem()">Новая запись</a></li>
-          <li class="menu-main-item"><a class="btn header-btn refresh" href="#" onclick="itemList.update()">Обновить</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="content-right">
-      <div class="sprints-list">
-        <select class="select-sprint" onchange="itemList.setFilter('.select-sprint')"></select>
-      </div>
-      <div class="menu-settings-block">
-        <ul class="menu-settings">
-          <li class="menu-settings-item">
-            <a class="btn header-btn settings" href="#" onclick="showFilterMenu()">Настройки</a>
+    <nav class="header clearfix">
+        <div class="content-left">
+            <div class="menu-main-block">
+                <ul class="menu-main">
+                    <li class="menu-main-item"><a class="btn header-btn new" href="#" onclick="itemList.addItem()">Новая запись</a></li>
+                    <li class="menu-main-item"><a class="btn header-btn refresh" href="#" onclick="itemList.update()">Обновить</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="content-right">
+            <div class="sprints-list">
+                <select class="select-sprint" onchange="itemList.setFilter('.select-sprint')"></select>
+            </div>
+            <div class="menu-settings-block">
+                <ul class="menu-settings">
+                    <li class="menu-settings-item">
+                        <a class="btn header-btn settings" href="#" onclick="showFilterMenu()">Настройки</a>
 
-            <ul class="submenu-settings" id="filter-submenuID">
-              <li class="submenu-settings-item">Вид
+                        <ul class="submenu-settings" id="filter-submenuID">
+                            <li class="submenu-settings-item">
+                                Вид
                                 <ul class="submenu-view">
-                                  <li class="submenu-view-item">
-                                    <label>
-                                      <input name="view-kind" type="radio" checked="checked" onclick="itemList.setViewMode(false)" />Полный
-                                    </label>
-                                  </li>
-                                  <li class="submenu-view-item">
-                                    <label>
-                                      <input name="view-kind" type="radio" onclick="itemList.setViewMode(true)" />Компактный
-                                    </label>
-                                  </li>
+                                    <li class="submenu-view-item">
+                                        <label>
+                                            <input name="view-kind" type="radio" checked="checked" onclick="itemList.setViewMode(false)" />Полный
+                                        </label>
+                                    </li>
+                                    <li class="submenu-view-item">
+                                        <label>
+                                            <input name="view-kind" type="radio" onclick="itemList.setViewMode(true)" />Компактный
+                                        </label>
+                                    </li>
                                 </ul>
-              </li>
-              <li class="submenu-filter-item">Фильтр
+                            </li>
+                            <li class="submenu-filter-item">
+                                Фильтр
                                 <ul class="submenu-filter">
-                                  <li class="submenu-filter-item">
-                                    <label class="label-input" for="employee">Работник</label>
-                                    <select class="select-employee" multiple="multiple" onchange="itemList.setFilter('.select-employee')"></select>
-                                  </li>
-                                  <li class="submenu-filter-item">
-                                    <label class="label-input" for="priority">Приоритет</label>
-                                    <select class="select-priority" multiple="multiple" onchange="itemList.setFilter('.select-priority')"></select>
-                                  </li>
-                                  <li class="submenu-filter-item">
-                                    <label class="label-input" for="issue-type">Тип</label>
-                                    <select class="select-issue-type" onchange="itemList.setFilter('.select-issue-type')"></select>
-                                  </li>
-                                  <li class="submenu-filter-item">
-                                    <div>
-                                      <span>План. дата</span>
-                                      <div class="clearfix">
-                                        <div class="date-box-from  content-left">
-                                          <label class="label-date" for="plan-date-from">С</label>
-                                          <input class="datepicker" type="text" id="plan-date-from" onchange="itemList.setFilter('#plan-date-from')" />
+                                    <li class="submenu-filter-item">
+                                        <label class="label-input" for="employee">Работник</label>
+                                        <select class="select-employee" multiple="multiple" onchange="itemList.setFilter('.select-employee')"></select>
+                                    </li>
+                                    <li class="submenu-filter-item">
+                                        <label class="label-input" for="priority">Приоритет</label>
+                                        <select class="select-priority" multiple="multiple" onchange="itemList.setFilter('.select-priority')"></select>
+                                    </li>
+                                    <li class="submenu-filter-item">
+                                        <label class="label-input" for="issue-type">Тип</label>
+                                        <select class="select-issue-type" onchange="itemList.setFilter('.select-issue-type')"></select>
+                                    </li>
+                                    <li class="submenu-filter-item">
+                                        <div>
+                                            <span>План. дата</span>
+                                            <div class="clearfix">
+                                                <div class="date-box-from  content-left">
+                                                    <label class="label-date" for="plan-date-from">С</label>
+                                                    <input class="datepicker" type="text" id="plan-date-from" onchange="itemList.setFilter('#plan-date-from')" />
+                                                </div>
+                                                <div class="date-box-to  content-right">
+                                                    <label class="label-date" for="plan-date-to">По</label>
+                                                    <input class="datepicker" type="text" id="plan-date-to" onchange="itemList.setFilter('#plan-date-to')" />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="date-box-to  content-right">
-                                          <label class="label-date" for="plan-date-to">По</label>
-                                          <input class="datepicker" type="text" id="plan-date-to" onchange="itemList.setFilter('#plan-date-to')" />
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </li>
+                                    </li>
                                 </ul>
-              </li>
-              <li class="submenu-filter-item">Сортировка
+                            </li>
+                            <li class="submenu-filter-item">
+                                Сортировка
                                 <ul class="submenu-filter">
-                                  <li class="submenu-filter-item clearfix">
-                                    <div class="content-left field-sort">
-                                      <select class="select-sort" onchange="itemList.setSortField(this)"></select>
-                                    </div>
-                                    <a href="#" class="btn sort-btn sort-up content-right" onclick="itemList.setSortDest(this)">Обратно</a>
-                                  </li>
+                                    <li class="submenu-filter-item clearfix">
+                                        <div class="content-left field-sort">
+                                            <select class="select-sort" onchange="itemList.setSortField(this)"></select>
+                                        </div>
+                                        <a href="#" class="btn sort-btn sort-up content-right" onclick="itemList.setSortDest(this)">Обратно</a>
+                                    </li>
                                 </ul>
-              </li>
-            </ul>
-      </div>
-    </div>
-  </nav>
-  <header class="states" id="states">
-    <!--Записывается из скрипта-->
-  </header>
-  <main class="items-board">
+                            </li>
+                        </ul>
+            </div>
+        </div>
+    </nav>
+    <header class="states" id="states">
+        <!--Записывается из скрипта-->
+    </header>
+    <main class="items-board">
         <div class="item-row" id="item-row">
             <!--Записывается из скрипта-->
         </div>
     </main>
-  <!--<script src="./js/script.js"></script>-->
-  <script src="./js/connector.js"></script>
-  <script src="./js/menu.js"></script>
+    <!--<script src="./js/script.js"></script>-->
+    <script src="./js/connector.js"></script>
+    <script src="./js/menu.js"></script>
 
-  <!--<script src="./js/test-data.js"></script>-->
+    <script src="./js/test-data.js"></script>
 
-  <script src="./js/states.js"></script>
+    <script src="./js/states.js"></script>
 
-  <script src="./js/item-list.js"></script>
-  <script src="./js/item.js"></script>
+    <script src="./js/item-list.js"></script>
+    <script src="./js/item.js"></script>
 
-  <script src="./js/test.js"></script>
+    <script src="./js/main.js"></script>
 </body>
 </html>

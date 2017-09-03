@@ -33,7 +33,7 @@
                 // также записать приложение в свойства
                 this.application = application;
                 // Получить компоненту через тестовые значения
-                component = application.ReferencesFactory.ReferenceFactory(this.refCode).GetObjectByID(this.recordID)
+                component = application.ReferencesFactory.ReferenceFactory(testRefCode).GetObjectByID(testSprintID)
             }
             catch (err) {
                 alert(err)
