@@ -93,7 +93,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
             // Элемент из JSON
             var itemData = itemsData[i];
             // создать новый элемент и добавить в список, если его еще не было
-            item = new Item(itemData);
+            item = new Item(itemData, this);
             items.push(item);
         }
     }
@@ -216,7 +216,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
 
     // Добавить новый элемент
     this.addItem = function (stateId) {
-        var item = new Item(stateId);
+        var item = new Item([], this, stateId);
         var data = item.add();
         // Добавить результат в JSON список
         this.itemsData.push(data);
@@ -332,7 +332,7 @@ Employee = function (_id, _name) {
     }
 }
 
-EmployeeList = function (data) {
+EmployeeList = function () {
     this.data = [];
     this.employees = [];
 

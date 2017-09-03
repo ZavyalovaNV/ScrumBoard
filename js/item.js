@@ -1,6 +1,6 @@
 let TEMPLATE_ITEM = document.getElementById("template_item").innerHTML;
 
-Item = function (data) {
+Item = function (data, itemList, stateId) {
     // Задать свойства элемента
     this.update = function (data, itemList) {        
         for (key in data) {
@@ -13,6 +13,16 @@ Item = function (data) {
             }
             this[key] = value;
         }
+        this["itemList"] = itemList;
+
+        // Добавить работника в список
+        var employeeId = this.executorId;
+        var employeeName = this.executorName;
+
+        var employee = new Employee(employeeId, employeeName);
+        this.itemList.employeeList.add(employee);
+
+        console.log(itemList);
     }
 
     // Получить элемент DOM по ид
@@ -109,7 +119,7 @@ Item = function (data) {
 
             // Задать обработчики события
             // Открытие элемента
-            //element.addEventListener('click', this.openElement)
+            element.addEventListener('click', this.openElement)
             // Удаление элемента
             deleteElement = element.querySelector('.item-delete');
             if (deleteElement !== null && deleteElement != undefined) {
@@ -338,5 +348,5 @@ Item = function (data) {
         return checked
     }
 
-    this.update(data);    
+    this.update(data, itemList);    
 }
