@@ -65,7 +65,11 @@ function stopChangeState(event, ui) {
     var newItemsList = ui.item[0].parentElement;
     var newItemStateId = getIdByElementId(newItemsList.id);
 
-    item.changeState(newItemStateId);
+    var result = item.changeState(newItemStateId);
+    // Отменить перемещение
+    if (!result) {
+        $(".ui-sortable").sortable("cancel");
+    }
 }
 
 function startChangeState(event, ui) {
@@ -160,8 +164,7 @@ function init() {
             delay: 10,
             opacity: 0.85,
             stop: stopChangeState,
-            forcePlaceholderSize: true,
-            start: startChangeState,
+            forcePlaceholderSize: true,            
             placeholder: "item-placeholder",
             forcePlaceholderSize: true
         });

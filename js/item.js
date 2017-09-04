@@ -268,9 +268,9 @@ Item = function (data, itemList, stateId) {
     this.changeState = function (newItemStateId) {
         // Предыдущий статус еще в свойствах
         var prevItemStateId = this.stateId;
+        var result = false;
 
         if (prevItemStateId != newItemStateId) {
-            var result;
             var params = {
                 sprintId: this.sprint,
                 projectId: this.project,
@@ -284,9 +284,12 @@ Item = function (data, itemList, stateId) {
                 result = JSON.parse(data);
                 this.update(result[0], this.itemList);
                 this.render();
+                result = true
             }
             //this.itemList.refresh();
         }
+
+        return result
     }
 
     // Метод смены исполнителя элемента
