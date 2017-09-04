@@ -63,7 +63,7 @@
         </div>
         <div class="content-right">
             <div class="sprints-list">
-                <select class="select-sprint" onchange="itemList.setFilter('.select-sprint')"></select>
+                <select class="select-sprint" id="select-sprint" onchange="itemList.setFilter('.select-sprint')"></select>
             </div>
             <div class="menu-settings-block">
                 <ul class="menu-settings">
@@ -141,17 +141,23 @@
             <!--Записывается из скрипта-->
         </div>
     </main>
-    <!--<script src="./js/script.js"></script>-->
-    <script src="./js/connector.js"></script>
-    <script src="./js/menu.js"></script>
-
     <script src="./js/test-data.js"></script>
 
-    <script src="./js/states.js"></script>
-
+    <!--подключение к Директум-->
+    <script src="./js/connector.js"></script>
+    <!--основные действия с меню-->
+    <script src="./js/menu.js"></script>
+    <!--описание класса реквизитов-признаков-->
+    <script src="./js/pick-items.js"></script>
+    <!--описание класса спринтов и списка-->
+    <script src="./js/sprint-list.js"></script>
+    <!--описание класса статусов и списка-->
+    <script src="./js/state-list.js"></script>
+    <!--описание класса списка элементов-->
     <script src="./js/item-list.js"></script>
+    <!--описание класса элементов-->
     <script src="./js/item.js"></script>
-
+    <!--входной файл JS-->
     <script src="./js/main.js"></script>
 </body>
 </html>

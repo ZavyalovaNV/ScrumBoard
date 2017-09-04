@@ -93,7 +93,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
             // Элемент из JSON
             var itemData = itemsData[i];
             // создать новый элемент и добавить в список, если его еще не было
-            item = new Item(itemData, this);
+            var item = new Item(itemData, this);
             items.push(item);
         }
     }
@@ -199,10 +199,11 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     // Обновить элементы - получить с сервера
     this.update = function () {
         // Получить данные с сервера
+        this.itemsData = this.getData();
 
-        // Преобразовать их в JSON
+        /*// Преобразовать их в JSON
         this.itemsData = items_test_new;
-
+        */
         // Обновить элементы в DOM
         this.refresh();
     }
@@ -211,7 +212,6 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     this.refresh = function () {       
         // Создать элементы
         this.setItems();
-
         // Отрисовать элементы
         this.render();
     }
@@ -219,10 +219,10 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     // Добавить новый элемент
     this.addItem = function (stateId) {
         var item = new Item([], this, stateId);
-        var data = item.add();
-        // Добавить результат в JSON список
-        this.itemsData.push(data);
-        this.refresh();
+        var result = item.new(stateId, this.projectId, this.sprintId);
+        if (result) {
+            this.update();
+        }
         event.stopPropagation();
     }
 

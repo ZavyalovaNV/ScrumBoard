@@ -19,10 +19,10 @@ Item = function (data, itemList, stateId) {
         var employeeId = this.executorId;
         var employeeName = this.executorName;
 
-        var employee = new Employee(employeeId, employeeName);
-        this.itemList.employeeList.add(employee);
-
-        console.log(itemList);
+        if (employeeId != undefined && employeeName != undefined) {
+            var employee = new Employee(employeeId, employeeName);
+            this.itemList.employeeList.add(employee);
+        }
     }
 
     // Получить элемент DOM по ид
@@ -198,7 +198,9 @@ Item = function (data, itemList, stateId) {
         // Удалить объект в HTML
         if (result) {
             var element = item.getElement(item.id);
-            element.parentNode.removeChild(element);            
+            if (element != null) {
+                element.parentNode.removeChild(element);
+            }
         }
         event.stopPropagation();
     }
@@ -220,6 +222,25 @@ Item = function (data, itemList, stateId) {
     }
 
     // Метод добавления элемента
+    this.new = function (stateId, projectId, sprintId) {
+        var result;
+        var params = {
+            sprintId: sprintId,
+            projectId: projectId
+        }
+
+        // Если задан статус, то передать его как значение по умолчанию
+        if (stateId != undefined) {
+            params['stateId'] = stateId;
+        }
+
+        var result = connector.executeScript("AK_SBCreateItem", params)
+        // Обновить весь список объектов, т.к. могли создать новые/удалить    
+        //itemList.update();
+        return result;
+    }
+
+    // Метод добавления элемента
     this.add = function (stateId) {
         var result;
         var params = {
@@ -236,8 +257,6 @@ Item = function (data, itemList, stateId) {
         var data = connector.executeScript("AK_SBDeleteItem", params)
         if (data != false) {
             result = JSON.parse(data);
-        } else {
-            result = { "stateId": "873359", "project": "1543890", "sprint": "1556288", "id": "1562158", "link": "", "text": "Новая запись! Свеженькая!", "executorId": "1149425", "executorName": "Завьялова Наталия Владимировна", "executorPhoto": "1149425.jpg", "priority": "Максимальный", "priorityId": "2", "issueType": "Пожелание", "issueTypeId": "2", "planDate": "", "number": "095-020", "planHours": "", "regDate": "20.07.2017" }
         }
 
         // Обновить весь список объектов, т.к. могли создать новые/удалить    
@@ -248,27 +267,26 @@ Item = function (data, itemList, stateId) {
     // Метод смены статуса элемента
     this.changeState = function (newItemStateId) {
         // Предыдущий статус еще в свойствах
-        var prevItemStateId = item.stateId;
-        
-        var result;
-        var params = {
-            sprintId: item.sprint,
-            projectId: item.project,
-            itemID: item.id,
-            prevItemStateId: prevItemStateId,
-            newItemStateId: newItemStateId
-        }
+        var prevItemStateId = this.stateId;
 
-        var data = connector.executeScript("AK_SBChangeStateItem", params)
-        if (data != false) {
-            result = JSON.parse(data);
-        } else {
-            result = { "stateId": "873359", "project": "1543890", "sprint": "1556288", "id": this.id, "link": "", "text": "Новая запись! Свеженькая!", "executorId": "1149425", "executorName": "Завьялова Наталия Владимировна", "executorPhoto": "1149425.jpg", "priority": "Максимальный", "priorityId": "2", "issueType": "Пожелание", "issueTypeId": "2", "planDate": "", "number": "095-020", "planHours": "", "regDate": "20.07.2017" }
-        }
+        if (prevItemStateId != newItemStateId) {
+            var result;
+            var params = {
+                sprintId: this.sprint,
+                projectId: this.project,
+                itemID: this.id,
+                prevItemStateId: prevItemStateId,
+                newItemStateId: newItemStateId
+            }
 
-        this.update(result);
-        this.render();
-        return result;
+            var data = connector.executeScript("AK_SBChangeStateItem", params)
+            if (data != false) {
+                result = JSON.parse(data);
+                this.update(result[0], this.itemList);
+                this.render();
+            }
+            //this.itemList.refresh();
+        }
     }
 
     // Метод смены исполнителя элемента
@@ -297,17 +315,17 @@ Item = function (data, itemList, stateId) {
             itemID: item.id
         }
 
-        var data = connector.executeScript("AK_SBChangeExecutorItem", params)
-        if (data != false) {
-            result = JSON.parse(data);
-        } else {
-            result = { "stateId": "873359", "project": "1543890", "sprint": "1556288", "id": "1562158", "link": "", "text": "Новая запись! Свеженькая!", "executorId": "1149425", "executorName": "Завьялова Наталия Владимировна", "executorPhoto": "1149425.jpg", "priority": "Максимальный", "priorityId": "2", "issueType": "Пожелание", "issueTypeId": "2", "planDate": "", "number": "095-020", "planHours": "", "regDate": "20.07.2017" }
+        var result = connector.executeScript("AK_SBChangeExecutorItem", params)
+        if (result != false) {
+            var data = JSON.parse(result);
+            item.update(data[0], item.itemList);
+            item.render();
         }
 
         // Обновить весь список объектов, т.к. могли создать новые/удалить    
         return result;
     }
-
+    
     this.checkByFilter = function (filter) {
         var checked = false;
 
@@ -347,6 +365,6 @@ Item = function (data, itemList, stateId) {
 
         return checked
     }
-
-    this.update(data, itemList);    
+    
+    this.update(data, itemList);
 }

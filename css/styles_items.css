@@ -37,6 +37,6 @@
 
 .items-list {
     font-size: 0px;
-    /*min-height: 100%;*/
+    min-height: 100%;
     /*height: inherit;*/
 }

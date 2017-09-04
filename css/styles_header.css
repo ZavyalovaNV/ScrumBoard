@@ -225,6 +225,11 @@
     font-size: 10px;
 }
 
+.select-sort {
+    width: 220px;    
+    font-size: 10px;
+}
+
 .select2-results__option {
     padding: 4px;
     font-size: 12px;

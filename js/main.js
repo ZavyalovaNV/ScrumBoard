@@ -2,6 +2,20 @@
 
 // Создать или получить подключение к DIRECTUM
 var connector = new Connector();
+
+// Получить признаки:
+// Приоритеты
+var prioriryList = new PickList(connector, "AK_SBGetPickRequisitesData", 'AK_PrioritySign', true);
+prioriryList.render(".select-priority");
+
+// Типы
+var issueTypesList = new PickList(connector, "AK_SBGetPickRequisitesData", 'AK_IT_IssueType', false);
+issueTypesList.render(".select-issue-type");
+
+// Получить спринты
+var sprintList = new SprintList(connector);
+sprintList.render();
+
 // Поулчить статусы
 var stateList = new StateList(connector);
 stateList.render();
@@ -114,8 +128,7 @@ window.onscroll = function () {
 $(init);
 function init() {
     $(".select-priority").select2({
-        placeholder: "Выберите...",
-        data: priorities_test
+        placeholder: "Выберите..."
     });
     $(".select-employee").select2({
         placeholder: "Выберите...",
@@ -126,12 +139,14 @@ function init() {
     });
     $(".select-issue-type").select2({
         placeholder: "Выберите...",
-        allowClear: true,
-        data: issueTypes_test
+        allowClear: true
     });
     $(".select-sort").select2({
-        //allowClear: true,
-        data: sort_test
+        data: [
+            { "id": "number", "text": "Номер" },
+            { "id": "priorityId", "text": "Приоритет" },
+            { "id": "regDate", "text": "Дата регистрации" }
+        ]
     });
 
     elemID = "filter-submenuID";
