@@ -14,8 +14,8 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     this.modeCompact = _modeCompact;
     // Толкьо чтение
     this.readOnly = _readOnly;
-  /*  // Статусы 
-    this.stateList = _stateList;*/
+    /*  // Статусы 
+      this.stateList = _stateList;*/
 
     // Фильтр
     this.filter = {
@@ -37,7 +37,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     /*****************************************/
     // Получить элемент из массива по его ИД
     this.getItemById = function (id) {
-        var items = this.items;
+        var items = this.list;
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var itemID = item.id;
@@ -50,7 +50,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
 
     // Получить элемент из массива JSON по его ИД
     this.getItemDataById = function (id) {
-        var itemsData = this.itemsData;
+        var itemsData = this.data;
         for (var j = 0; j < itemsData.length; j++) {
             var data = itemsData[j];
             if (data.id === id) {
@@ -119,7 +119,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     this.applySort = function () {
         var sortField = this.sort.field;
         var sortDest = this.sort.dest;
-        
+
         // Коэффициент направления сортировки
         // Если сортировка по убыванию, то всё наоборот - результат умножается на -1
         var koefDest = sortDest === 'desc' ? -1 : 1;
@@ -176,7 +176,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     this.render = function () {
         this.clear();
 
-        var items = this.list;        
+        var items = this.list;
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             item.render()
@@ -189,7 +189,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         this.deleteItems();
 
         // Создать новый список
- //       this.createItems();
+        //       this.createItems();
 
         // Применить фильтр
         this.applyFilter();
@@ -199,7 +199,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     }
 
     // Обновить элементы - получить с сервера
-    this.refresh = function () {       
+    this.refresh = function () {
         // Получить данные с сервера
         this.getData();
         // Обновить
