@@ -11,7 +11,7 @@ Item = function (_itemList) {
     this.modeCompact = this.itemList.modeCompact;
 
     // Обновить свойства элемента
-    this.update = function (data) {        
+    this.update = function (data) {
         for (key in data) {
             // Для плановой даты преобразовать строку в Дату, чтобы дальше работать как с датами
             if (key === 'planDate' || key === 'regDate') {
@@ -22,7 +22,7 @@ Item = function (_itemList) {
             }
             this[key] = value;
         }
-        
+
         // Обновить работника в список
         var itemList = this.itemList;
         if (itemList != undefined && itemList != null) {
@@ -31,7 +31,7 @@ Item = function (_itemList) {
             var employee = employeeList.getItemById(this.executorId);
             if (employee === undefined || employee === null) {
                 employee = new Employee(this.executorId, this.executorName);
-                employeeList.add(employee); 
+                employeeList.add(employee);
                 /*var container = document.querySelector(".select-employee");
                 employee.render(container, "");*/
             }
@@ -114,7 +114,7 @@ Item = function (_itemList) {
                     innerElement.setAttribute("title", arr[1]);
                 }
             }
-            
+
             // Установить стили элемента
             var elementClassList = element.classList;
             if (!elementClassList.contains('item')) {
@@ -151,23 +151,30 @@ Item = function (_itemList) {
         var height = column.offsetHeight;
         var maxHeight = height;
 
-        console.dir(column);
-
         for (var i = 1; i < columns.length; i++) {
             column = columns[i];
             height = column.offsetHeight;
             maxHeight = height > maxHeight ? height : maxHeight;
         }
 
-        console.dir("maxHeight - " + maxHeight);
-        
         for (var i = 0; i < columns.length; i++) {
             column = columns[i];
             height = column.offsetHeight;
             if (height <= maxHeight) {
-                column.style.minHeight = maxHeight;
+                column.style.minHeight = maxHeight + "px";
+                //column.style.height = maxHeight + "px";
             }
         }
+        /*
+                columns = document.querySelectorAll(".items-column");
+                for (var i = 0; i < columns.length; i++) {
+                    column = columns[i];
+                    height = column.offsetHeight;
+                    if (height <= maxHeight) {
+                        column.style.minHeight = maxHeight + "px";
+                        column.style.height = maxHeight + "px";
+                    }
+                }*/
     }
 
     // Установить режим отображения Полный/Компактный
@@ -243,7 +250,7 @@ Item = function (_itemList) {
         if (result) {
             // Обновить весь список объектов, т.к. могли создать новые/удалить    
             itemList.refresh();
-        }        
+        }
     }
 
     // Метод удаления элемента
@@ -313,7 +320,7 @@ Item = function (_itemList) {
         event.stopPropagation();
 
         // Дойти до родителя с классом item
-        var parent = this.parentElement;        
+        var parent = this.parentElement;
         var parentClassList = parent.classList;
         var parentIsItem = parentClassList.contains("item");
         while (!parentIsItem) {
@@ -406,7 +413,7 @@ Item = function (_itemList) {
         }
 
         this.update();
-        
+
         // Обновить весь список объектов, т.к. могли создать новые/удалить    
         //itemList.update();
         return result;
