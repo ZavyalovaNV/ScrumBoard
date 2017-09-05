@@ -1,20 +1,25 @@
 StateList = function (_connector) {
+    // Подключение к Директум
     this.connector = _connector;    
+    // Данные с сервера
+    this.data = [];
+    // Локальные данные
+    this.list = [];
 
     // Получить данные по спринту/проекту
     this.getData = function () {
-        var params = {
-            sprintId: this.connector.sprintId,
-            projectId: this.connector.projectId
+        var result = [];
+        // Получить данные с сервера
+        var resultScript = connector.executeScript("AK_SBGetStatesData",
+            {
+                sprintId: this.connector.sprintId,
+                projectId: this.connector.projectId
+            });
+        // Если сценарий отработал корректно = вернул данные, распарсить их
+        if (resultScript) {
+            result = JSON.parse(resultScript);
         }
-        var result;
-
-        if (isTesting) {
-            result = states_test
-        } else {
-            var data = connector.executeScript("AK_SBGetStatesData", params);
-            result = JSON.parse(data);
-        }
+        this.data = result;
         return result;
     };
 
@@ -23,7 +28,7 @@ StateList = function (_connector) {
         var container = document.getElementById("states");
         var containerCols = document.getElementById("item-row");
 
-        var states = this.states;
+        var states = this.list;
         for (var i = 0; i < states.length; i++) {
             var state = states[i];
             // отрисовать статус
@@ -33,30 +38,42 @@ StateList = function (_connector) {
     }
 
     // Создать статусы на основе JSON
-    this.createStates = function () {
-        this.states = [];
+    this.create = function () {
+        // Очистить текущий список
+        this.list = [];
         var newStates = [];
 
-        var statesData = this.statesData;
+        // По списку данных с сервера создать локальные данные
+        var statesData = this.data;
         for (var i = 0; i < statesData.length; i++) {
-            var data = statesData[i];
-            // создать новый статус
-            var state = new State(data);
+            var stateData = statesData[i];
+            // Создать новый статус
+            var state = new State();
+            state.refresh(stateData);
+            // Добавить в список
             newStates.push(state);
         };
 
-        this.states = newStates;
+        this.list = newStates;
     }
 
-    // Получить все статусы как JSON
-    this.statesData = this.getData();
+    this.refresh = function () {
+        // Получить все статусы как JSON
+        this.getData();
 
-    // Создать статусы
-    this.createStates();
+        // Создать статусы
+        this.create();
+
+        // Отобразить
+        this.render()
+    }
 }
 
-State = function (data) {
-    // Свойства элемента
+State = function () {
+    // Основной класс
+    this.mainClass = "state";
+
+    // Обновить свойства элемента
     this.update = function (data) {
         for (key in data) {
             this[key] = data[key];
@@ -64,9 +81,9 @@ State = function (data) {
     }
 
     // Получить элемент DOM по ид
-    this.getElement = function () {
+    this.getDOMElement = function () {
         // Найти элемент с таким же ИД
-        return document.getElementById("state-" + this.id);
+        return document.getElementById(this.mainClass + "-" + this.id);
     }
 
     this.render = function (parent) {
@@ -74,10 +91,10 @@ State = function (data) {
             throw 'Не определен контейнер для статуса'
         }
 
-        var className = "state";
+        var className = this.mainClass;
         
         // Найти данный элемент, чтобы не перерисовывать каждый раз
-        var element = this.getElement();        
+        var element = this.getDOMElement();        
         if (element === undefined || element === null) {
             element = document.createElement('div');
             // Задать ИД
@@ -159,5 +176,12 @@ State = function (data) {
         element.sortable({ connectWith: availableStatesStr });
     }
 
-    this.update(data);
+    this.refresh = function (data) {
+        // Получить данные
+        this.update(data);
+       /* // Отобразить
+        this.render(container);
+        // Доступные изменения статуса
+        this.setTransmissions(); */
+    }
 }

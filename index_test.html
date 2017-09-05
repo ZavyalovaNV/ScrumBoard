@@ -21,8 +21,8 @@
 
     <!--Шаблоны-->
     <script type="text/x-my-template" id="template_item">
-      <div class="item-handle"></div> 
-      <a class="item-delete" href= "#"></a>
+        <div class="item-handle"></div>
+        <a class="item-delete" href="#"></a>
         <div class="item-content">
             <div class="item-text"><text></div>
 
@@ -57,13 +57,13 @@
             <div class="menu-main-block">
                 <ul class="menu-main">
                     <li class="menu-main-item"><a class="btn header-btn new" href="#" onclick="itemList.addItem()">Новая запись</a></li>
-                    <li class="menu-main-item"><a class="btn header-btn refresh" href="#" onclick="itemList.update()">Обновить</a></li>
+                    <li class="menu-main-item"><a class="btn header-btn refresh" href="#" onclick="itemList.refresh()">Обновить</a></li>
                 </ul>
             </div>
         </div>
         <div class="content-right">
             <div class="sprints-list">
-                <select class="select-sprint" onchange="itemList.setFilter('.select-sprint')"></select>
+                <select class="select-sprint" id="select-sprint" onchange="itemList.setFilter('.select-sprint')"></select>
             </div>
             <div class="menu-settings-block">
                 <ul class="menu-settings">
@@ -114,7 +114,7 @@
                                                     <input class="datepicker" type="text" id="plan-date-to" onchange="itemList.setFilter('#plan-date-to')" />
                                                 </div>
                                             </div>
-                                         </div>
+                                        </div>
                                     </li>
                                 </ul>
                             </li>
@@ -129,7 +129,7 @@
                                     </li>
                                 </ul>
                             </li>
-                </ul>
+                        </ul>
             </div>
         </div>
     </nav>
@@ -141,17 +141,24 @@
             <!--Записывается из скрипта-->
         </div>
     </main>
-    <!--<script src="./js/script.js"></script>-->
-    <script src="./js/connector.js"></script>
-    <script src="./js/menu.js"></script>
-
     <script src="./js/test-data.js"></script>
-
-    <script src="./js/states.js"></script>
-
-    <script src="./js/item-list.js"></script>
-    <script src="./js/item.js"></script>
-
     <script src="./js/test.js"></script>
+
+    <!--подключение к Директум-->
+    <script src="./js/connector.js"></script>
+    <!--основные действия с меню-->
+    <script src="./js/menu.js"></script>
+    <!--описание класса реквизитов-признаков-->
+    <script src="./js/pick-items.js"></script>
+    <!--описание класса спринтов и списка-->
+    <script src="./js/sprint-list.js"></script>
+    <!--описание класса статусов и списка-->
+    <script src="./js/state-list.js"></script>
+    <!--описание класса списка элементов-->
+    <script src="./js/item-list.js"></script>
+    <!--описание класса элементов-->
+    <script src="./js/item.js"></script>
+    <!--входной файл JS-->
+    <script src="./js/main.js"></script>
 </body>
 </html>

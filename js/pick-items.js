@@ -1,92 +1,136 @@
 ﻿// Признак
-Pick = function (data) {
-    this.id = data.id;
-    this.name = data.text;
+Pick = function (_id, _text) {
+    this.id = _id;
+    this.text = _text;
 
-    this.render = function (container) {
-        var optionList = container.options;
+    // Отрисовать элемент признака в контейнере container
+    this.render = function (container, pickClassName) {
+        if (container != undefined && container != null) {
+            // Объекты для выбора
+            var optionList = container.options;
+            if (optionList != undefined && optionList != null) {
+                // Найти признак в списке
+                var founded = false,
+                    option;
+                console.dir(optionList);
 
-        // Найти работника в списке
-        var founded = false;
-        for (var i = 0; i < optionList.length; i++) {
-            var option = optionList[i];
-            founded = option.value === this.id;
-            if (founded) { break; }
-        }
-        if (!founded) {
-            // Создать работника в списке
-            var element = document.createElement("option");
-            element.classList.add('select-pick-option');
-            element.value = this.id;
-            element.innerHTML = this.name;
-            container.appendChild(element);
+                for (var i = 0; i < optionList.length; i++) {
+                    option = optionList[i];
+                    founded = option.value === this.id;
+                    if (founded) { break; }
+                }
+                // Если не был найден - создать
+                if (!founded) {
+                    // Создать признак в списке
+                    option = document.createElement("option");
+                    option.classList.add('select-pick-option');
+                    option.value = this.id;
+                    container.appendChild(option);
+                }
+                // Обновить текст
+                option.innerHTML = this.text;
+            }
         }
     }
 }
 
 // Список признаков
-PickList = function (_connector, _scriptName, _pickName, _multiSelect) {
-    this.pickList = [];
+PickList = function (_scriptName, _pickName, _multiSelect, _pickClassName) {
+    this.list = [];
+    this.data = [];
+
+    // Имя признака
     this.scriptName = _scriptName;
+    // Имя признака
     this.pickName = _pickName;
-    this.connector = _connector;
+    // Мультивыбор - ?
     this.multiSelect = _multiSelect;
 
-    this.add = function (pick) {
-        this.pickList.push(pick);
-        this.data.push({ id: pick.id, text: pick.text });
-        pick.render();
+    // Получить объект по ИД
+    this.getItemById = function (_id) {
+        // Найти нужный объект, сравнивая ИД
+        var itemList = this.list;
+        for (var i = 0; i < itemList.length; i++) {
+            var item = itemList[i];
+            if (item.id === _id) {
+                return item
+            }
+        }
+        return null;
+    }
+
+    // Добавление нового признака в спимок
+    this.add = function (item, pickClassName) {
+        // Проверить, что в текущем списке нет добавляемого элемента
+        var item = this.getItemById(item.id);
+        if (item != null) {
+            // Добавить новый элемент в локальный список
+            this.list.push(item);
+            // И в список данных
+            this.data.push({ id: item.id, text: item.text });
+            // Отрисовать
+            item.render(pickClassName);
+        }
     }
 
     // Получить данные по признакам по текущему проекту
-    this.getData = function () {
-        var params = {
-            projectId: this.connector.projectId,
-            ReqNames: this.pickName
-        }
-        
-        var data = connector.executeScript(this.scriptName, params);
-        var result = JSON.parse(data);
-        
-        // Если нет мультивыбора, добавить "Все" в начало массива
-        if (!this.multiSelect) {
-            result.unshift({ "id": "-1", "text": "Все" });            
+    this.getData = function (params) {
+        var result = false;
+        // К основному списку параметров добавить имя признака
+        params["reqNames"] = this.pickName;
+
+        // Выполнить скрипт
+        var resultScript = connector.executeScript(this.scriptName, params);
+
+        // Если возвращено true или данные, обработать результат
+        if (resultScript) {
+            result = JSON.parse(resultScript);
+            // Если нет мультивыбора, добавить "Все" в начало массива
+            if (!this.multiSelect) {
+                result.unshift({ "id": "-1", "text": "Все" });
+            }
         }
 
+        this.data = result;
         return result;
     }
 
     // Создать признаки
-    this.createPicks = function () {
-        this.pickList = [];
-        var newPickList = [];
+    this.create = function () {
+        // Очистить текущий список признаков
+        this.list = [];
+        // Список новых данных - результирующий список
+        var result = [];
+        // Текущий список признаков с сервера
+        var listData = this.data;
 
-        var pickListData = this.pickListData;
-        for (var i = 0; i < pickListData.length; i++) {
-            var data = pickListData[i];
-            
-            // создать новый статус
-            var pick = new Pick(data);
-            newPickList.push(pick);
+        for (var i = 0; i < listData.length; i++) {
+            var data = listData[i];
+
+            // Создать новый статус
+            var item = new Pick(data.id, data.text);
+            result.push(item);
         };
 
-        return newPickList;
+        this.list = result;
+        return result;
     }
 
+    // Отрисовать признаки (т.к. для отображения признаков используется библиотека JQuery Select2 - используются её методы)   
     this.render = function (selector) {
-        //var container = document.getElementById(selector);
-        var pickList = this.pickListData;
-        /*
-        for (var i = 0; i < pickList.length; i++) {
-            var pick = pickList[i];
-            pick.render(container);
-        }*/
+        var pickList = this.data;
         $(selector).select2({
             data: pickList
         });
     }
 
-
-    this.pickListData = this.getData();
-    this.pickList = this.createPicks();
+    // Обновить список: получить данные + актуализироват локальные данные + отобразить
+    this.refresh = function (params, selector, pickClassName) {
+        // Получить актуальные данные с сервера
+        this.getData(params);
+        // Создать локальные объекты
+        this.create();
+        // Отобразить
+        this.render(selector, pickClassName);
+    }
 }

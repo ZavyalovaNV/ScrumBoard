@@ -94,7 +94,11 @@
             result = script.Execute();
         }
         catch (err) {
-            alert(err)
+            alert(err);
+
+            if (isTesting) {
+                result = TESTING_COMPARE(scriptName, params)
+            }
         }
         return result
     }

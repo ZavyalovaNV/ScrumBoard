@@ -1,5 +1,117 @@
 ﻿// Спринт
-Sprint = function (data) {
+Sprint = function (_id, _text) {
+    // Наследуется от признаков
+    Pick.call(this);
+}
+
+
+// Список спринтов
+SprintList = function (_connector) {
+    // Наследуется от признаков
+    PickList.call(this);
+
+    // Сценарий для получения данных с сервера
+    this.scriptName = "AK_SBGetSprintesData";
+    // Имя признака
+    this.pickName = "sprint";
+    // Мультивыбор - ?
+    this.multiSelect = false;
+    // Подключение к Директум
+    this.connector = _connector;
+}
+
+
+Employee = function (_id, _text) {
+    this.id = _id;
+    this.text = _text;
+
+    this.render = function () {
+        var container = document.querySelector(".select-employee");
+        var optionList = container.options;
+
+        // Найти работника в списке
+        var founded = false;
+        for (var i = 0; i < optionList.length; i++) {
+            var option = optionList[i];
+            founded = option.value === this.id;
+            if (founded) { break; }
+        }
+        if (!founded) {
+            // Создать работника в списке
+            var option = document.createElement("option");
+            option.classList.add('select-employee-option');
+            option.value = this.id;
+            container.appendChild(option);
+        }
+        option.innerHTML = this.text;
+    }
+}
+
+EmployeeList = function (_itemList) {
+    // Сценарий для получения данных с сервера
+    this.scriptName = "";
+    // Имя признака
+    this.pickName = "employee";
+    // Мультивыбор - ?
+    this.multiSelect = true;
+    //
+    this.itemList = _itemList;
+
+    this.data = [];
+    this.list = [];
+
+    // Получить объект по ИД
+    this.getItemById = function (_id) {
+        // Найти нужный объект, сравнивая ИД
+        var itemList = this.list;
+        for (var i = 0; i < itemList.length; i++) {
+            var item = itemList[i];
+            if (item.id === _id) {
+                return item
+            }
+        }
+        return null;
+    }
+
+    // Данные формируются на основе элементов
+    this.getData = function () {
+        var data = [];
+
+        var itemList = this.itemList;
+        var items = itemList.list;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var employeeData = { "id": item.executorId, "text": item.executorName };
+            data.push(employeeData);
+            var employee = new Employee(employeeData.id, employeeData.text);
+            this.list.push(employee);
+            employee.render()
+        }
+
+        this.data = result;
+        return result;
+    }
+    
+    this.add = function (employee) {
+        this.list.push(employee);
+        this.data.push({ id: employee.id, text: employee.text });
+        employee.render();
+    }
+
+    /*
+    this.getEmployeeById = function (_id) {
+        var data = this.data;
+        for (var i = 0; i < data.length; i++) {
+            employee = data[i];
+            if (employee.id === _id) {
+                return employee
+            }
+        }
+    }*/
+}
+
+
+    /*
     this.id = data.id;
     this.name = data.text;
 
@@ -21,15 +133,14 @@ Sprint = function (data) {
             element.innerHTML = this.name;
             container.appendChild(element);
         }
-    }
-}
+    }*/
 
-// Список спринтов
-SprintList = function (_connector) {
-    this.sprintList = [];
-    this.connector = _connector;
 
+
+/*
+    // Добавить новый элемент в список
     this.add = function (sprint) {
+        
         this.sprintList.push(sprint);
         this.data.push({ id: sprint.id, text: sprint.name });
         sprint.render();
@@ -44,26 +155,21 @@ SprintList = function (_connector) {
             }
         }
     }
-
+    
     // Получить данные по спринтам по текущему проекту
     this.getData = function () {
-        var params = {
-            sprintId: this.connector.sprintId,
-            projectId: this.connector.projectId
-        }
-        var result;
+        var data = connector.executeScript("AK_SBGetSprintesData",
+            {
+                sprintId: this.connector.sprintId,
+                projectId: this.connector.projectId
+            });
+        var result = JSON.parse(data); 
 
-        if (isTesting) {
-            result = sprints_test
-        } else {
-            var data = connector.executeScript("AK_SBGetSprintesData", params);
-            result = JSON.parse(data);
-        }
         return result;
-    }
+    }*/
 
     // Создать спринты
-    this.createSprints = function () {
+    /*this.createSprintList = function () {
         this.sprintList = [];
         var newSprintList = [];
 
@@ -90,6 +196,5 @@ SprintList = function (_connector) {
     }
 
 
-    this.sprintListData = this.getData();
-    this.sprintList = this.createSprints();
-}
+    this.sprintListData = this.getData("AK_SBGetSprintesData", { projectId: connector.projectId, sprintId: connector.sprintId });
+    this.sprintList = this.createSprintList();*/

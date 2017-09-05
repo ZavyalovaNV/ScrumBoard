@@ -1,16 +1,21 @@
 ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
+    this.data = [];
+    this.list = [];
+    // Работники
+    this.employeeList = new EmployeeList();
+
     /***********Свойства отображения*********/
     this.connector = _connector;
     // Спринт
-    this.sprintId = _connector.sprintId;
+    this.sprintId = this.connector.sprintId;
     // Проект
-    this.projectId = _connector.projectId;
+    this.projectId = this.connector.projectId;
     // Настройка режима отображения элементов: компактно или нет
     this.modeCompact = _modeCompact;
     // Толкьо чтение
     this.readOnly = _readOnly;
-    // Статусы 
-    this.states = _stateList;
+  /*  // Статусы 
+    this.stateList = _stateList;*/
 
     // Фильтр
     this.filter = {
@@ -30,25 +35,6 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         dest: 'asc'
     }
     /*****************************************/
-
-    // Получить данные по спринту/проекту
-    this.getData = function () {
-        var params = {
-            sprintId: this.sprintId,
-            projectId: this.projectId
-        }
-        var result;
-
-        if (isTesting) {
-            result = items_test
-        } else {
-            var data = connector.executeScript("AK_SBGetItemsData", params);
-            result = JSON.parse(data);
-        }
-        return result;
-    };
-
-    /***********Основные методы работы со списком***************/
     // Получить элемент из массива по его ИД
     this.getItemById = function (id) {
         var items = this.items;
@@ -73,27 +59,39 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         }
     };
 
+    // Получить все данные по спринту/проекту
+    this.getData = function () {
+        var result = [];
+        // Получить данные с сервера
+        var resultScript = connector.executeScript("AK_SBGetItemsData",
+            {
+                sprintId: this.sprintId,
+                projectId: this.projectId
+            });
+        // Если сценарий отработал корректно = вернул данные, распарсить их
+        if (resultScript) {
+            result = JSON.parse(resultScript);
+        }
+        this.data = result;
+        return result;
+    };
+
     // Очистить текущий список объектов
     this.deleteItems = function () {
-        //var items = this.items;
-        // Удалить 
-        //for (var i = 0; i < items.length; i++) {
-        //    var item = items[i];
-        //    item.delete()
-        //}
-        this.items = [];
+        this.list = [];
     }
 
     // Создать новый список на основе JSON
     this.createItems = function () {
-        var items = this.items;
-        var itemsData = this.itemsData;
+        var items = this.list;
+        var itemsData = this.data;
 
         for (var i = 0; i < itemsData.length; i++) {
             // Элемент из JSON
             var itemData = itemsData[i];
             // создать новый элемент и добавить в список, если его еще не было
-            var item = new Item(itemData, this);
+            var item = new Item(this);
+            item.update(itemData);
             items.push(item);
         }
     }
@@ -107,20 +105,18 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         this.createItems();
 
         // Результатом будут только подходящие под фильтр элементы
-        var currentItems = this.items;
+        var currentItems = this.list;
         var newItems = currentItems.filter(
             function (element, index, array) {
                 var checked = element.checkByFilter(filter);
                 return checked;
             }
         )
-
-        this.items = newItems;
+        this.list = newItems;
     }
 
     // Применить сортировку
     this.applySort = function () {
-        var items = this.items;
         var sortField = this.sort.field;
         var sortDest = this.sort.dest;
         
@@ -132,7 +128,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         var koef = sortField === 'priorityId' ? -1 : 1;
 
         // Результатом будут отсортированные элементы
-        var currentItems = this.items;
+        var currentItems = this.list;
         var newItems = currentItems.sort(
             function (item1, item2) {
                 // Результат сравнения:
@@ -156,23 +152,15 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
                 return result;
             }
         );
-
-        this.items = newItems;
+        this.list = newItems;
     }
 
     // Получить объекты из JSON с учетом фильтров и сортировок
-    this.setItems = function () {
-        // Очистить текущий список
-        this.deleteItems();
-
-        // Создать новый список
-        this.createItems();
-
-        // Применить фильтр
-        this.applyFilter();
-
-        // Применить сортировку
-        this.applySort();
+    this.refreshItems = function () {
+        // Получить данные с сервера
+        this.getData();
+        // Обновить
+        this.update();
     }
 
     // Очистить область от элементов
@@ -188,47 +176,69 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     this.render = function () {
         this.clear();
 
-        var items = this.items;
-
-        for (var i = 0; i < this.items.length; i++) {
-            var item = this.items[i];
-            item.render(this.modeCompact)
+        var items = this.list;        
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            item.render()
         }
     }
 
-    // Обновить элементы - получить с сервера
+    // Обновить элементы 
     this.update = function () {
-        // Получить данные с сервера
-        this.itemsData = this.getData();
+        // Очистить текущий список
+        this.deleteItems();
 
-        /*// Преобразовать их в JSON
-        this.itemsData = items_test_new;
-        */
-        // Обновить элементы в DOM
-        this.refresh();
+        // Создать новый список
+ //       this.createItems();
+
+        // Применить фильтр
+        this.applyFilter();
+
+        // Применить сортировку
+        this.applySort();
     }
 
-    // Обновить элементы
+    // Обновить элементы - получить с сервера
     this.refresh = function () {       
-        // Создать элементы
-        this.setItems();
+        // Получить данные с сервера
+        this.getData();
+        // Обновить
+        this.update();
         // Отрисовать элементы
         this.render();
     }
 
     // Добавить новый элемент
     this.addItem = function (stateId) {
-        var item = new Item([], this, stateId);
-        var result = item.new(stateId, this.projectId, this.sprintId);
+        var item = new Item(this);
+        var result = item.new(this.projectId, this.sprintId);
         if (result) {
+            // Новое значение добавить в JSON массив
+            this.data.push(result);
+            // Обновить весь список
             this.update();
+            // Отрисовать
+            this.render();
         }
         event.stopPropagation();
     }
 
     // Сменить режим отображения Полный/Компактный
-    this.setViewMode = function (viewMode_) {
-        this.modeCompact = viewMode_;
+    this.setViewMode = function (_modeCompact) {
+        this.modeCompact = _modeCompact;
+
+        // Получить все элементы
+        var items = itemList.list;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            item.setViewMode(this.modeCompact);
+
+            /*itemId = getIdByElementId(element.id)
+            item = this.getItemById(itemId);
+            if (item !== undefined) {
+                item.setViewMode(this.modeCompact);
+            }*/
+        }
 
         var elements = document.querySelectorAll('.item');
         var element, item, itemId;
@@ -267,13 +277,17 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         var filterName = COMPARE[selector];
         this.filter[filterName] = filterValue;
 
-        this.refresh();
+        this.update();
+        // Отрисовать
+        this.render();
     }
 
     // Установить текущее значение ПОЛЯ сортировки и применить её
     this.setSortField = function (element) {
         this.sort['field'] = element.value;
-        this.refresh();
+        this.update();
+        // Отрисовать
+        this.render();
     }
 
     // Установить текущее значение НАПРАВЛЕНИЯ сортировки и применить её
@@ -295,62 +309,8 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
             elementClassList.add('sort-down');
         };
 
-        this.refresh();
-    }
-        
-    // Все элементы, как JSON - т.е. все выгруженные значения без фильтров и сортировок
-    this.itemsData = this.getData();
-
-    // Список созданных объектов с учетом фильтров и сортировок
-    this.items = [];
-
-    // Работники
-    this.employeeList = new EmployeeList();
-}
-
-Employee = function (_id, _name) {
-    this.id = _id;
-    this.name = _name;
-
-    this.render = function () {
-        var container = document.querySelector(".select-employee");
-        var optionList = container.options;
-        
-        // Найти работника в списке
-        var founded = false;
-        for (var i = 0; i < optionList.length; i++) {
-            var option = optionList[i];
-            founded = option.value === this.id;
-            if (founded) { break; }
-        }
-        if (!founded) {
-            // Создать работника в списке
-            var element = document.createElement("option");
-            element.classList.add('select-employee-option');
-            element.value = this.id;
-            element.innerHTML = this.name;
-            container.appendChild(element);
-        }
-    }
-}
-
-EmployeeList = function () {
-    this.data = [];
-    this.employees = [];
-
-    this.add = function (employee) {
-        this.employees.push(employee);
-        this.data.push({ id: employee.id, text: employee.name });
-        employee.render();
-    }
-
-    this.getEmployeeById = function (_id) {
-        var data = this.data;
-        for (var i = 0; i < data.length; i++) {
-            employee = data[i];
-            if (employee.id === _id) {
-                return employee
-            }
-        }
+        this.update();
+        // Отрисовать
+        this.render();
     }
 }

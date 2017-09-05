@@ -1,8 +1,17 @@
+// Шаблон внутреннего устройства элемента
 TEMPLATE_ITEM = document.getElementById("template_item").innerHTML;
 
-Item = function (data, itemList, stateId) {
-    // Задать свойства элемента
-    this.update = function (data, itemList) {        
+Item = function (_itemList) {
+    this.data = {};
+    // Основной класс
+    this.mainClass = "item";
+    // Родитель - список всех элементов
+    this.itemList = _itemList;
+    // Стиль отображения: компактный/полный
+    this.modeCompact = this.itemList.modeCompact;
+
+    // Обновить свойства элемента
+    this.update = function (data) {        
         for (key in data) {
             // Для плановой даты преобразовать строку в Дату, чтобы дальше работать как с датами
             if (key === 'planDate' || key === 'regDate') {
@@ -13,33 +22,41 @@ Item = function (data, itemList, stateId) {
             }
             this[key] = value;
         }
-        this["itemList"] = itemList;
-
-        // Добавить работника в список
-        var employeeId = this.executorId;
-        var employeeName = this.executorName;
-
-        if (employeeId != undefined && employeeName != undefined) {
-            var employee = new Employee(employeeId, employeeName);
-            this.itemList.employeeList.add(employee);
+        
+        // Обновить работника в список
+        var itemList = this.itemList;
+        if (itemList != undefined && itemList != null) {
+            // Найти работника в списке
+            var employeeList = itemList.employeeList;
+            var employee = employeeList.getItemById(this.executorId);
+            if (employee === undefined || employee === null) {
+                employee = new Employee(this.executorId, this.executorName);
+                employeeList.add(employee); 
+                /*var container = document.querySelector(".select-employee");
+                employee.render(container, "");*/
+            }
         }
+        /*var employee = new Employee(this.executorId, this.executorName);
+        if (employee != undefined) {
+            this.itemList.employeeList.add(employee);
+        }*/
     }
 
     // Получить элемент DOM по ид
-    this.getElement = function () {
+    this.getDOMElement = function () {
         // Найти элемент с таким же ИД
         return document.getElementById("item-" + this.id);
     }
 
     // Отрисовка элемента
-    this.render = function (modeCompact) {
+    this.render = function () {
         // Получить родительский контейнер
         var parent = document.getElementById("items-list-" + this.stateId);
         if (parent !== null && parent != undefined) {
-            var className = "item";
+            var className = this.mainClass;
 
             // Найти элемент с таким же ИД
-            var element = this.getElement();
+            var element = this.getDOMElement();
             if (element === undefined || element === null) {
                 element = document.createElement('div');
                 // Новый элемент добавляется в контейнер
@@ -51,8 +68,8 @@ Item = function (data, itemList, stateId) {
 
             // Подстановка для плановой даты
             var planHoursElementInnerHTML = '';
-            if (data.planHours != '' && data.planHours != undefined) {
-                planHoursElementInnerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + data.planHours + ' ч.';
+            if (this.planHours != '' && this.planHours != undefined) {
+                planHoursElementInnerHTML = '<img src="css/img/clock.svg" width="12px" height="12px"/>' + this.planHours + ' ч.';
             }
 
             // Соответствие частей элемента и их значений
@@ -112,10 +129,9 @@ Item = function (data, itemList, stateId) {
             if (this.issueTypeId == '2') {
                 elementClassList.add('wish');
             };
-            //elementClassList.add('ui-sortable');
 
             // Компактный режим. Определить видимые области
-            this.setViewMode(modeCompact);
+            this.setViewMode(this.modeCompact);
 
             // Задать обработчики события
             // Открытие элемента
@@ -127,16 +143,43 @@ Item = function (data, itemList, stateId) {
                 deleteElement.addEventListener('click', this.deleteElement)
             }
         }
+
+        // Получить все столбцы
+        var columns = document.querySelectorAll(".items-list");
+        // Найти максимальную высоту
+        var column = columns[0];
+        var height = column.offsetHeight;
+        var maxHeight = height;
+
+        console.dir(column);
+
+        for (var i = 1; i < columns.length; i++) {
+            column = columns[i];
+            height = column.offsetHeight;
+            maxHeight = height > maxHeight ? height : maxHeight;
+        }
+
+        console.dir("maxHeight - " + maxHeight);
+        
+        for (var i = 0; i < columns.length; i++) {
+            column = columns[i];
+            height = column.offsetHeight;
+            if (height <= maxHeight) {
+                column.style.minHeight = maxHeight;
+            }
+        }
     }
 
     // Установить режим отображения Полный/Компактный
-    this.setViewMode = function (modeCompact) {
-        var element = this.getElement();
+    this.setViewMode = function (_modeCompact) {
+        this.modeCompact = _modeCompact;
+
+        var element = this.getDOMElement();
         if (element !== undefined && element !== null) {
             var elementData = element.querySelector('.item-data');
             var elementInd = element.querySelector('.item-ind');
             var elementCompactExecutor = element.querySelector('.item-executor-compact');
-            if (modeCompact) {
+            if (_modeCompact) {
                 // В компактном режиме доступны только ФИО
                 elementData.classList.add('hidden');
                 elementInd.classList.add('hidden');
@@ -150,16 +193,32 @@ Item = function (data, itemList, stateId) {
         }
     }
 
-    // Метод обновления элемента
-    this.refresh = function () {
-        try {
-            var textData = executeScript('AK_SBRefreshItem', this.projectID, this.sprintID, this.id, readOnly);
-            var data = JSON.parse(textData);
-            this.update(data);
+    // Получить данные по элементу с сервера
+    this.getData = function (getFromServer) {
+        var result = {};
+        // Получить данные с сервера
+        if (getFromServer) {
+            var resultScript = connector.executeScript("AK_SBGetItemsData",
+                {
+                    sprintId: this.sprint,
+                    projectId: this.project,
+                    itemId: this.id
+                });
+
+            // Если сценарий отработал корректно = вернул данные, распарсить их
+            if (resultScript) {
+                result = JSON.parse(resultScript);
+                result = result[0];
+            }
+        } else {
+            // Получить из JSON массива
+            var itemList = this.itemList;
+            if (itemList != undefined) {
+                result = itemList.getItemDataById(this.id);
+            }
         }
-        catch (err) {
-            alert(err);
-        };
+        this.data = result;
+        return result;
     }
 
     // Метод открытия элемента DOM (событие клика)
@@ -183,7 +242,7 @@ Item = function (data, itemList, stateId) {
         var result = connector.executeScript("AK_SBOpenItem", params)
         if (result) {
             // Обновить весь список объектов, т.к. могли создать новые/удалить    
-            itemList.update();
+            itemList.refresh();
         }        
     }
 
@@ -197,7 +256,7 @@ Item = function (data, itemList, stateId) {
 
         // Удалить объект в HTML
         if (result) {
-            var element = item.getElement(item.id);
+            var element = item.getDOMElement(item.id);
             if (element != null) {
                 element.parentNode.removeChild(element);
             }
@@ -216,52 +275,9 @@ Item = function (data, itemList, stateId) {
         var result = connector.executeScript("AK_SBDeleteItem", params)
         if (result) {
             // Обновить весь список объектов, т.к. могли создать новые/удалить    
-            itemList.update();
+            itemList.refresh();
         }
         return result;
-    }
-
-    // Метод добавления элемента
-    this.new = function (stateId, projectId, sprintId) {
-        var result;
-        var params = {
-            sprintId: sprintId,
-            projectId: projectId
-        }
-
-        // Если задан статус, то передать его как значение по умолчанию
-        if (stateId != undefined) {
-            params['stateId'] = stateId;
-        }
-
-        var result = connector.executeScript("AK_SBCreateItem", params)
-        // Обновить весь список объектов, т.к. могли создать новые/удалить    
-        //itemList.update();
-        return result;
-    }
-
-    // Метод добавления элемента
-    this.add = function (stateId) {
-        var result;
-        var params = {
-            sprintId: this.sprint,
-            projectId: this.project,
-            itemID: this.id
-        }
-
-        // Если задан статус, то передать его как значение по умолчанию
-        if (stateId != undefined) {
-            params['stateId'] = stateId;
-        }
-
-        var data = connector.executeScript("AK_SBDeleteItem", params)
-        if (data != false) {
-            result = JSON.parse(data);
-        }
-
-        // Обновить весь список объектов, т.к. могли создать новые/удалить    
-        itemList.update();
-        return result;        
     }
 
     // Метод смены статуса элемента
@@ -328,7 +344,8 @@ Item = function (data, itemList, stateId) {
         // Обновить весь список объектов, т.к. могли создать новые/удалить    
         return result;
     }
-    
+
+    // Проверка соответствия текущего элемента фильтру
     this.checkByFilter = function (filter) {
         var checked = false;
 
@@ -368,6 +385,40 @@ Item = function (data, itemList, stateId) {
 
         return checked
     }
-    
-    this.update(data, itemList);
+
+    // Метод добавления элемента
+    this.new = function (stateId, projectId, sprintId) {
+        var result = {};
+        var params = {
+            sprintId: sprintId,
+            projectId: projectId
+        }
+
+        // Если задан статус, то передать его как значение по умолчанию
+        if (stateId != undefined) {
+            params['stateId'] = stateId;
+        }
+
+        var resultScript = connector.executeScript("AK_SBCreateItem", params)
+        if (resultScript) {
+            result = JSON.parse(resultScript);
+            result = result[0];
+        }
+
+        this.update();
+        
+        // Обновить весь список объектов, т.к. могли создать новые/удалить    
+        //itemList.update();
+        return result;
+    }
+
+    // Метод обновления элемента
+    this.refresh = function (getFromServer) {
+        // Получить данные из JSON массива или напрямую с сервера
+        this.getData(getFromServer);
+        // Обновить свойства
+        this.update();
+        // Отобразить
+        this.render();
+    }
 }

@@ -1,28 +1,28 @@
-﻿var isTesting = false;
+﻿//isTesting = false;
+//console.log(isTesting);
 
 // Создать или получить подключение к DIRECTUM
 var connector = new Connector();
 
 // Получить признаки:
-// Приоритеты
-var prioriryList = new PickList(connector, "AK_SBGetPickRequisitesData", 'AK_PrioritySign', true);
-prioriryList.render(".select-priority");
+// Приоритеты. Получить информацию и отобразить 
+var prioriryList = new PickList("AK_SBGetPickRequisitesData", 'AK_PrioritySign', true);
+prioriryList.refresh({ projectId: connector.projectId, sprintId: connector.sprintId }, ".select-priority", 'select-pick-option');
 
-// Типы
-var issueTypesList = new PickList(connector, "AK_SBGetPickRequisitesData", 'AK_IT_IssueType', false);
-issueTypesList.render(".select-issue-type");
+// Типы. Получить информацию и отобразить
+var issueTypesList = new PickList("AK_SBGetPickRequisitesData", 'AK_IT_IssueType', false);
+issueTypesList.refresh({ projectId: connector.projectId, sprintId: connector.sprintId }, ".select-issue-type", 'select-pick-option');
 
-// Получить спринты
+// Спринты. Получить информацию и отобразить
 var sprintList = new SprintList(connector);
-sprintList.render();
+sprintList.refresh({ projectId: connector.projectId, sprintId: connector.sprintId }, "#select-sprint", 'select-pick-option');
 
 // Поулчить статусы
 var stateList = new StateList(connector);
-stateList.render();
+stateList.refresh();
 
 var itemList = new ItemList(false, connector, false, stateList);
-itemList.setItems();
-itemList.render();
+itemList.refresh();
 
 // Выделить ИД элемента, которому соответствует элемент ДОМ
 function getIdByElementId(elementId) {
@@ -55,7 +55,6 @@ function dateToStr(date) {
     return date.toLocaleString("ru", options);
 }
 
-
 function stopChangeState(event, ui) {
     var elementID = ui.item.attr("id");
     var itemId = getIdByElementId(elementID);
@@ -70,21 +69,6 @@ function stopChangeState(event, ui) {
     if (!result) {
         $(".ui-sortable").sortable("cancel");
     }
-}
-
-function startChangeState(event, ui) {
-    console.dir(ui);
-    prevItemsList = ui.item[0].parentElement;
-}
-
-// Поиск элемента в массиве
-function findElementInArray(array, element) {
-    var result = false;
-    for (var i = 0; i < array.length; i++) {
-        if (array[i] == element)
-            return true;
-    }
-    return result
 }
 
 //********************* Обработчики событий формы ************************
@@ -127,7 +111,6 @@ window.onscroll = function () {
     var states = document.querySelector('.states');
     states.style.left = -scrolled + 'px';
 }
-
 
 $(init);
 function init() {

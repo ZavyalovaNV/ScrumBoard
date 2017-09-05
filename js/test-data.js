@@ -28,7 +28,6 @@ var priorities_test = [
 ];
 
 var issueTypes_test = [
-    { "id": "-1", "text": "Все" },
     { "id": "1", "text": "Дефект" },
     { "id": "2", "text": "Пожелание" }
 ];
