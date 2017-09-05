@@ -32,14 +32,8 @@ Item = function (_itemList) {
             if (employee === undefined || employee === null) {
                 employee = new Employee(this.executorId, this.executorName);
                 employeeList.add(employee);
-                /*var container = document.querySelector(".select-employee");
-                employee.render(container, "");*/
             }
-        }
-        /*var employee = new Employee(this.executorId, this.executorName);
-        if (employee != undefined) {
-            this.itemList.employeeList.add(employee);
-        }*/
+        }        
     }
 
     // Получить элемент DOM по ид
@@ -160,21 +154,10 @@ Item = function (_itemList) {
         for (var i = 0; i < columns.length; i++) {
             column = columns[i];
             height = column.offsetHeight;
-            if (height <= maxHeight) {
+            if (height < maxHeight) {
                 column.style.minHeight = maxHeight + "px";
-                //column.style.height = maxHeight + "px";
             }
-        }
-        /*
-                columns = document.querySelectorAll(".items-column");
-                for (var i = 0; i < columns.length; i++) {
-                    column = columns[i];
-                    height = column.offsetHeight;
-                    if (height <= maxHeight) {
-                        column.style.minHeight = maxHeight + "px";
-                        column.style.height = maxHeight + "px";
-                    }
-                }*/
+        }        
     }
 
     // Установить режим отображения Полный/Компактный
