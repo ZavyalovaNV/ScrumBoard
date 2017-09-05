@@ -190,8 +190,8 @@ Item = function (_itemList) {
         if (getFromServer) {
             var resultScript = connector.executeScript("AK_SBGetItemsData",
                 {
-                    sprintId: this.sprint,
-                    projectId: this.project,
+                    sprintId: this.sprintId,
+                    projectId: this.projectId,
                     itemId: this.id
                 });
 
@@ -224,8 +224,8 @@ Item = function (_itemList) {
     // Открытие самого элемента
     this.open = function () {
         var params = {
-            SprintId: this.sprint,
-            ProjectId: this.project,
+            SprintId: this.sprintId,
+            ProjectId: this.projectId,
             ItemID: this.id,
             ReadOnly: this.itemList.readOnly
         }
@@ -258,8 +258,8 @@ Item = function (_itemList) {
     // Метод удаления элемента
     this.delete = function () {
         var params = {
-            sprintId: this.sprint,
-            projectId: this.project,
+            sprintId: this.sprintId,
+            projectId: this.projectId,
             itemID: this.id
         }
 
@@ -291,8 +291,8 @@ Item = function (_itemList) {
 
         if (prevItemStateId != newItemStateId) {
             var params = {
-                sprintId: this.sprint,
-                projectId: this.project,
+                sprintId: this.sprintId,
+                projectId: this.projectId,
                 itemID: this.id,
                 prevItemStateId: prevItemStateId,
                 newItemStateId: newItemStateId
