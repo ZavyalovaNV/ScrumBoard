@@ -157,7 +157,7 @@ Item = function (_itemList) {
             if (height < maxHeight) {
                 column.style.minHeight = maxHeight + "px";
             }
-        }        
+        }         
     }
 
     // Установить режим отображения Полный/Компактный
