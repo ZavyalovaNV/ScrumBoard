@@ -359,8 +359,8 @@ Item = function (_itemList) {
 
         // Проверка по спринту
         var filterSprintId = filter._sprintId;
-        checked = (filterSprintId === this.sprintId) || filterSprintId == '' || filterSprintId == null || filterSprintId == -1 || filterSprintId == undefined;
-
+        checked = (filterSprintId == this.sprintId) || filterSprintId == '' || filterSprintId == null || filterSprintId == -1 || filterSprintId == undefined;
+       
         if (checked) {
             // Проверка по работнику
             var filterEmployeeList = filter._employeeList;
@@ -374,7 +374,7 @@ Item = function (_itemList) {
                 // Проверка по типу
                 if (checked) {
                     var filterType = filter._type;
-                    checked = (filterType === this.issueTypeId) || filterType == '' || filterType == null || filterType == -1 || filterType == undefined
+                    checked = (filterType == this.issueTypeId) || filterType == '' || filterType == null || filterType == -1 || filterType == undefined
 
                     // Проверка по дате с
                     if (checked) {
@@ -395,7 +395,7 @@ Item = function (_itemList) {
     }
 
     // Метод добавления элемента
-    this.new = function (stateId, projectId, sprintId) {
+    this.new = function (projectId, sprintId, stateId) {
         var result = {};
         var params = {
             sprintId: sprintId,

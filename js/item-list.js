@@ -24,8 +24,8 @@ ItemList = function (_modeCompact, _connector, _stateList) {
         _priorityList: [],
         _dateFrom: '',
         _dateTo: '',
-        _sprintId: null,
-        _projectId: null
+        _sprintId: this.sprintId,
+        _projectId: this.projectId
     };
 
     // Сортировка
@@ -209,7 +209,7 @@ ItemList = function (_modeCompact, _connector, _stateList) {
     }
 
     // Добавить новый элемент
-    this.addItem = function (stateId) {
+    this.addItem = function () {
         event.stopPropagation();
 
         if (this.readOnly) {
