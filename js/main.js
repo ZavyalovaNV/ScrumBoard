@@ -17,11 +17,12 @@ issueTypesList.refresh({ projectId: connector.projectId, sprintId: connector.spr
 var sprintList = new SprintList(connector);
 sprintList.refresh({ projectId: connector.projectId, sprintId: connector.sprintId }, "#select-sprint", 'select-pick-option');
 
-// Поулчить статусы
+// Получить статусы
 var stateList = new StateList(connector);
 stateList.refresh();
 
-var itemList = new ItemList(false, connector, false, stateList);
+// Получить элементы
+var itemList = new ItemList(false, connector, stateList);
 itemList.refresh();
 
 // Выделить ИД элемента, которому соответствует элемент ДОМ
@@ -106,10 +107,20 @@ function stopChangeSize(event, ui) {
     element.width(width);
 }
 
+// Синхронизировать заголовки
 window.onscroll = function () {
     var scrolled = window.pageXOffset || document.documentElement.scrollLeft;
     var states = document.querySelector('.states');
     states.style.left = -scrolled + 'px';
+}
+
+// Скрывать меню при клике где-либо
+var elementList = [document.getElementById("item-row"), document.getElementById("states")]
+for (var i = 0; i < elementList.length; i++) {
+    var element = elementList[i];
+    element.onclick = function () {
+        hideFilterMenu();
+    }
 }
 
 $(init);

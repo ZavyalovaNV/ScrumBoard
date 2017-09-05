@@ -226,7 +226,8 @@ Item = function (_itemList) {
         var params = {
             SprintId: this.sprint,
             ProjectId: this.project,
-            ItemID: this.id
+            ItemID: this.id,
+            ReadOnly: this.itemList.readOnly
         }
 
         var result = connector.executeScript("AK_SBOpenItem", params)
@@ -262,6 +263,12 @@ Item = function (_itemList) {
             itemID: this.id
         }
 
+        if (this.itemList.readOnly) {
+            var msg = "Нет прав на удаление объектов";
+            alert(msg);
+            return false
+        }
+
         var result = connector.executeScript("AK_SBDeleteItem", params)
         if (result) {
             // Обновить весь список объектов, т.к. могли создать новые/удалить    
@@ -275,6 +282,12 @@ Item = function (_itemList) {
         // Предыдущий статус еще в свойствах
         var prevItemStateId = this.stateId;
         var result = false;
+
+        if (this.itemList.readOnly) {
+            var msg = "Нет прав на изменение новых объектов";
+            alert(msg);
+            return false
+        }
 
         if (prevItemStateId != newItemStateId) {
             var params = {
@@ -317,7 +330,12 @@ Item = function (_itemList) {
         // Найти итем
         var item = itemList.getItemById(itemId);
 
-        var result;
+        if (item.itemList.readOnly) {
+            var msg = "Нет прав на изменение объектов";
+            alert(msg);
+            return result
+        }
+
         var params = {
             sprintId: item.sprint,
             projectId: item.project,
@@ -382,6 +400,12 @@ Item = function (_itemList) {
         var params = {
             sprintId: sprintId,
             projectId: projectId
+        }
+
+        if (this.itemList.readOnly) {
+            var msg = "Нет прав на создание новых объектов";
+            alert(msg);
+            return result
         }
 
         // Если задан статус, то передать его как значение по умолчанию

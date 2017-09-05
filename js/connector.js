@@ -57,11 +57,14 @@
                 }
             }
             this.refCode = refCode;
+            this.readOnly = component.Params.FindItem('ReadOnly');
+
         } else {
             // Заполнить тестовыми значениями
             this.projectId = testProjectID;
             this.sprintId = testSprintID;
             this.refCode = testRefCode;
+            this.readOnly = testReadOnly;
         }
 
         return component;

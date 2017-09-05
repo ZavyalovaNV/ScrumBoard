@@ -1,4 +1,4 @@
-ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
+ItemList = function (_modeCompact, _connector, _stateList) {
     this.data = [];
     this.list = [];
     // Работники
@@ -13,7 +13,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
     // Настройка режима отображения элементов: компактно или нет
     this.modeCompact = _modeCompact;
     // Толкьо чтение
-    this.readOnly = _readOnly;
+    this.readOnly = this.connector.readOnly;
     /*  // Статусы 
       this.stateList = _stateList;*/
 
@@ -34,7 +34,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         field: 'number',
         dest: 'asc'
     }
-    /*****************************************/
+    
     // Получить элемент из массива по его ИД
     this.getItemById = function (id) {
         var items = this.list;
@@ -189,7 +189,7 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         this.deleteItems();
 
         // Создать новый список
-        //       this.createItems();
+//       this.createItems();
 
         // Применить фильтр
         this.applyFilter();
@@ -210,6 +210,14 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
 
     // Добавить новый элемент
     this.addItem = function (stateId) {
+        event.stopPropagation();
+
+        if (this.readOnly) {
+            var msg = "Нет прав на создание новых объектов";
+            alert(msg);
+            return false
+        }
+
         var item = new Item(this);
         var result = item.new(this.projectId, this.sprintId);
         if (result) {
@@ -220,7 +228,6 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
             // Отрисовать
             this.render();
         }
-        event.stopPropagation();
     }
 
     // Сменить режим отображения Полный/Компактный
@@ -232,23 +239,6 @@ ItemList = function (_modeCompact, _connector, _readOnly, _stateList) {
         for (var i = 0; i < items.length; i++) {
             var item = items[i];
             item.setViewMode(this.modeCompact);
-
-            /*itemId = getIdByElementId(element.id)
-            item = this.getItemById(itemId);
-            if (item !== undefined) {
-                item.setViewMode(this.modeCompact);
-            }*/
-        }
-
-        var elements = document.querySelectorAll('.item');
-        var element, item, itemId;
-        for (var i = 0; i < elements.length; i++) {
-            element = elements[i];
-            itemId = getIdByElementId(element.id)
-            item = this.getItemById(itemId);
-            if (item !== undefined) {
-                item.setViewMode(this.modeCompact);
-            }
         }
     }
 
