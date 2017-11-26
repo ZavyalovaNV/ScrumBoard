@@ -85,7 +85,7 @@ function stopChangeSize(event, ui) {
     var elemArray = elementID.split("-");
     var id = elemArray[elemArray.length - 1];
 
-    // Получить ИД связанных документов
+    // Получить ИД связанных объектов
     var idItemColumn = '#' + divItemColumn + '-' + id;
     var idItemList = '#' + divItemList + '-' + id;
     var idState = '#' + divState + '-' + id;

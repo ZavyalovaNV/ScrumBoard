@@ -2,7 +2,7 @@
 var testSprintID = 1556288;
 var testProjectID = 1543890;
 var testRefCode = 'AK_IT_Sprints';
-var testReadOnly = true;
+var testReadOnly = false;
 
 var sort_test = [
     { "id": "number", "text": "Номер" },

@@ -1,17 +1,21 @@
 ﻿/*элементы-задачи*/
 .item,
 .item-placeholder {
-    display: inline-block;
     margin: 5px 10px 5px 10px;
     width: 217px; 
+}
+
+.item,
+.item-placeholder {
+    display: inline-block;
 }
 
 .item {
     background-color: #ffffff;
     border: 1px solid rgba(0,0,0,0.15);
-    border-top: none;   
-    
+    border-top: none;
     position: relative;
+    vertical-align: top;
 }
 
 .item:hover { 

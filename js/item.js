@@ -137,7 +137,7 @@ Item = function (_itemList) {
                 deleteElement.addEventListener('click', this.deleteElement)
             }
         }
-
+        
         // Получить все столбцы
         var columns = document.querySelectorAll(".items-list");
         // Найти максимальную высоту
@@ -157,7 +157,7 @@ Item = function (_itemList) {
             if (height < maxHeight) {
                 column.style.minHeight = maxHeight + "px";
             }
-        }         
+        }       
     }
 
     // Установить режим отображения Полный/Компактный
