@@ -31,7 +31,7 @@ ItemList = function (_modeCompact, _connector, _stateList) {
     // Сортировка
     this.sort = {
         // Значения по умолчанию
-        field: 'number',
+        field: 'priorityId',
         dest: 'asc'
     }
     
@@ -272,9 +272,18 @@ ItemList = function (_modeCompact, _connector, _stateList) {
         this.render();
     }
 
+    // Применить сортировку
+    this.setSort = function () {
+        // Обновить список элементов
+        this.update();
+        // Отрисовать
+        this.render();
+    }
+
     // Установить текущее значение ПОЛЯ сортировки и применить её
     this.setSortField = function (element) {
         this.sort['field'] = element.value;
+        // Обновить список элементов
         this.update();
         // Отрисовать
         this.render();
@@ -298,7 +307,7 @@ ItemList = function (_modeCompact, _connector, _stateList) {
         } else {
             elementClassList.add('sort-down');
         };
-
+        // Обновить список элементов
         this.update();
         // Отрисовать
         this.render();

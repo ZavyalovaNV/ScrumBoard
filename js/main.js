@@ -141,8 +141,8 @@ function init() {
     });
     $(".select-sort").select2({
         data: [
-            { "id": "number", "text": "Номер" },
             { "id": "priorityId", "text": "Приоритет" },
+            { "id": "number", "text": "Номер" },
             { "id": "regDate", "text": "Дата регистрации" }
         ]
     });
