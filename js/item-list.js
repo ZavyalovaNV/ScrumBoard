@@ -32,7 +32,7 @@ ItemList = function (_modeCompact, _connector, _stateList) {
     this.sort = {
         // Значения по умолчанию
         field: 'priorityId',
-        dest: 'asc'
+        dest: 'desc'
     }
     
     // Получить элемент из массива по его ИД
