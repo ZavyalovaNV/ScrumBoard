@@ -78,6 +78,16 @@ State = function () {
         for (key in data) {
             this[key] = data[key];
         }
+
+        let availableStates = this.availableStates;        
+        if (availableStates != '') {
+            // Убрать последний символ
+            availableStates = availableStates.slice(0, availableStates.length - 1);
+            // Преобразовать в массив
+            this.availableStates = availableStates.split(',');
+        } else {
+            this.availableStates = []
+        }     
     }
 
     // Получить элемент DOM по ид
@@ -168,12 +178,10 @@ State = function () {
     this.setTransmissions = function () {
         var CLASS_NAME = "items-list";
         var elementId = "#" + CLASS_NAME + "-" + this.id;
-
-        // Сформировать переходы как ИД доступных столбцов
-        var availableStatesStr = "#" + CLASS_NAME + "-" + this.availableStates.join(",#" + CLASS_NAME + "-");
-       
+        
         var element = $(elementId);
-        element.sortable({ connectWith: availableStatesStr });
+        // Сформировать переходы как ИД доступных столбцов
+        element.sortable({ connectWith: "#" + CLASS_NAME + "-" + this.availableStates.join(",#" + CLASS_NAME + "-") });
     }
 
     this.refresh = function (data) {

@@ -1,5 +1,4 @@
 ﻿isTesting = true;
-isTesting = true;
 console.log(isTesting);
 
 var TESTING_COMPARE = function (_scriptName, params) {
